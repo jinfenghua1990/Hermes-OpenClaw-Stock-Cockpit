@@ -34,6 +34,25 @@
 ### 6.4 风险提示
 {{risk_note}}
 
+## 7. 市场情绪快照
+{{emotion_snapshot}}
+
+### 7.1 情绪分数
+**{{emotion_score}}/100** - {{emotion_interpretation}}
+
+### 7.2 市场阶段
+**{{market_phase}}** - {{phase_interpretation}}
+
+### 7.3 风险等级
+**{{market_risk_level}}** - {{risk_interpretation}}
+
+### 7.4 模式强度
+- 最强模式：**{{strongest_mode}}**
+- 最弱模式：**{{weakest_mode}}**
+
+### 7.5 快照说明
+{{snapshot_explanation}}
+
 ---
-*数据来源：技术因子缓存 + 原版四模式扫描器*  
+*数据来源：技术因子缓存 + 原版四模式扫描器 + 市场情绪快照系统*  
 *生成时间：{{timestamp}}*
