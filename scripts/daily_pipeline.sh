@@ -15,7 +15,7 @@ START_TIME=$(date '+%Y-%m-%d %H:%M:%S')
 echo "[TIME] Pipeline started at: $START_TIME"
 
 # 1. 构建技术因子缓存
-echo "[1/4] Build Technical Factor Cache"
+echo "[1/6] Build Technical Factor Cache"
 python features/build_technical_factor_cache.py
 if [ $? -ne 0 ]; then
     echo "[ERROR] Technical Factor Cache failed"
@@ -23,37 +23,51 @@ if [ $? -ne 0 ]; then
 fi
 
 # 2. 运行原版四种模式扫描器
-echo "[2/4] Run Original Four Modes Scanner"
+echo "[2/6] Run Original Four Modes Scanner"
 python strategies/original_four_modes_scanner.py
 if [ $? -ne 0 ]; then
     echo "[ERROR] Four Modes Scanner failed"
     exit 1
 fi
 
-# 3. 构建市场摘要
-echo "[3/4] Build Market Summary"
+# 3. 构建市场情绪快照
+echo "[3/6] Build Market Emotion Snapshot"
+python emotion_engine/build_market_emotion_snapshot.py
+if [ $? -ne 0 ]; then
+    echo "[WARNING] Market Emotion Snapshot failed, continuing with pipeline"
+fi
+
+# 4. 分析情绪历史
+echo "[4/6] Analyze Emotion History"
+python emotion_engine/analyzer/analyze_emotion_history.py
+if [ $? -ne 0 ]; then
+    echo "[WARNING] Emotion History Analyzer failed, continuing with pipeline"
+fi
+
+# 5. 构建市场摘要
+echo "[5/6] Build Market Summary"
 python report_engine/generators/build_market_summary.py
 if [ $? -ne 0 ]; then
     echo "[ERROR] Market Summary failed"
     exit 1
 fi
 
-# 4. 生成日报
-echo "[4/4] Generate Daily Report"
+# 6. 生成日报
+echo "[6/6] Generate Daily Report"
 python report_engine/generators/generate_daily_report.py
 if [ $? -ne 0 ]; then
     echo "[ERROR] Daily Report failed"
     exit 1
 fi
 
-# 5. 归档历史日报
-echo "[5/5] Archive Historical Reports"
+# 7. 归档历史日报
+echo "[7/7] Archive Historical Reports"
 mkdir -p reports/history
-cp report_engine/outputs/*.md reports/history/
+cp report_engine/outputs/*.md reports/history/ 2>/dev/null || echo "[WARNING] No reports to copy"
 echo "[ARCHIVE] Daily reports archived to reports/history/"
 
-# 6. 更新日报索引
-echo "[6/6] Update Report Index"
+# 8. 更新日报索引
+echo "[8/8] Update Report Index"
 python reports/build_report_index.py
 if [ $? -ne 0 ]; then
     echo "[WARNING] Report index update failed"
@@ -71,6 +85,9 @@ echo "=================================================="
 echo "[FILES] Generated files:"
 echo "  - features/cache/daily_technical_factors.json"
 echo "  - strategies/outputs/original_four_modes_$(date '+%Y-%m-%d').json"
+echo "  - emotion_engine/cache/market_emotion_snapshot.json"
+echo "  - emotion_engine/history/$(date '+%Y-%m-%d').json"
+echo "  - emotion_engine/analyzer/emotion_history_analysis.json"
 echo "  - report_engine/data/market_summary.json"
 echo "  - report_engine/outputs/$(date '+%Y-%m-%d').md"
 echo "  - reports/history/$(date '+%Y-%m-%d').md"

@@ -6,6 +6,7 @@ BASE_DIR = Path(__file__).resolve().parents[1]
 TEMPLATE_PATH = BASE_DIR / "templates" / "daily_report_template.md"
 SUMMARY_PATH = BASE_DIR / "data" / "market_summary.json"
 EMOTION_SNAPSHOT_PATH = BASE_DIR.parent / "emotion_engine" / "cache" / "market_emotion_snapshot.json"
+EMOTION_ANALYSIS_PATH = BASE_DIR.parent / "emotion_engine" / "analyzer" / "emotion_history_analysis.json"
 OUTPUT_DIR = BASE_DIR / "outputs"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -94,6 +95,134 @@ def load_emotion_snapshot() -> dict:
         return {}
 
 
+def load_emotion_history_analysis() -> dict:
+    """加载情绪历史分析数据"""
+    if not EMOTION_ANALYSIS_PATH.exists():
+        print(f"[WARN] 情绪历史分析文件不存在: {EMOTION_ANALYSIS_PATH}")
+        return {
+            "emotion_history_trend": "暂无历史趋势数据，请先运行情绪历史分析器",
+            "recent_scores_chart": "数据不足",
+            "trend_direction": "unknown",
+            "trend_explanation": "数据不足，无法判断趋势",
+            "history_statistics": "数据不足",
+            "trend_interpretation": "请先运行情绪历史分析器以获取历史趋势数据"
+        }
+    
+    try:
+        with open(EMOTION_ANALYSIS_PATH, "r", encoding="utf-8") as f:
+            analysis = json.load(f)
+        
+        basic = analysis.get("basic_statistics", {})
+        trend = analysis.get("trend_analysis", {})
+        mode_analysis = analysis.get("mode_dominance_analysis", {})
+        
+        # 构建趋势图表文本
+        if trend.get("trend") == "insufficient_data":
+            recent_scores_chart = "数据不足，无法显示图表"
+            trend_direction = "unknown"
+            trend_explanation = "数据不足，无法判断趋势"
+        else:
+            recent_scores = trend.get("recent_scores", [])
+            recent_dates = trend.get("recent_dates", [])
+            
+            # 创建图表
+            chart_lines = []
+            for date, score in zip(recent_dates, recent_scores):
+                # 简化为月-日格式
+                date_display = date[-5:] if len(date) >= 5 else date
+                bar_length = max(1, int(score / 2))  # 每2分显示1个字符
+                bar = "█" * bar_length
+                chart_lines.append(f"{date_display}: {bar} {score}")
+            
+            recent_scores_chart = "\n".join(chart_lines)
+            
+            # 趋势方向映射
+            trend_map = {
+                "rising": "上升",
+                "falling": "下降", 
+                "flat": "平缓",
+                "volatile": "波动"
+            }
+            trend_direction = trend_map.get(trend.get("trend", "unknown"), "未知")
+            
+            # 趋势解释
+            strength = trend.get("trend_strength", "")
+            strength_map = {
+                "strong": "强烈",
+                "weak": "微弱",
+                "stable": "稳定",
+                "high_volatility": "高波动"
+            }
+            strength_cn = strength_map.get(strength, "")
+            
+            trend_explanation = f"趋势{trend_direction}{'（' + strength_cn + '）' if strength_cn else ''}"
+        
+        # 历史统计文本
+        history_stats = []
+        history_stats.append(f"• 历史平均情绪分数: {basic.get('average_emotion_score', 0)}/100")
+        history_stats.append(f"• 最高情绪日: {basic.get('highest_emotion_day', {}).get('date', '未知')} ({basic.get('highest_emotion_day', {}).get('score', 0)}/100)")
+        history_stats.append(f"• 最低情绪日: {basic.get('lowest_emotion_day', {}).get('date', '未知')} ({basic.get('lowest_emotion_day', {}).get('score', 0)}/100)")
+        history_stats.append(f"• 最常见市场阶段: {basic.get('most_common_market_phase', 'unknown')}")
+        history_stats.append(f"• 最常见风险等级: {basic.get('most_common_risk_level', 'unknown')}")
+        
+        # 模式主导历史
+        mode_display = {
+            "mode1": "回踩止跌型",
+            "mode2": "突破启动型",
+            "mode3": "小阳启动型", 
+            "mode4": "2波启动型"
+        }
+        
+        most_dominant_mode = mode_analysis.get("most_dominant_mode", "unknown")
+        most_dominant_percentage = mode_analysis.get("most_dominant_percentage", 0)
+        
+        mode_stats = []
+        for mode_name, percentage in mode_analysis.get("dominance_percentages", {}).items():
+            mode_cn = mode_display.get(mode_name, mode_name)
+            mode_stats.append(f"  - {mode_cn}: {percentage}%")
+        
+        history_stats.append(f"• 模式主导历史（{mode_display.get(most_dominant_mode, most_dominant_mode)} 主导 {most_dominant_percentage}% 天数）:")
+        history_stats.extend(mode_stats)
+        
+        history_statistics = "\n".join(history_stats)
+        
+        # 趋势解读
+        if trend.get("trend") == "rising":
+            trend_interpretation = "情绪分数持续上升，表明市场情绪正在改善，投资者信心增强。"
+        elif trend.get("trend") == "falling":
+            trend_interpretation = "情绪分数持续下降，表明市场情绪正在恶化，投资者趋于谨慎。"
+        elif trend.get("trend") == "flat":
+            trend_interpretation = "情绪分数波动较小，市场情绪稳定，无明显趋势变化。"
+        elif trend.get("trend") == "volatile":
+            trend_interpretation = "情绪分数大幅波动，市场情绪不稳定，短期方向不明。"
+        else:
+            trend_interpretation = "基于历史情绪数据，市场情绪缺乏明确趋势方向。"
+        
+        # 添加数据不足时的额外解释
+        if basic.get("total_days", 0) < 5:
+            trend_interpretation += "（注：历史数据较少，趋势判断仅供参考）"
+        
+        return {
+            "emotion_history_trend": "基于历史情绪快照数据的统计分析",
+            "recent_scores_chart": recent_scores_chart,
+            "trend_direction": trend_direction,
+            "trend_explanation": trend_explanation,
+            "history_statistics": history_statistics,
+            "trend_interpretation": trend_interpretation
+        }
+        
+    except Exception as e:
+        print(f"[ERROR] 加载情绪历史分析失败: {e}")
+        return {
+            "emotion_history_trend": "加载历史趋势数据时出错",
+            "recent_scores_chart": f"错误: {str(e)}",
+            "trend_direction": "error",
+            "trend_explanation": "数据加载失败",
+            "history_statistics": "数据加载失败",
+            "trend_interpretation": "请检查情绪历史分析器运行状态"
+        }
+
+
 def generate_daily_report():
     if not TEMPLATE_PATH.exists():
         raise FileNotFoundError(f"Template not found: {TEMPLATE_PATH}")
@@ -108,6 +237,9 @@ def generate_daily_report():
     
     # 加载情绪快照数据
     emotion_data = load_emotion_snapshot()
+    
+    # 加载情绪历史分析数据
+    history_data = load_emotion_history_analysis()
     
     # 添加时间戳
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -129,8 +261,9 @@ def generate_daily_report():
         # 将策略摘要转为可显示的字符串（用于原始占位符）
         summary["strategy_summary"] = json.dumps(strategy, ensure_ascii=False, indent=2)
     
-    # 合并情绪数据
+    # 合并情绪数据和历史分析数据
     summary.update(emotion_data)
+    summary.update(history_data)
     
     report = template
     for key, value in summary.items():
@@ -156,7 +289,8 @@ def generate_daily_report():
         "市场情绪快照",
         "情绪分数",
         "市场阶段",
-        "风险等级"
+        "风险等级",
+        "情绪历史趋势"
     ]
     report_text = output_path.read_text(encoding="utf-8")
     missing = []

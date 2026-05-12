@@ -53,6 +53,22 @@
 ### 7.5 快照说明
 {{snapshot_explanation}}
 
+## 8. 情绪历史趋势
+{{emotion_history_trend}}
+
+### 8.1 最近5日情绪分数
+{{recent_scores_chart}}
+
+### 8.2 当前趋势
+**{{trend_direction}}** - {{trend_explanation}}
+
+### 8.3 历史统计
+{{history_statistics}}
+
+### 8.4 趋势解读
+{{trend_interpretation}}
+
 ---
-*数据来源：技术因子缓存 + 原版四模式扫描器 + 市场情绪快照系统*  
+
+*数据来源：技术因子缓存 + 原版四模式扫描器 + 市场情绪快照系统 + 情绪历史分析器*  
 *生成时间：{{timestamp}}*
