@@ -1,0 +1,13 @@
+{
+  "update_time": "2026-05-12T15:52:17.569644",
+  "mode": "codes",
+  "total": 12,
+  "success": 2,
+  "fail": 0,
+  "skip": 10,
+  "source_stats": {
+    "baostock": 2
+  },
+  "failed_codes": [],
+  "elapsed_seconds": 3.0
+}

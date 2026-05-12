@@ -1,0 +1,33 @@
+{
+  "enabled": false,
+  "phase": "SAFE_OBSERVE",
+  "note": "Phase-2.1 重复买入保护触发，自动买入已暂停",
+  "kill_switch": false,
+  "auto_trade_prohibited": true,
+  "pending_review": false,
+  "rules": {
+    "same_stock_same_signal_no_repeat": true,
+    "add_position_requires_new_signal": true,
+    "max_per_stock_per_day": {
+      "first_buy": 1,
+      "add_position": 2
+    },
+    "add_position_requires": [
+      "volume_surge_confirmation",
+      "retest_ma5_bounce",
+      "sector_strength_increasing",
+      "regime_neutral_to_risk_on"
+    ],
+    "prohibited_stocks_today": [
+      "301282",
+      "002463",
+      "603629"
+    ],
+    "min_avail_cash_ratio": 0.10,
+    "max_single_position_ratio": 0.30
+  },
+  "allow_events_engine": true,
+  "allow_candidate_engine": true,
+  "allow_feishu_push": true,
+  "allow_daily_review": true
+}

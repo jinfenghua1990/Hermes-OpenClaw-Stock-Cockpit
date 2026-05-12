@@ -1,0 +1,11 @@
+{
+  "robot_id": "",
+  "date": "",
+  "scores": {
+    "data_accuracy": 0,
+    "pattern_match_accuracy": 0,
+    "risk_check_quality": 0,
+    "overall": 0
+  },
+  "notes": ""
+}

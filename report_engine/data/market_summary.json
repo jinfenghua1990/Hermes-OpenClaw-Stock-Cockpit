@@ -1,0 +1,8 @@
+{
+  "date": "2026-05-12",
+  "northbound": "待接入北向资金数据，目前先占位。",
+  "main_sector": "待接入板块强度数据，目前先占位。",
+  "institution": "待接入龙虎榜/机构净买数据，目前先占位。",
+  "emotion": "待接入 Emotion Layer 输出，目前先占位。",
+  "tomorrow_focus": "待接入 Decision Layer 输出，目前先占位。"
+}

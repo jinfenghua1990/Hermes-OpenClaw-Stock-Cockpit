@@ -1,0 +1,714 @@
+{
+  "check_time": "2026-05-12T15:38:01.151759",
+  "total_stocks": 957,
+  "anomalies": [
+    {
+      "code": "600909",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-04-25 pct=11.08% 板块限额10.5%",
+      "row_date": "2022-04-25"
+    },
+    {
+      "code": "600048",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2018-02-07 pct=-12.09% 板块限额10.5%",
+      "row_date": "2018-02-07"
+    },
+    {
+      "code": "600048",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2018-02-09 pct=-12.74% 板块限额10.5%",
+      "row_date": "2018-02-09"
+    },
+    {
+      "code": "600048",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2018-07-02 pct=-13.92% 板块限额10.5%",
+      "row_date": "2018-07-02"
+    },
+    {
+      "code": "600048",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2018-08-09 pct=11.61% 板块限额10.5%",
+      "row_date": "2018-08-09"
+    },
+    {
+      "code": "600048",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2020-02-03 pct=-11.08% 板块限额10.5%",
+      "row_date": "2020-02-03"
+    },
+    {
+      "code": "600048",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2020-07-06 pct=11.7% 板块限额10.5%",
+      "row_date": "2020-07-06"
+    },
+    {
+      "code": "600048",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2021-11-11 pct=11.34% 板块限额10.5%",
+      "row_date": "2021-11-11"
+    },
+    {
+      "code": "600048",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-03-15 pct=-11.06% 板块限额10.5%",
+      "row_date": "2022-03-15"
+    },
+    {
+      "code": "600048",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-03-18 pct=11.13% 板块限额10.5%",
+      "row_date": "2022-03-18"
+    },
+    {
+      "code": "600048",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-10-31 pct=-10.69% 板块限额10.5%",
+      "row_date": "2022-10-31"
+    },
+    {
+      "code": "600048",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-11-11 pct=10.77% 板块限额10.5%",
+      "row_date": "2022-11-11"
+    },
+    {
+      "code": "600048",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2024-05-17 pct=10.61% 板块限额10.5%",
+      "row_date": "2024-05-17"
+    },
+    {
+      "code": "603233",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2019-08-02 pct=11.41% 板块限额10.5%",
+      "row_date": "2019-08-02"
+    },
+    {
+      "code": "603233",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2020-03-20 pct=11.27% 板块限额10.5%",
+      "row_date": "2020-03-20"
+    },
+    {
+      "code": "603233",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2021-01-12 pct=10.61% 板块限额10.5%",
+      "row_date": "2021-01-12"
+    },
+    {
+      "code": "603233",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2021-08-09 pct=10.84% 板块限额10.5%",
+      "row_date": "2021-08-09"
+    },
+    {
+      "code": "603233",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2021-10-28 pct=-10.81% 板块限额10.5%",
+      "row_date": "2021-10-28"
+    },
+    {
+      "code": "603233",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2021-12-27 pct=10.92% 板块限额10.5%",
+      "row_date": "2021-12-27"
+    },
+    {
+      "code": "603233",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-03-11 pct=10.85% 板块限额10.5%",
+      "row_date": "2022-03-11"
+    },
+    {
+      "code": "603233",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-03-15 pct=-10.95% 板块限额10.5%",
+      "row_date": "2022-03-15"
+    },
+    {
+      "code": "603233",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-05-25 pct=11.15% 板块限额10.5%",
+      "row_date": "2022-05-25"
+    },
+    {
+      "code": "603233",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-11-14 pct=10.6% 板块限额10.5%",
+      "row_date": "2022-11-14"
+    },
+    {
+      "code": "603233",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2023-01-03 pct=10.57% 板块限额10.5%",
+      "row_date": "2023-01-03"
+    },
+    {
+      "code": "603233",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2024-09-30 pct=10.69% 板块限额10.5%",
+      "row_date": "2024-09-30"
+    },
+    {
+      "code": "603233",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2024-10-09 pct=-10.61% 板块限额10.5%",
+      "row_date": "2024-10-09"
+    },
+    {
+      "code": "002376",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2018-02-08 pct=10.52% 板块限额10.5%",
+      "row_date": "2018-02-08"
+    },
+    {
+      "code": "002376",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2018-02-12 pct=11.39% 板块限额10.5%",
+      "row_date": "2018-02-12"
+    },
+    {
+      "code": "002376",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2018-08-20 pct=11.08% 板块限额10.5%",
+      "row_date": "2018-08-20"
+    },
+    {
+      "code": "002376",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2019-05-06 pct=-11.05% 板块限额10.5%",
+      "row_date": "2019-05-06"
+    },
+    {
+      "code": "002376",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2020-02-03 pct=-11.04% 板块限额10.5%",
+      "row_date": "2020-02-03"
+    },
+    {
+      "code": "002376",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2020-02-07 pct=11.21% 板块限额10.5%",
+      "row_date": "2020-02-07"
+    },
+    {
+      "code": "002376",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-02-21 pct=10.89% 板块限额10.5%",
+      "row_date": "2022-02-21"
+    },
+    {
+      "code": "002376",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-06-30 pct=10.7% 板块限额10.5%",
+      "row_date": "2022-06-30"
+    },
+    {
+      "code": "002376",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-07-01 pct=10.64% 板块限额10.5%",
+      "row_date": "2022-07-01"
+    },
+    {
+      "code": "002376",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2023-05-18 pct=10.72% 板块限额10.5%",
+      "row_date": "2023-05-18"
+    },
+    {
+      "code": "002376",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2024-02-05 pct=-10.59% 板块限额10.5%",
+      "row_date": "2024-02-05"
+    },
+    {
+      "code": "002376",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2024-03-15 pct=10.67% 板块限额10.5%",
+      "row_date": "2024-03-15"
+    },
+    {
+      "code": "002376",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2024-04-17 pct=10.79% 板块限额10.5%",
+      "row_date": "2024-04-17"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2020-07-30 pct=51.39% 板块限额10.5%",
+      "row_date": "2020-07-30"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2020-07-31 pct=11.15% 板块限额10.5%",
+      "row_date": "2020-07-31"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2020-08-03 pct=11.0% 板块限额10.5%",
+      "row_date": "2020-08-03"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2020-08-04 pct=10.92% 板块限额10.5%",
+      "row_date": "2020-08-04"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2020-08-05 pct=10.82% 板块限额10.5%",
+      "row_date": "2020-08-05"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2020-08-06 pct=10.75% 板块限额10.5%",
+      "row_date": "2020-08-06"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2020-08-07 pct=10.65% 板块限额10.5%",
+      "row_date": "2020-08-07"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2020-08-10 pct=10.61% 板块限额10.5%",
+      "row_date": "2020-08-10"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2020-09-23 pct=10.8% 板块限额10.5%",
+      "row_date": "2020-09-23"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2020-10-09 pct=10.83% 板块限额10.5%",
+      "row_date": "2020-10-09"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2021-01-11 pct=10.99% 板块限额10.5%",
+      "row_date": "2021-01-11"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2021-04-14 pct=10.99% 板块限额10.5%",
+      "row_date": "2021-04-14"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2021-09-01 pct=10.86% 板块限额10.5%",
+      "row_date": "2021-09-01"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2021-11-17 pct=10.9% 板块限额10.5%",
+      "row_date": "2021-11-17"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2021-11-30 pct=10.86% 板块限额10.5%",
+      "row_date": "2021-11-30"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2021-12-22 pct=10.85% 板块限额10.5%",
+      "row_date": "2021-12-22"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-01-13 pct=10.78% 板块限额10.5%",
+      "row_date": "2022-01-13"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-04-25 pct=-10.68% 板块限额10.5%",
+      "row_date": "2022-04-25"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-04-29 pct=11.29% 板块限额10.5%",
+      "row_date": "2022-04-29"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-06-28 pct=10.83% 板块限额10.5%",
+      "row_date": "2022-06-28"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-08-03 pct=10.79% 板块限额10.5%",
+      "row_date": "2022-08-03"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2023-05-30 pct=10.74% 板块限额10.5%",
+      "row_date": "2023-05-30"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2023-05-31 pct=10.66% 板块限额10.5%",
+      "row_date": "2023-05-31"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2023-06-01 pct=10.61% 板块限额10.5%",
+      "row_date": "2023-06-01"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2023-06-05 pct=10.57% 板块限额10.5%",
+      "row_date": "2023-06-05"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2023-06-08 pct=-10.52% 板块限额10.5%",
+      "row_date": "2023-06-08"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2023-12-12 pct=10.55% 板块限额10.5%",
+      "row_date": "2023-12-12"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2023-12-27 pct=10.57% 板块限额10.5%",
+      "row_date": "2023-12-27"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2024-02-05 pct=-10.67% 板块限额10.5%",
+      "row_date": "2024-02-05"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2024-02-28 pct=-10.6% 板块限额10.5%",
+      "row_date": "2024-02-28"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2024-03-28 pct=10.55% 板块限额10.5%",
+      "row_date": "2024-03-28"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2024-04-12 pct=10.57% 板块限额10.5%",
+      "row_date": "2024-04-12"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2024-04-17 pct=10.64% 板块限额10.5%",
+      "row_date": "2024-04-17"
+    },
+    {
+      "code": "605118",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2024-08-16 pct=10.53% 板块限额10.5%",
+      "row_date": "2024-08-16"
+    },
+    {
+      "code": "000950",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2018-09-20 pct=10.55% 板块限额10.5%",
+      "row_date": "2018-09-20"
+    },
+    {
+      "code": "000950",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2018-11-02 pct=10.79% 板块限额10.5%",
+      "row_date": "2018-11-02"
+    },
+    {
+      "code": "000950",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2018-12-03 pct=10.73% 板块限额10.5%",
+      "row_date": "2018-12-03"
+    },
+    {
+      "code": "000950",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2019-03-21 pct=10.68% 板块限额10.5%",
+      "row_date": "2019-03-21"
+    },
+    {
+      "code": "000950",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2019-04-11 pct=10.59% 板块限额10.5%",
+      "row_date": "2019-04-11"
+    },
+    {
+      "code": "000950",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2019-05-06 pct=-10.54% 板块限额10.5%",
+      "row_date": "2019-05-06"
+    },
+    {
+      "code": "000950",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2020-07-29 pct=10.63% 板块限额10.5%",
+      "row_date": "2020-07-29"
+    },
+    {
+      "code": "000950",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2020-07-30 pct=10.54% 板块限额10.5%",
+      "row_date": "2020-07-30"
+    },
+    {
+      "code": "000950",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2021-05-11 pct=10.67% 板块限额10.5%",
+      "row_date": "2021-05-11"
+    },
+    {
+      "code": "000950",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2021-07-20 pct=10.58% 板块限额10.5%",
+      "row_date": "2021-07-20"
+    },
+    {
+      "code": "000950",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-03-04 pct=10.58% 板块限额10.5%",
+      "row_date": "2022-03-04"
+    },
+    {
+      "code": "000950",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-03-07 pct=10.51% 板块限额10.5%",
+      "row_date": "2022-03-07"
+    },
+    {
+      "code": "000950",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-03-16 pct=10.57% 板块限额10.5%",
+      "row_date": "2022-03-16"
+    },
+    {
+      "code": "000950",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2022-03-28 pct=10.51% 板块限额10.5%",
+      "row_date": "2022-03-28"
+    },
+    {
+      "code": "603970",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2018-02-06 pct=-12.04% 板块限额10.5%",
+      "row_date": "2018-02-06"
+    },
+    {
+      "code": "603970",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2018-02-09 pct=-10.59% 板块限额10.5%",
+      "row_date": "2018-02-09"
+    },
+    {
+      "code": "603970",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2018-03-22 pct=12.29% 板块限额10.5%",
+      "row_date": "2018-03-22"
+    },
+    {
+      "code": "603970",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2018-03-23 pct=12.06% 板块限额10.5%",
+      "row_date": "2018-03-23"
+    },
+    {
+      "code": "603970",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2018-03-28 pct=-11.58% 板块限额10.5%",
+      "row_date": "2018-03-28"
+    },
+    {
+      "code": "603970",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2018-07-04 pct=12.39% 板块限额10.5%",
+      "row_date": "2018-07-04"
+    },
+    {
+      "code": "603970",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2018-08-22 pct=12.31% 板块限额10.5%",
+      "row_date": "2018-08-22"
+    },
+    {
+      "code": "603970",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2019-05-16 pct=12.56% 板块限额10.5%",
+      "row_date": "2019-05-16"
+    },
+    {
+      "code": "603970",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2019-05-17 pct=12.38% 板块限额10.5%",
+      "row_date": "2019-05-17"
+    },
+    {
+      "code": "603970",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2019-05-20 pct=-12.09% 板块限额10.5%",
+      "row_date": "2019-05-20"
+    },
+    {
+      "code": "603970",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2019-05-23 pct=-12.29% 板块限额10.5%",
+      "row_date": "2019-05-23"
+    },
+    {
+      "code": "603970",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2019-10-09 pct=12.66% 板块限额10.5%",
+      "row_date": "2019-10-09"
+    },
+    {
+      "code": "603970",
+      "type": "pct_abnormal",
+      "severity": "HIGH",
+      "detail": "2020-02-03 pct=-12.75% 板块限额10.5%",
+      "row_date": "2020-02-03"
+    }
+  ],
+  "summary": {
+    "CRITICAL": 0,
+    "HIGH": 10264,
+    "MEDIUM": 0,
+    "LOW": 0,
+    "OK": 0
+  },
+  "elapsed_seconds": 5.0
+}

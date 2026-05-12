@@ -1,0 +1,74 @@
+{
+  "schema_version": "2.0",
+  "timestamp": "2026-05-12T13:18:26.730810",
+  "phase": "Phase-2.1 Market Filter Upgrade",
+  "broker": "eastmoney_mock",
+  "mode": "aggressive_paper",
+  "real_trade_prohibited": true,
+  "today_trades": [
+    {
+      "trade_date": "2026-05-12",
+      "trade_time": "13:18:24",
+      "symbol": "301282",
+      "name": "金禄电子",
+      "action": "buy",
+      "mode": "phase2_candidate",
+      "submitted_price": 30.75,
+      "submitted_vol": 49900,
+      "filled_price": 30.75,
+      "filled_shares": 1000,
+      "order_id": "PTB_20260512131824_301282",
+      "success": true,
+      "order_status": "filled",
+      "reject_reason": "",
+      "cap_reason": "风控资金限制",
+      "trigger": "RSI=21.1 超卖；匹配模式：回踩止跌型",
+      "strategy": "AI选股候选",
+      "position_mult": 2.2,
+      "market_regime": "risk_on",
+      "event": null
+    },
+    {
+      "trade_date": "2026-05-12",
+      "trade_time": "13:18:25",
+      "symbol": "002463",
+      "name": "沪电股份",
+      "action": "buy",
+      "mode": "phase2_candidate",
+      "submitted_price": 108.68,
+      "submitted_vol": 10100,
+      "filled_price": 108.68,
+      "filled_shares": 0,
+      "order_id": "PTB_20260512131825_002463",
+      "success": false,
+      "order_status": "rejected",
+      "reject_reason": "买入委托失败: 委托失败，可用余额不足",
+      "cap_reason": "风控资金限制",
+      "trigger": "MA5 金叉 MA20；股价突破 MA20 +8.9%",
+      "strategy": "AI选股候选",
+      "position_mult": 2.2,
+      "market_regime": "risk_on",
+      "event": null
+    }
+  ],
+  "today_rejects": [
+    {
+      "symbol": "002130",
+      "action": "buy",
+      "reason": "无有效行情",
+      "mode": "phase2_candidate"
+    }
+  ],
+  "positions": {
+    "301282": 1000
+  },
+  "source": {
+    "positions_count": 6,
+    "capital": {
+      "total_assets": 1272068.914,
+      "avail_balance": 481184.914,
+      "total_pos_value": 790884.0,
+      "pos_count": 6
+    }
+  }
+}

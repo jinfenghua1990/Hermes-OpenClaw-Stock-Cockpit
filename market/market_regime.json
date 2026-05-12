@@ -1,0 +1,76 @@
+{
+  "schema_version": "2.1",
+  "phase": "Phase-2.1 Market Regime Filter",
+  "generated_at": "2026-05-12T13:05:07.762284",
+  "regime": "risk_on",
+  "position_limit": 1.0,
+  "allow_new": true,
+  "allow_reinforce": true,
+  "allow_short": false,
+  "reason": "市场做多窗口，积极布局强势主线",
+  "signals": [
+    "做多窗口：指数全涨 强势板块5个 均1.46%"
+  ],
+  "index_details": [
+    {
+      "name": "上证指数",
+      "code": "000001.SH",
+      "price": 4175.36,
+      "pct": 0.37,
+      "status": "📗"
+    },
+    {
+      "name": "深证成指",
+      "code": "399001.SZ",
+      "price": 15636.55,
+      "pct": 1.14,
+      "status": "🔥"
+    },
+    {
+      "name": "创业板指",
+      "code": "399006.SZ",
+      "price": 3835.07,
+      "pct": 1.51,
+      "status": "🔥"
+    },
+    {
+      "name": "沪深300",
+      "code": "000300.SH",
+      "price": 4896.8,
+      "pct": 0.4,
+      "status": "📗"
+    },
+    {
+      "name": "科创50",
+      "code": "000688.SH",
+      "price": 1551.46,
+      "pct": 3.88,
+      "status": "🔥"
+    }
+  ],
+  "index_summary": {
+    "上证": 0.37,
+    "深证": 1.14,
+    "创业板": 1.51,
+    "沪深300": 0.4,
+    "科创50": 3.88,
+    "平均": 1.46,
+    "最高": 3.88,
+    "最低": 0.37
+  },
+  "sector_summary": {
+    "hot": 5,
+    "warm": 8,
+    "cool": 0,
+    "cold": 0,
+    "concentration": 0.38,
+    "hot_avg_pct": 15.24
+  },
+  "cand_summary": {
+    "count": 5,
+    "high_rsi": 3,
+    "mid_rsi": 0,
+    "high_rsi_ratio": 0.6,
+    "avg_rsi": 61.1
+  }
+}

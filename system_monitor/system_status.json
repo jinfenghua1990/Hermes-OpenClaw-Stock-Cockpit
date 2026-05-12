@@ -1,0 +1,58 @@
+{
+  "report_type": "heartbeat",
+  "timestamp": "2026-05-12 11:06:26",
+  "phase": "Phase-1.6 OBSERVE_ONLY",
+  "scheduler": {
+    "last_entry": "2026-05-12 10:30",
+    "status": "ok"
+  },
+  "cron_errors": 0,
+  "data_sources": {
+    "openclaw_fetch_last": "2026-05-12 10:25",
+    "feature_engine_last": "2026-05-12 08:25"
+  },
+  "files": [
+    {
+      "path": "/Users/gino/project_ai_trading/reports/pre_market/pre_market_report.json",
+      "exists": true,
+      "age_seconds": 9349,
+      "status": "fresh"
+    },
+    {
+      "path": "/Users/gino/project_ai_trading/reports/intraday/intraday_signal_am.json",
+      "exists": true,
+      "age_seconds": 2165,
+      "status": "fresh"
+    },
+    {
+      "path": "/Users/gino/project_ai_trading/cron/logs/scheduler.log",
+      "exists": true,
+      "age_seconds": 2165,
+      "status": "fresh"
+    },
+    {
+      "path": "/Users/gino/project_ai_trading/configs/candidate_stocks.json",
+      "exists": true,
+      "age_seconds": 58737,
+      "status": "fresh"
+    },
+    {
+      "path": "/Users/gino/project_ai_trading/configs/feishu_webhook.json",
+      "exists": true,
+      "age_seconds": 7562,
+      "status": "fresh"
+    }
+  ],
+  "trade_reference": [
+    "reports/pre_market/",
+    "reports/intraday/",
+    "reports/daily_review/"
+  ],
+  "prohibited": [
+    "买入判断",
+    "卖出判断",
+    "strategy_positions写入",
+    "自动交易",
+    "baseline修改"
+  ]
+}

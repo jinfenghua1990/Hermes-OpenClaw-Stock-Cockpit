@@ -1,0 +1,34 @@
+# secrets
+.env
+.env.*
+*.key
+*.pem
+*.token
+config/secrets/*
+secrets/*
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# logs
+logs/
+*.log
+
+# large local data
+data/kline/
+data/kline_daily/
+data/factors_daily/
+data/raw/
+data/cache/
+*.csv
+*.parquet
+*.db
+*.sqlite
+
+# system
+.DS_Store
+.idea/
+.vscode/

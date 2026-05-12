@@ -1,0 +1,64 @@
+{
+  "system_name": "Hermes-AI-Trading-System",
+  "version": "v1.0",
+  "phase": "Phase-1",
+  "architecture": "Distributed Autonomous",
+  "core_principle": "Human-in-the-loop, No Auto-Trading",
+  "robots": {
+    "robot-1": {"role": "SystemAdmin", "status": "active"},
+    "robot-2": {"role": "Research", "status": "active"},
+    "robot-3": {"role": "DataCollection", "status": "active"},
+    "robot-4": {"role": "Strategy", "status": "active"},
+    "robot-5": {"role": "Risk", "status": "active"},
+    "robot-6~10": {"role": "Reserved", "status": "isolated"}
+  },
+  "workflow_phase1": [
+    "OpenClaw",
+    "robot-2 (Research)",
+    "robot-3 (Data)",
+    "robot-4 (Strategy)",
+    "robot-5 (Risk)",
+    "Main (Aggregation)"
+  ],
+  "position_classification": {
+    "legacy": {
+      "path": "portfolio/legacy/",
+      "description": "历史旧仓位",
+      "inclusions": ["risk_analysis"],
+      "exclusions": ["success_rate", "pattern_backtest", "ai_training", "robot_scoring"]
+    },
+    "strategy": {
+      "path": "portfolio/strategy/",
+      "description": "新策略仓位",
+      "inclusions": ["success_rate", "pattern_backtest", "ai_training", "robot_scoring", "risk_analysis"]
+    }
+  },
+  "four_patterns_v1": [
+    "回踩止跌型",
+    "突破启动型",
+    "小阳启动型",
+    "2波启动型"
+  ],
+  "prohibited_actions": [
+    "自动下单",
+    "AI自动调参数",
+    "AI自动修改baseline",
+    "高频交易",
+    "多策略混战",
+    "机器人自由交易",
+    "无风控建仓"
+  ],
+  "report_schedule": {
+    "08:30": "reports/pre_market/pre_market_report.json",
+    "10:30": "reports/intraday/intraday_signal_am.json",
+    "13:30": "reports/intraday/intraday_signal_pm.json",
+    "15:30": "reports/daily_review/daily_review.json"
+  },
+  "memory沉淀格式": {
+    "successful_patterns": "memory/successful_patterns/successful_patterns.jsonl",
+    "failed_patterns": "memory/failed_patterns/failed_patterns.jsonl",
+    "market_emotion": "memory/market_emotion/",
+    "risk_cases": "memory/risk_cases/"
+  },
+  "created_at": "2026-05-11"
+}

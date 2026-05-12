@@ -1,0 +1,13 @@
+{
+  "single_position_limit": 0.10,
+  "total_position_limit": 0.50,
+  "hongkong_position_limit": 0.30,
+  "max_drawdown_warning": -0.15,
+  "hard_stoploss": -0.20,
+  "rules": {
+    "single_over_10pct": "RED_ALERT",
+    "total_over_50pct": "POSITION_WARNING",
+    "single_loss_over_20pct": "HARD_STOP_CHECK",
+    "hongkong_over_30pct": "HONGKONG_RISK_ALERT"
+  }
+}

@@ -1,0 +1,65 @@
+[
+  {
+    "stock_code": "301282",
+    "stock_name": "金禄电子",
+    "quality_score": 100,
+    "missing_fields": [],
+    "optional_missing": [
+      "昨日涨停"
+    ],
+    "data_source": "eastmoney",
+    "feature_ready": true
+  },
+  {
+    "stock_code": "300476",
+    "stock_name": "胜宏科技",
+    "quality_score": 90,
+    "missing_fields": [],
+    "optional_missing": [
+      "上影线长度",
+      "下影线长度",
+      "昨日涨停"
+    ],
+    "data_source": "eastmoney",
+    "feature_ready": true
+  },
+  {
+    "stock_code": "002130",
+    "stock_name": "沃尔核材",
+    "quality_score": 90,
+    "missing_fields": [],
+    "optional_missing": [
+      "上影线长度",
+      "下影线长度",
+      "昨日涨停"
+    ],
+    "data_source": "eastmoney",
+    "feature_ready": true
+  },
+  {
+    "stock_code": "603629",
+    "stock_name": "利通电子",
+    "quality_score": 90,
+    "missing_fields": [],
+    "optional_missing": [
+      "上影线长度",
+      "下影线长度",
+      "昨日涨停"
+    ],
+    "data_source": "eastmoney",
+    "feature_ready": true
+  },
+  {
+    "stock_code": "002463",
+    "stock_name": "沪电股份",
+    "quality_score": 90,
+    "missing_fields": [],
+    "optional_missing": [
+      "上影线长度",
+      "下影线长度",
+      "昨日涨停"
+    ],
+    "data_source": "eastmoney",
+    "feature_ready": true
+  }
+]

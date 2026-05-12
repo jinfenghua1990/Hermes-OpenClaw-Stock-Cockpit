@@ -1,0 +1,258 @@
+{
+  "report_type": "daily_review",
+  "timestamp": "2026-05-12 15:30:08",
+  "date": "2026-05-12",
+  "time": "15:30",
+  "robot": "Main (Hermes SystemAdmin)",
+  "phase": "Phase-1.6 有限自动化",
+  "workflow": "OpenClaw → robot-3 → robot-4 → robot-5 → Main",
+  "candidate_stocks": [
+    {
+      "stock_code": "301282",
+      "stock_name": "金禄电子",
+      "fetch_time": "2026-05-12 15:25",
+      "indicators": {
+        "最低价": 30.25,
+        "最高价": 31.76,
+        "开盘价": 31.32,
+        "MA5": 36.9,
+        "MA20": 41.44,
+        "量比": 1.093,
+        "RSI": 21.12,
+        "日涨幅": 0.0,
+        "上影线长度": 0.0,
+        "下影线长度": 0.0,
+        "股价距MA20距离": 0.0,
+        "MA5大于MA20": false,
+        "MA20趋势": "unknown",
+        "MA20斜率": 0.0,
+        "昨日涨停": false,
+        "昨日涨幅": 0.0
+      }
+    },
+    {
+      "stock_code": "300476",
+      "stock_name": "胜宏科技",
+      "fetch_time": "2026-05-12 15:26",
+      "indicators": {
+        "最新价": 378.24,
+        "最低价": 0.0,
+        "最高价": 0.0,
+        "开盘价": 0.0,
+        "MA5": 341.5,
+        "MA20": 325.8,
+        "量比": 1.84,
+        "RSI": 91.03,
+        "日涨幅": 0.0,
+        "上影线长度": 0.0,
+        "下影线长度": 0.0,
+        "股价距MA20距离": 16.1,
+        "MA5大于MA20": true,
+        "MA20趋势": "unknown",
+        "MA20斜率": 0.0,
+        "昨日涨停": false,
+        "昨日涨幅": 6.09
+      }
+    },
+    {
+      "stock_code": "002130",
+      "stock_name": "沃尔核材",
+      "fetch_time": "2026-05-12 15:27",
+      "indicators": {
+        "最新价": 23.5,
+        "昨收": 23.78,
+        "最低价": 0.0,
+        "最高价": 0.0,
+        "开盘价": 0.0,
+        "MA5": 16.19,
+        "MA20": 18.17,
+        "量比": 1.374,
+        "RSI": 35.44,
+        "日涨幅": -1.18,
+        "上影线长度": 0.0,
+        "下影线长度": 0.0,
+        "股价距MA20距离": 29.33,
+        "MA5大于MA20": false,
+        "MA20趋势": "unknown",
+        "MA20斜率": 0.0,
+        "昨日涨停": false,
+        "昨日涨幅": 0.9
+      }
+    },
+    {
+      "stock_code": "603629",
+      "stock_name": "利通电子",
+      "fetch_time": "2026-05-12 15:27",
+      "indicators": {
+        "最低价": 152.25,
+        "最高价": 167.55,
+        "开盘价": 167.55,
+        "MA5": 158.4,
+        "MA20": 114.1,
+        "量比": 1.29,
+        "RSI": 81.9,
+        "日涨幅": 0.0,
+        "上影线长度": 0.0,
+        "下影线长度": 0.0,
+        "股价距MA20距离": 0.0,
+        "MA5大于MA20": true,
+        "MA20趋势": "unknown",
+        "MA20斜率": 0.0,
+        "昨日涨停": false,
+        "昨日涨幅": 0.0
+      }
+    },
+    {
+      "stock_code": "002463",
+      "stock_name": "沪电股份",
+      "fetch_time": "2026-05-12 15:28",
+      "indicators": {
+        "最低价": 105.58,
+        "最高价": 110.8,
+        "开盘价": 110.0,
+        "MA5": 106.5,
+        "MA20": 99.84,
+        "量比": 1.204,
+        "RSI": 0.0,
+        "日涨幅": 0.0,
+        "上影线长度": 0.0,
+        "下影线长度": 0.0,
+        "股价距MA20距离": 0.0,
+        "MA5大于MA20": true,
+        "MA20趋势": "unknown",
+        "MA20斜率": 0.0,
+        "昨日涨停": false,
+        "昨日涨幅": 0.0
+      }
+    }
+  ],
+  "fetch_time": "2026-05-12 15:25:51",
+  "pattern_matching": {
+    "timestamp": "2026-05-11 18:39:44",
+    "robot": "robot-4 Strategy (P3+P4)",
+    "data_source": "features/daily_features.json",
+    "baseline": "four-patterns-v1.0",
+    "matched_stocks": [
+      {
+        "stock_code": "301282",
+        "stock_name": "金禄电子",
+        "matched": true,
+        "pattern": "回踩止跌型",
+        "score": 3,
+        "pattern_reasons": [
+          "RSI=21.1<40"
+        ],
+        "risk_notes": [],
+        "entry_pass": false,
+        "indicators_summary": {
+          "RSI": 21.12,
+          "MA5": 36.9,
+          "MA20": 41.44,
+          "日涨幅": -1.98,
+          "下影线": 1.63,
+          "量比": 1.093,
+          "MA20距": -25.8,
+          "MA5大于MA20": false,
+          "昨涨停": false
+        }
+      },
+      {
+        "stock_code": "300476",
+        "stock_name": "胜宏科技",
+        "matched": false,
+        "pattern": null,
+        "score": 0,
+        "pattern_reasons": [],
+        "risk_notes": [],
+        "entry_pass": false,
+        "indicators_summary": {
+          "RSI": 91.03,
+          "MA5": 341.5,
+          "MA20": 325.8,
+          "日涨幅": 5.46,
+          "下影线": 0.0,
+          "量比": 1.84,
+          "MA20距": 16.1,
+          "MA5大于MA20": true,
+          "昨涨停": false
+        }
+      },
+      {
+        "stock_code": "002130",
+        "stock_name": "沃尔核材",
+        "matched": true,
+        "pattern": "回踩止跌型",
+        "score": 3,
+        "pattern_reasons": [
+          "RSI=35.4<40"
+        ],
+        "risk_notes": [],
+        "entry_pass": false,
+        "indicators_summary": {
+          "RSI": 35.44,
+          "MA5": 16.19,
+          "MA20": 18.17,
+          "日涨幅": -1.18,
+          "下影线": 0.0,
+          "量比": 1.374,
+          "MA20距": 29.33,
+          "MA5大于MA20": false,
+          "昨涨停": false
+        }
+      },
+      {
+        "stock_code": "603629",
+        "stock_name": "利通电子",
+        "matched": false,
+        "pattern": null,
+        "score": 0,
+        "pattern_reasons": [],
+        "risk_notes": [],
+        "entry_pass": false,
+        "indicators_summary": {
+          "RSI": 81.9,
+          "MA5": 158.4,
+          "MA20": 114.1,
+          "日涨幅": -2.85,
+          "下影线": 0.0,
+          "量比": 1.29,
+          "MA20距": 42.7,
+          "MA5大于MA20": true,
+          "昨涨停": false
+        }
+      },
+      {
+        "stock_code": "002463",
+        "stock_name": "沪电股份",
+        "matched": false,
+        "pattern": null,
+        "score": 0,
+        "pattern_reasons": [],
+        "risk_notes": [],
+        "entry_pass": false,
+        "indicators_summary": {
+          "RSI": 76.22,
+          "MA5": 106.5,
+          "MA20": 99.84,
+          "日涨幅": -0.79,
+          "下影线": 0.0,
+          "量比": 1.204,
+          "MA20距": 8.85,
+          "MA5大于MA20": true,
+          "昨涨停": false
+        }
+      }
+    ]
+  },
+  "passed_candidates": [],
+  "legacy_positions_count": 14,
+  "title": "📋 2026-05-12 收盘复盘报告",
+  "sections": {
+    "market_data": "候选股数量: 5",
+    "pattern_matching": "通过候选: 0 只",
+    "passed_stocks": [],
+    "legacy_review": "Legacy 仓位: 14 只（需人工复审）",
+    "auto_trade_blocked": "✅ 自动交易已禁止（Phase-1.6 限制）",
+    "strategy_write_blocked": "✅ 策略仓位写入已禁止（仅人工可写）"
+  }
+}

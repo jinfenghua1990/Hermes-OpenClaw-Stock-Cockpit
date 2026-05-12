@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "timestamp": "2026-05-12T15:30:08.916131",
+  "data_source": "manual",
+  "data_sources_tried": [
+    "mx_api",
+    "mx_skill",
+    "manual"
+  ],
+  "data_sources": {
+    "mx_api": {
+      "status": "no_data"
+    },
+    "mx_skill": {
+      "status": "not_found"
+    },
+    "manual": {
+      "status": "available"
+    }
+  },
+  "capital": {},
+  "positions": [],
+  "validation": {
+    "valid": true,
+    "count": 0,
+    "issues": []
+  },
+  "anomalies": [],
+  "trade_prohibited": true,
+  "schema_prohibited": [
+    "auto_trade",
+    "auto_rebalance",
+    "strategy_positions_write"
+  ]
+}

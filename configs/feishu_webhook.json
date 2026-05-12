@@ -1,0 +1,10 @@
+{
+  "enabled": false,
+  "webhook_url": "",
+  "notify_types": [
+    "cron_error",
+    "red_alert",
+    "daily_review",
+    "pre_market"
+  ]
+}

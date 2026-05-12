@@ -1,0 +1,65 @@
+{
+  "report_type": "rolling_snapshot",
+  "timestamp": "2026-05-12 11:05:24",
+  "phase": "Phase-1.6 OBSERVE_ONLY",
+  "data_quality": {
+    "openclaw_raw_freshness_min": null,
+    "feature_engine_freshness_min": null,
+    "candidate_pool_count": 0,
+    "strategy_matched_count": 5,
+    "report_available": true,
+    "openclaw_file_count": 0,
+    "feature_file_count": 0,
+    "alert": null
+  },
+  "candidate_pool": {
+    "count": 0,
+    "source": "configs/candidate_stocks.json"
+  },
+  "strategy_match": {
+    "matched": 5,
+    "details": [],
+    "latest_report": "intraday_signal_am.json",
+    "latest_report_time": "2026-05-12 10:30:21",
+    "top_candidates": [
+      {
+        "code": "301282",
+        "name": "金禄电子",
+        "rsi": 21.12,
+        "量比": 1.093
+      },
+      {
+        "code": "300476",
+        "name": "胜宏科技",
+        "rsi": 91.03,
+        "量比": 1.84
+      },
+      {
+        "code": "002130",
+        "name": "沃尔核材",
+        "rsi": 35.44,
+        "量比": 1.374
+      }
+    ]
+  },
+  "risk_check": {
+    "flags": [],
+    "status": "无规则"
+  },
+  "trade_reference": {
+    "description": "此快照不作为交易依据",
+    "official_reports": [
+      "reports/pre_market/pre_market_report.json (08:30)",
+      "reports/intraday/intraday_signal_am.json / intraday_signal_pm.json",
+      "reports/daily_review/daily_review.json (15:30)"
+    ]
+  },
+  "prohibited": [
+    "自动交易",
+    "自动调仓",
+    "strategy_positions写入",
+    "baseline修改",
+    "自动学习",
+    "将snapshot作为交易依据"
+  ]
+}

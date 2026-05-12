@@ -1,0 +1,380 @@
+{
+  "schema_version": "2.1",
+  "phase": "Phase-2.1 Sector Rotation Engine",
+  "generated_at": "2026-05-12T13:05:06.715865",
+  "indices_snapshot": [
+    {
+      "code": "000001.SH",
+      "name": "上证指数",
+      "price": 4175.36,
+      "pct": 0.37
+    },
+    {
+      "code": "399001.SZ",
+      "name": "深证成指",
+      "price": 15636.55,
+      "pct": 1.14
+    },
+    {
+      "code": "399006.SZ",
+      "name": "创业板指",
+      "price": 3835.07,
+      "pct": 1.51
+    },
+    {
+      "code": "000300.SH",
+      "name": "沪深300",
+      "price": 4896.8,
+      "pct": 0.4
+    },
+    {
+      "code": "000688.SH",
+      "name": "科创50",
+      "price": 1551.46,
+      "pct": 3.88
+    }
+  ],
+  "all_sectors": {
+    "机器人": {
+      "board_name": "工业母机",
+      "theme": "机器人",
+      "avg_pct": 20.0,
+      "stock_count": 20,
+      "level": "hot",
+      "position_multiplier": 1.3,
+      "source": "xuangu+news"
+    },
+    "PCB": {
+      "board_name": "PCB",
+      "theme": "PCB",
+      "avg_pct": 20.0,
+      "stock_count": 20,
+      "level": "hot",
+      "position_multiplier": 1.3,
+      "source": "xuangu+news"
+    },
+    "半导体": {
+      "board_name": "存储芯片",
+      "theme": "半导体",
+      "avg_pct": 10.96,
+      "stock_count": 20,
+      "level": "hot",
+      "position_multiplier": 1.3,
+      "source": "xuangu+news"
+    },
+    "算力": {
+      "board_name": "光通信",
+      "theme": "算力",
+      "avg_pct": 20.0,
+      "stock_count": 20,
+      "level": "hot",
+      "position_multiplier": 1.3,
+      "source": "xuangu+news"
+    },
+    "电力": {
+      "board_name": "光伏设备",
+      "theme": "电力",
+      "avg_pct": 5.25,
+      "stock_count": 20,
+      "level": "hot",
+      "position_multiplier": 1.0,
+      "source": "xuangu+news"
+    },
+    "光纤": {
+      "board_name": "光纤",
+      "theme": "光纤",
+      "avg_pct": 20.0,
+      "stock_count": 0,
+      "level": "warm",
+      "position_multiplier": 1.0,
+      "source": "news",
+      "top_stocks": [
+        {
+          "name": "炬光科技",
+          "code": "688167"
+        },
+        {
+          "name": "华中数控",
+          "code": "300161"
+        }
+      ]
+    },
+    "工业母机": {
+      "board_name": "工业母机",
+      "theme": "工业母机",
+      "avg_pct": 20.0,
+      "stock_count": 0,
+      "level": "warm",
+      "position_multiplier": 1.0,
+      "source": "news",
+      "top_stocks": [
+        {
+          "name": "炬光科技",
+          "code": "688167"
+        },
+        {
+          "name": "华中数控",
+          "code": "300161"
+        }
+      ]
+    },
+    "光通信": {
+      "board_name": "光通信",
+      "theme": "光通信",
+      "avg_pct": 20.0,
+      "stock_count": 0,
+      "level": "warm",
+      "position_multiplier": 1.0,
+      "source": "news",
+      "top_stocks": [
+        {
+          "name": "炬光科技",
+          "code": "688167"
+        },
+        {
+          "name": "华中数控",
+          "code": "300161"
+        }
+      ]
+    },
+    "AI": {
+      "board_name": "AI",
+      "theme": "AI",
+      "avg_pct": 17.73,
+      "stock_count": 0,
+      "level": "warm",
+      "position_multiplier": 1.0,
+      "source": "news",
+      "top_stocks": []
+    },
+    "新能源": {
+      "board_name": "新能源",
+      "theme": "新能源",
+      "avg_pct": 8.0,
+      "stock_count": 0,
+      "level": "warm",
+      "position_multiplier": 1.0,
+      "source": "news",
+      "top_stocks": []
+    },
+    "证券": {
+      "board_name": "证券",
+      "theme": "证券",
+      "avg_pct": 17.73,
+      "stock_count": 0,
+      "level": "warm",
+      "position_multiplier": 1.0,
+      "source": "news",
+      "top_stocks": []
+    },
+    "医疗": {
+      "board_name": "医疗",
+      "theme": "医疗",
+      "avg_pct": 3.0,
+      "stock_count": 0,
+      "level": "warm",
+      "position_multiplier": 1.0,
+      "source": "news",
+      "top_stocks": []
+    },
+    "银行": {
+      "board_name": "银行",
+      "theme": "银行",
+      "avg_pct": 5.47,
+      "stock_count": 0,
+      "level": "warm",
+      "position_multiplier": 1.0,
+      "source": "news",
+      "top_stocks": []
+    }
+  },
+  "hot": [
+    {
+      "board_name": "工业母机",
+      "theme": "机器人",
+      "avg_pct": 20.0,
+      "stock_count": 20,
+      "level": "hot",
+      "position_multiplier": 1.3,
+      "source": "xuangu+news"
+    },
+    {
+      "board_name": "PCB",
+      "theme": "PCB",
+      "avg_pct": 20.0,
+      "stock_count": 20,
+      "level": "hot",
+      "position_multiplier": 1.3,
+      "source": "xuangu+news"
+    },
+    {
+      "board_name": "光通信",
+      "theme": "算力",
+      "avg_pct": 20.0,
+      "stock_count": 20,
+      "level": "hot",
+      "position_multiplier": 1.3,
+      "source": "xuangu+news"
+    },
+    {
+      "board_name": "存储芯片",
+      "theme": "半导体",
+      "avg_pct": 10.96,
+      "stock_count": 20,
+      "level": "hot",
+      "position_multiplier": 1.3,
+      "source": "xuangu+news"
+    },
+    {
+      "board_name": "光伏设备",
+      "theme": "电力",
+      "avg_pct": 5.25,
+      "stock_count": 20,
+      "level": "hot",
+      "position_multiplier": 1.0,
+      "source": "xuangu+news"
+    }
+  ],
+  "warm": [
+    {
+      "board_name": "光纤",
+      "theme": "光纤",
+      "avg_pct": 20.0,
+      "stock_count": 0,
+      "level": "warm",
+      "position_multiplier": 1.0,
+      "source": "news",
+      "top_stocks": [
+        {
+          "name": "炬光科技",
+          "code": "688167"
+        },
+        {
+          "name": "华中数控",
+          "code": "300161"
+        }
+      ]
+    },
+    {
+      "board_name": "工业母机",
+      "theme": "工业母机",
+      "avg_pct": 20.0,
+      "stock_count": 0,
+      "level": "warm",
+      "position_multiplier": 1.0,
+      "source": "news",
+      "top_stocks": [
+        {
+          "name": "炬光科技",
+          "code": "688167"
+        },
+        {
+          "name": "华中数控",
+          "code": "300161"
+        }
+      ]
+    },
+    {
+      "board_name": "光通信",
+      "theme": "光通信",
+      "avg_pct": 20.0,
+      "stock_count": 0,
+      "level": "warm",
+      "position_multiplier": 1.0,
+      "source": "news",
+      "top_stocks": [
+        {
+          "name": "炬光科技",
+          "code": "688167"
+        },
+        {
+          "name": "华中数控",
+          "code": "300161"
+        }
+      ]
+    },
+    {
+      "board_name": "AI",
+      "theme": "AI",
+      "avg_pct": 17.73,
+      "stock_count": 0,
+      "level": "warm",
+      "position_multiplier": 1.0,
+      "source": "news",
+      "top_stocks": []
+    },
+    {
+      "board_name": "证券",
+      "theme": "证券",
+      "avg_pct": 17.73,
+      "stock_count": 0,
+      "level": "warm",
+      "position_multiplier": 1.0,
+      "source": "news",
+      "top_stocks": []
+    },
+    {
+      "board_name": "新能源",
+      "theme": "新能源",
+      "avg_pct": 8.0,
+      "stock_count": 0,
+      "level": "warm",
+      "position_multiplier": 1.0,
+      "source": "news",
+      "top_stocks": []
+    },
+    {
+      "board_name": "银行",
+      "theme": "银行",
+      "avg_pct": 5.47,
+      "stock_count": 0,
+      "level": "warm",
+      "position_multiplier": 1.0,
+      "source": "news",
+      "top_stocks": []
+    },
+    {
+      "board_name": "医疗",
+      "theme": "医疗",
+      "avg_pct": 3.0,
+      "stock_count": 0,
+      "level": "warm",
+      "position_multiplier": 1.0,
+      "source": "news",
+      "top_stocks": []
+    }
+  ],
+  "neutral": [],
+  "cool": [],
+  "cold": [],
+  "leaders": [
+    {
+      "theme": "光纤",
+      "pct": 20.0,
+      "level": "warm",
+      "top_stock": {
+        "name": "炬光科技",
+        "code": "688167"
+      }
+    },
+    {
+      "theme": "工业母机",
+      "pct": 20.0,
+      "level": "warm",
+      "top_stock": {
+        "name": "炬光科技",
+        "code": "688167"
+      }
+    },
+    {
+      "theme": "光通信",
+      "pct": 20.0,
+      "level": "warm",
+      "top_stock": {
+        "name": "炬光科技",
+        "code": "688167"
+      }
+    }
+  ],
+  "total_sectors": 13
+}

@@ -1,0 +1,67 @@
+[
+  {
+    "date": "2026-05-11",
+    "stock_code": "002130",
+    "stock_name": "沃尔核材",
+    "sector": "",
+    "source": "robot-3",
+    "heat_score": 42,
+    "feature_quality": 90,
+    "rsi": 35.44,
+    "volume_ratio": 1.374,
+    "ma20_distance": 29.33,
+    "pattern_match": []
+  },
+  {
+    "date": "2026-05-11",
+    "stock_code": "002463",
+    "stock_name": "沪电股份",
+    "sector": "",
+    "source": "robot-3",
+    "heat_score": 27,
+    "feature_quality": 90,
+    "rsi": 76.22,
+    "volume_ratio": 1.204,
+    "ma20_distance": 8.85,
+    "pattern_match": []
+  },
+  {
+    "date": "2026-05-11",
+    "stock_code": "300476",
+    "stock_name": "胜宏科技",
+    "sector": "",
+    "source": "robot-3",
+    "heat_score": 25,
+    "feature_quality": 90,
+    "rsi": 91.03,
+    "volume_ratio": 1.84,
+    "ma20_distance": 16.1,
+    "pattern_match": []
+  },
+  {
+    "date": "2026-05-11",
+    "stock_code": "603629",
+    "stock_name": "利通电子",
+    "sector": "",
+    "source": "robot-3",
+    "heat_score": 23,
+    "feature_quality": 90,
+    "rsi": 81.9,
+    "volume_ratio": 1.29,
+    "ma20_distance": 42.7,
+    "pattern_match": []
+  },
+  {
+    "date": "2026-05-11",
+    "stock_code": "301282",
+    "stock_name": "金禄电子",
+    "sector": "",
+    "source": "robot-3",
+    "heat_score": 22,
+    "feature_quality": 100,
+    "rsi": 21.12,
+    "volume_ratio": 1.093,
+    "ma20_distance": -25.8,
+    "pattern_match": []
+  }
+]

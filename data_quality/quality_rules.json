@@ -1,0 +1,24 @@
+{
+  "required_fields": [
+    "close",
+    "ma20",
+    "rsi",
+    "volume_ratio",
+    "daily_change_pct"
+  ],
+  "optional_fields": [
+    "upper_shadow_pct",
+    "lower_shadow_pct",
+    "yesterday_limit_up"
+  ],
+  "minimum_quality_score": 80,
+  "weights": {
+    "close": 20,
+    "ma20": 15,
+    "rsi": 20,
+    "volume_ratio": 15,
+    "daily_change_pct": 20,
+    "upper_shadow_pct": 5,
+    "lower_shadow_pct": 5
+  }
+}

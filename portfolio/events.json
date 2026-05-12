@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "timestamp": "2026-05-12T11:42:50.902796",
+  "phase": "Phase-1.8 OBSERVE_ONLY",
+  "trade_prohibited": true,
+  "events": [
+    {
+      "type": "index_move",
+      "level": "red_alert",
+      "index": "深证成指",
+      "detail": "指数异动 +1.14%（阈值 ±1.0%）"
+    },
+    {
+      "type": "index_move",
+      "level": "red_alert",
+      "index": "创业板指",
+      "detail": "指数异动 +1.51%（阈值 ±1.0%）"
+    },
+    {
+      "type": "index_move",
+      "level": "red_alert",
+      "index": "科创50",
+      "detail": "指数异动 +3.88%（阈值 ±1.0%）"
+    }
+  ],
+  "event_counts": {
+    "total": 3,
+    "red_alert": 3,
+    "important_event": 0
+  },
+  "indices_snapshot": [
+    {
+      "code": "000001.SH",
+      "name": "上证指数",
+      "price": 4175.36,
+      "pct": 0.37
+    },
+    {
+      "code": "399001.SZ",
+      "name": "深证成指",
+      "price": 15636.55,
+      "pct": 1.14
+    },
+    {
+      "code": "399006.SZ",
+      "name": "创业板指",
+      "price": 3835.07,
+      "pct": 1.51
+    },
+    {
+      "code": "000300.SH",
+      "name": "沪深300",
+      "price": 4896.8,
+      "pct": 0.4
+    },
+    {
+      "code": "000688.SH",
+      "name": "科创50",
+      "price": 1551.46,
+      "pct": 3.88
+    }
+  ],
+  "market_data_keys": [
+    "603629"
+  ]
+}

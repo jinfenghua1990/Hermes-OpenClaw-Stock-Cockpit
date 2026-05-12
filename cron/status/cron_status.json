@@ -1,0 +1,21 @@
+{
+  "phase": "Phase-1.6 有限自动化阶段",
+  "last_run": "2026-05-12T15:20:16",
+  "last_success": "2026-05-12T15:20:16",
+  "runs_today": 0,
+  "enabled": true,
+  "constraints": {
+    "auto_trade": false,
+    "auto_adjust": false,
+    "auto_modify_baseline": false,
+    "auto_modify_risk": false,
+    "auto_ai_tuning": false,
+    "allowed": [
+      "data_fetch",
+      "feature_engine",
+      "report_generation",
+      "risk_check",
+      "log_archive"
+    ]
+  }
+}
