@@ -13,9 +13,5 @@ Baseline Policy:
 - No auto trading
 - No auto strategy mutation
 - No auto position adjustment
+- Human final decision required
 Maintainer: MAIN + Strategy Architect
-
-========================================
-Version History
-========================================
-v1.0.0 | 2026-05-12 | Phase-2.4A | 初始化项目 + 日报骨架 + GitHub推送
