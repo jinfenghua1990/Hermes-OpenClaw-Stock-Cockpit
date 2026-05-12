@@ -1,6 +1,10 @@
 import json
+import sys
 from pathlib import Path
 from datetime import datetime
+
+sys.path.append(str(Path(__file__).resolve().parents[1]))
+from core.symbol_normalizer import normalize_symbol
 
 KLINE_DIR = Path("data/kline_daily")
 OUTPUT_DIR = Path("data_quality")
@@ -37,13 +41,17 @@ def run_coverage_monitor(stock_pool_path="data/stock_pool.json"):
     invalid = []
     
     for item in stock_pool:
-        symbol = item.get("symbol") or item.get("code")
-        if not symbol:
+        raw_symbol = item.get("symbol") or item.get("code")
+        if not raw_symbol:
             continue
+        symbol = normalize_symbol(str(raw_symbol).zfill(6))
         csv_path = KLINE_DIR / f"{symbol}.csv"
         if not csv_path.exists():
-            missing.append(symbol)
-            continue
+            # 尝试不带后缀的格式
+            csv_path = KLINE_DIR / f"{symbol.split('.')[0]}.csv"
+            if not csv_path.exists():
+                missing.append(symbol)
+                continue
         if check_csv_valid(csv_path):
             valid += 1
         else:
