@@ -1,4 +1,21 @@
-# Hermes Version Log
-# 格式: VERSION=日期.序号 | 日期: YYYYMMDD | 序号: 当日第几次提交
+Hermes + OpenClaw AI Stock Cockpit
+Current Phase: Phase-2.4A
+Version: v1.0.0
+Build Date: 2026-05-12
+Architecture Status:
+- Time Context Engine completed
+- Realtime Guard completed
+- Decision Layer completed
+- Emotion Layer completed
+- Local K-line foundation under repair
+- Minimal Report Pipeline building
+Baseline Policy:
+- No auto trading
+- No auto strategy mutation
+- No auto position adjustment
+Maintainer: MAIN + Strategy Architect
 
-v1.0.0-20260512 | 2026-05-12 | Phase-2.4A | 初始化项目 + 日报骨架 + GitHub推送
+========================================
+Version History
+========================================
+v1.0.0 | 2026-05-12 | Phase-2.4A | 初始化项目 + 日报骨架 + GitHub推送
