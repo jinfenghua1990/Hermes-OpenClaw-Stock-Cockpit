@@ -42,6 +42,11 @@ Build an AI-assisted A-share research cockpit.
 - Local A-share K-line foundation under repair
 - Minimal Report Pipeline being added
 
+## Configuration Directory
+
+All runtime configuration files must be stored under `config/`.
+The `configs/` directory is deprecated and should not be used.
+
 ## Important
 
 - No auto trading
