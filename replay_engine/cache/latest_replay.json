@@ -1,0 +1,18 @@
+{
+  "replay_version": "1.0",
+  "generated_at": "2026-05-12T23:09:35.779536",
+  "data": {
+    "date": "2026-05-12",
+    "market_phase": "bullish",
+    "risk_level": "medium",
+    "strongest_mode": "mode3_small_bullish",
+    "mode1_count": 99,
+    "mode2_count": 0,
+    "mode3_count": 286,
+    "mode4_count": 142,
+    "total_candidates": 461,
+    "report_path": "reports/history/2026-05-12.md",
+    "file_size": 1542,
+    "last_modified": "2026-05-12T22:35:48.749953"
+  }
+}
