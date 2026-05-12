@@ -2,26 +2,18 @@
 
 ---
 
-# v1.0.0 - 2026-05-12
+# v1.0.1 - 2026-05-12
 
 ## Phase
-Phase-2.4A
+Phase-2.3B-Fix2 Completed
 
-## Completed
-- Time Context Engine
-- Realtime Guard
-- Decision Layer
-- Emotion Layer
-- GitHub Central Repository
-- Minimal Report Pipeline initialized
+## Result
+- K-line coverage improved from 17.09% to 91.06%
+- Mainboard / GEM / STAR coverage completed
+- Remaining missing symbols: 454
+- Unavailable symbols: 25
+- Other-market symbols: 429
 
-## In Progress
-- A-share local K-line coverage repair
-- Symbol normalization
-- Report output system
-
-## Frozen
-- Observation Freeze enabled
-- No auto-learning
-- No strategy mutation
-- Original four-strategy baseline protected
+## Next
+- Phase-2.3C Technical Factor Cache
+- Phase-2.4A Minimal Report Pipeline
