@@ -46,6 +46,19 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# 5. 归档历史日报
+echo "[5/5] Archive Historical Reports"
+mkdir -p reports/history
+cp report_engine/outputs/*.md reports/history/
+echo "[ARCHIVE] Daily reports archived to reports/history/"
+
+# 6. 更新日报索引
+echo "[6/6] Update Report Index"
+python reports/build_report_index.py
+if [ $? -ne 0 ]; then
+    echo "[WARNING] Report index update failed"
+fi
+
 # 记录结束时间
 END_TIME=$(date '+%Y-%m-%d %H:%M:%S')
 echo "[TIME] Pipeline finished at: $END_TIME"
@@ -60,3 +73,5 @@ echo "  - features/cache/daily_technical_factors.json"
 echo "  - strategies/outputs/original_four_modes_$(date '+%Y-%m-%d').json"
 echo "  - report_engine/data/market_summary.json"
 echo "  - report_engine/outputs/$(date '+%Y-%m-%d').md"
+echo "  - reports/history/$(date '+%Y-%m-%d').md"
+echo "  - reports/history/index.json"

@@ -1,0 +1,46 @@
+{
+  "metadata": {
+    "index_version": "1.0",
+    "created_at": "2026-05-12T23:00:22.652573",
+    "total_reports": 1,
+    "date_range": {
+      "earliest": "2026-05-12",
+      "latest": "2026-05-12"
+    },
+    "statistics": {
+      "market_phases": {
+        "bullish": 1
+      },
+      "risk_levels": {
+        "medium": 1
+      },
+      "most_common_phase": "bullish",
+      "most_common_risk": "medium",
+      "most_common_mode": "mode3_small_bullish",
+      "total_pattern_counts": {
+        "mode1_total": 99,
+        "mode2_total": 0,
+        "mode3_total": 286,
+        "mode4_total": 142
+      }
+    }
+  },
+  "reports": [
+    {
+      "date": "2026-05-12",
+      "path": "reports/history/2026-05-12.md",
+      "market_phase": "bullish",
+      "risk_level": "medium",
+      "strongest_mode": "mode3_small_bullish",
+      "pattern_counts": {
+        "mode1_count": 99,
+        "mode2_count": 0,
+        "mode3_count": 286,
+        "mode4_count": 142,
+        "total_candidates": 461
+      },
+      "file_size": 1542,
+      "last_modified": "2026-05-12T22:35:48.749953"
+    }
+  ]
+}
