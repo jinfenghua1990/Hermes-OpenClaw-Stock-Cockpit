@@ -1,0 +1,4 @@
+# Hermes Version Log
+# 格式: VERSION=日期.序号 | 日期: YYYYMMDD | 序号: 当日第几次提交
+
+v1.0.0-20260512 | 2026-05-12 | Phase-2.4A | 初始化项目 + 日报骨架 + GitHub推送
