@@ -66,7 +66,7 @@ def run_coverage_monitor(stock_pool_path="data/stock_pool.json"):
         "missing": len(missing),
         "invalid": len(invalid),
         "coverage": coverage,
-        "missing_symbols": missing[:500],
+        "missing_symbols": missing,
         "invalid_symbols": invalid[:500]
     }
     
