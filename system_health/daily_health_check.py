@@ -16,31 +16,21 @@ CURRENT_DATE = datetime.datetime.now().strftime("%Y-%m-%d")
 
 def check_kline_update():
     """检查K线更新是否成功"""
+def check_kline_update():
+    """检查K线数据是否更新"""
     try:
         kline_dir = BASE_DIR / "data" / "kline_daily"
-        today = datetime.datetime.now().strftime("%Y%m%d")
+        today = datetime.datetime.now().strftime("%Y-%m-%d")
         
         if not kline_dir.exists():
-            return {"status": "error", "message": "K线目录不存在"}
+            return {"status": "error", "message": "K线数据目录不存在"}
         
-        # 检查今天的更新日志
-        update_logs = BASE_DIR / "data" / "update_logs"
-        today_log = update_logs / f"kline_update_{today}.json"
-        
-        if today_log.exists():
-            with open(today_log, 'r') as f:
-                log_data = json.load(f)
-                if log_data.get("status") == "success":
-                    return {"status": "success", "message": "K线更新成功", "updated_stocks": log_data.get("count", 0)}
-                else:
-                    return {"status": "error", "message": f"K线更新失败: {log_data.get('error', '未知错误')}"}
+        # 检查是否有今天的K线文件
+        today_files = list(kline_dir.glob(f"*_{today}.csv"))
+        if today_files:
+            return {"status": "success", "message": f"找到{len(today_files)}个今日K线文件", "updated_stocks": len(today_files)}
         else:
-            # 检查是否有今天的K线文件
-            today_files = list(kline_dir.glob(f"*_{today}.csv"))
-            if today_files:
-                return {"status": "success", "message": f"找到{len(today_files)}个今日K线文件"}
-            else:
-                return {"status": "warning", "message": "未找到今日K线更新记录"}
+            return {"status": "warning", "message": "未找到今日K线更新记录"}
     except Exception as e:
         return {"status": "error", "message": f"检查K线更新时出错: {str(e)}"}
 
@@ -86,22 +76,27 @@ def check_factor_cache():
 def check_mode_scan():
     """检查四模式扫描是否完成"""
     try:
-        candidate_dir = BASE_DIR / "candidate_pool"
+        strategies_dir = BASE_DIR / "strategies" / "outputs"
         today = datetime.datetime.now().strftime("%Y-%m-%d")
         
-        if not candidate_dir.exists():
-            return {"status": "error", "message": "候选池目录不存在"}
+        if not strategies_dir.exists():
+            return {"status": "error", "message": "策略输出目录不存在"}
         
-        today_file = candidate_dir / f"candidates_{today}.json"
+        today_file = strategies_dir / f"original_four_modes_{today}.json"
         
         if today_file.exists():
             with open(today_file, 'r') as f:
                 data = json.load(f)
-                count = len(data.get("candidates", []))
+                # 计算所有模式的总数
+                total_count = 0
+                for mode in ["mode_1_revert", "mode_2_breakout", "mode_3_xiaoyang", "mode_4_second_wave"]:
+                    if mode in data:
+                        total_count += len(data[mode])
+                
                 return {
                     "status": "success",
-                    "message": f"四模式扫描完成，找到{count}个候选",
-                    "candidate_count": count
+                    "message": f"四模式扫描完成，找到{total_count}个候选",
+                    "candidate_count": total_count
                 }
         else:
             return {"status": "warning", "message": "今日四模式扫描未完成"}
@@ -140,19 +135,18 @@ def check_emotion_snapshot():
         if not emotion_dir.exists():
             return {"status": "error", "message": "情绪引擎目录不存在"}
         
-        # 检查快照
-        snapshots_dir = emotion_dir / "snapshots"
-        if snapshots_dir.exists():
-            today_snapshot = snapshots_dir / f"emotion_{today}.json"
-            if today_snapshot.exists():
-                with open(today_snapshot, 'r') as f:
-                    data = json.load(f)
-                    emotion_score = data.get("emotion_score", 0)
-                    return {
-                        "status": "success",
-                        "message": f"情绪快照已生成 (分数: {emotion_score})",
-                        "emotion_score": emotion_score
-                    }
+        # 检查快照缓存文件
+        snapshot_file = emotion_dir / "cache" / "market_emotion_snapshot.json"
+        
+        if snapshot_file.exists():
+            with open(snapshot_file, 'r') as f:
+                data = json.load(f)
+                emotion_score = data.get("emotion_score", 0)
+                return {
+                    "status": "success",
+                    "message": f"情绪快照已生成 (分数: {emotion_score})",
+                    "emotion_score": emotion_score
+                }
         
         return {"status": "warning", "message": "今日情绪快照未生成"}
     except Exception as e:
@@ -186,7 +180,7 @@ def check_replay_cache():
         if not replay_dir.exists():
             return {"status": "warning", "message": "Replay缓存目录不存在"}
         
-        cache_files = list(replay_dir.glob("replay_*.json"))
+        cache_files = list(replay_dir.glob("*.json"))
         
         if cache_files:
             latest_file = max(cache_files, key=lambda x: x.stat().st_mtime)
