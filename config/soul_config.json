@@ -1,0 +1,22 @@
+{
+  "SOUL_MODE": "OBSERVE_ONLY",
+  "learning_enabled": false,
+  "auto_strategy_mutation": false,
+  "auto_weight_adjustment": false,
+  "baseline_write_permission": false,
+  "decision_write_permission": false,
+  "allowed_actions": [
+    "observe",
+    "record",
+    "summarize",
+    "generate_insight"
+  ],
+  "forbidden_actions": [
+    "modify_baseline",
+    "modify_strategy",
+    "adjust_weights",
+    "auto_trade",
+    "auto_learn",
+    "write_decision"
+  ]
+}
