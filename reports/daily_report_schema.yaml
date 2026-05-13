@@ -1,0 +1,55 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Standardized daily report structure for Governance OS.
+
+report_sections:
+  - system_status
+  - governance_status
+  - health_status
+  - coverage_status
+  - consensus_summary
+  - score_summary
+  - risk_summary
+  - replay_summary
+  - pipeline_status
+  - next_actions
+
+required_fields:
+  system_status:
+    - phase
+    - mode
+    - freeze_state
+
+  governance_status:
+    - integrity_status
+    - governance_state
+    - active_team
+
+  health_status:
+    - passed
+    - warnings
+    - errors
+
+  coverage_status:
+    - coverage_percent
+    - missing_symbols
+
+  consensus_summary:
+    - consensus_label
+    - participating_robots
+
+  risk_summary:
+    - portfolio_risk
+    - governance_risk
+    - operational_risk
+
+constraints:
+  immutable_report_required: true
+  github_sync_required: true
+  no_hidden_modification: true
+
+storage:
+  path: reports/history/
+
+status: active
