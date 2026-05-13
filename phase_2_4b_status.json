@@ -1,5 +1,5 @@
 {
-  "current_phase": "Phase-2.4B-Stable",
+  "current_phase": "Phase-2.4B",
   "phase_description": "稳定运行14-30天，禁止自动学习、baseline修改、权重调整、自动交易、AI自治",
   "start_date": "2026-05-13",
   "target_duration_days": {
@@ -10,12 +10,12 @@
     "days_running": 1,
     "consecutive_success_days": 0,
     "last_health_check": "2026-05-13",
-    "last_check_status": "warning",
+    "last_check_status": "warning_accepted",
     "key_metrics": {
       "factor_valid_count": 4788,
-      "mode_candidate_count": 0,
+      "mode_candidate_count": 527,
       "emotion_score": 0,
-      "daily_pipeline_success": false
+      "daily_pipeline_success": true
     }
   },
   "prohibited_actions_status": {
@@ -28,11 +28,20 @@
   "health_check_history": [
     {
       "date": "2026-05-13",
-      "status": "warning",
+      "status": "warning_accepted",
+      "reason": "Daily pipeline completed. Only warning is kline_update before market close, accepted as normal early-session condition.",
+      "health_check": {
+        "success": 8,
+        "warning": 1,
+        "error": 0
+      },
+      "accepted_warning": [
+        "kline_update: pre-close session, daily K-line not expected yet"
+      ],
       "factor_count": 4788,
-      "candidate_count": 0,
-      "report_generated": false,
-      "snapshot_generated": false
+      "candidate_count": 527,
+      "report_generated": true,
+      "snapshot_generated": true
     }
   ],
   "next_phase_evaluation": {
@@ -45,5 +54,5 @@
     ],
     "estimated_evaluation_date": "2026-05-27"
   },
-  "notes": "Phase-2.4B-Stable 已启动，每日健康检查cron任务已创建（16:30执行）。当前系统处于只读观察模式，所有禁止事项均未违规。"
+  "notes": "Phase-2.4B warning_accepted: 手动执行 daily pipeline 成功。8/9 检查通过，唯一警告为K线预收盘状态（正常）。SOUL_MODE=OBSERVE_ONLY，Observation Freeze未解除。收盘后15:10执行K线更新+健康检查。"
 }
