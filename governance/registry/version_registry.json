@@ -1,0 +1,17 @@
+{
+  "system_version": "Phase-2.7D",
+  "governance_version": "2.7D-governance-scalability",
+  "strategy_version": "baseline_v1_four_modes_original",
+  "execution_version": "2.7C-eastmoney-auto-paper",
+  "market_structure_version": "2.7A-market-structure-engine",
+  "risk_validation_version": "2.6D-risk-price-validation",
+  "agent_runtime_version": "2.7D-agent-trace",
+  "snapshot_schema_version": "2.7D-split-snapshot-ready",
+  "replay_schema_version": "2.7D-replay-scalability",
+  "account_mode": "PAPER_ONLY",
+  "soul_mode": "OBSERVE_ONLY",
+  "baseline_frozen": true,
+  "robot_6_10_status": "RESERVED_ONLY",
+  "created_at": "2026-05-14",
+  "status": "active"
+}
