@@ -1,0 +1,48 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Frontend data contract for Cockpit UI rendering.
+
+data_sources:
+  governance_snapshot:
+    path: governance/snapshots/
+
+  consensus_archive:
+    path: governance/consensus_archive/
+
+  replay_history:
+    path: replay_engine/history/
+
+  attribution_reports:
+    path: governance/attribution/
+
+  risk_heatmap:
+    path: governance/risk_heatmap_schema.yaml
+
+  dashboard_snapshot:
+    path: dashboard/dashboard_snapshot_template.json
+
+frontend_requirements:
+  polling_enabled: true
+  polling_interval_seconds: 30
+  read_only_mode: true
+
+rendering_rules:
+  governance_state:
+    stable: green
+    warning_accepted: yellow
+    degraded: orange
+    critical: red
+
+  risk_levels:
+    low: green
+    medium: yellow
+    high: orange
+    extreme: red
+
+constraints:
+  no_execution_endpoints: true
+  no_trade_api: true
+  no_hidden_state_mutation: true
+
+status: active
