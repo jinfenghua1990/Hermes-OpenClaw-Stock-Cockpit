@@ -278,6 +278,26 @@ def check_system_monitor():
     except Exception as e:
         return {"status": "error", "message": f"检查系统监控时出错: {str(e)}"}
 
+def check_runtime_event_health():
+    """检查所有 enabled 模块是否在今天产生了 runtime event"""
+    try:
+        from runtime_event_health_check import check_runtime_event_health as _check
+        result = _check()
+        active = result["active_today"]
+        total = result["total_modules"]
+        status = result["status"]
+
+        # 映射到 health_check 标准格式
+        if status == "pass":
+            return {"status": "success", "message": f"Runtime Event 健康: {active}/{total} 模块今日活跃"}
+        elif status == "error":
+            return {"status": "error", "message": f"Runtime Event 异常: error_modules={result['error_modules']}"}
+        else:
+            return {"status": "warning", "message": f"Runtime Event 不完整: {total - active} 模块今日无事件 ({', '.join(result['missing_today'][:5])})"}
+    except Exception as e:
+        return {"status": "error", "message": f"Runtime Event 检查失败: {str(e)}"}
+
+
 def generate_health_report():
     """生成健康报告"""
     checks = {
@@ -289,7 +309,8 @@ def generate_health_report():
         "emotion_history": check_emotion_history(),
         "replay_cache": check_replay_cache(),
         "git_push": check_git_push(),
-        "system_monitor": check_system_monitor()
+        "system_monitor": check_system_monitor(),
+        "runtime_event_health": check_runtime_event_health()
     }
     
     # 计算总体状态
