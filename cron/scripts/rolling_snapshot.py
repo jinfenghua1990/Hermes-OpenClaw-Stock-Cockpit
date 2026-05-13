@@ -158,6 +158,16 @@ snapshot = {
             "reports/daily_review/daily_review.json (15:30)"
         ]
     },
+    "runtime_events": {
+        "total_modules": 0,
+        "active_modules": 0,
+        "layers": {
+            "execution_layer": {"total": 7, "active": 0},
+            "governance_layer": {"total": 7, "active": 0},
+            "cockpit_layer": {"total": 3, "active": 0}
+        },
+        "latest_events": []
+    },
     "prohibited": [
         "自动交易", "自动调仓", "strategy_positions写入",
         "baseline修改", "自动学习", "将snapshot作为交易依据"
@@ -166,6 +176,16 @@ snapshot = {
 
 SNAPSHOT_FILE.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 log(f"Snapshot 已写入: {SNAPSHOT_FILE.name}")
+
+# ── 8. Runtime Event 汇总 ────────────────────────────────────
+try:
+    from runtime_events.runtime_event_logger import summarize_events as _summarize, log_event as _log
+    re_summary = _summarize()
+    snapshot["runtime_events"] = re_summary
+    SNAPSHOT_FILE.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    log(f"Runtime Events: {re_summary['active_modules']}/{re_summary['total_modules']} modules active")
+except ImportError:
+    pass
 
 # Runtime Event
 import time as _time

@@ -70,5 +70,18 @@
 
 ---
 
+## 9. Runtime Event Summary
+
+- **总模块数**: {{runtime_total_modules}}
+- **活跃模块数**: {{runtime_active_modules}}
+- **Execution Layer**: {{runtime_exec_active}}/7 active
+- **Governance Layer**: {{runtime_gov_active}}/7 active
+- **Cockpit Layer**: {{runtime_cockpit_active}}/3 active
+
+### 最近事件
+{{runtime_latest_events_text}}
+
+---
+
 *数据来源：技术因子缓存 + 原版四模式扫描器 + 市场情绪快照系统 + 情绪历史分析器*  
 *生成时间：{{timestamp}}*

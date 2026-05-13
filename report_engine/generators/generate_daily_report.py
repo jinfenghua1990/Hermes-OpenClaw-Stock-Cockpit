@@ -223,6 +223,42 @@ def load_emotion_history_analysis() -> dict:
         }
 
 
+def load_runtime_event_summary() -> dict:
+    """加载 Runtime Event 汇总数据"""
+    try:
+        sys.path.insert(0, str(BASE_DIR.parent))
+        from runtime_events.runtime_event_logger import summarize_events
+        summary = summarize_events()
+        
+        # 构建最近事件文本
+        latest_lines = []
+        for evt in summary.get("latest_events", []):
+            status_icon = "✅" if evt["status"] == "success" else "⚠️" if evt["status"] == "warning" else "❌"
+            latest_lines.append(
+                f"- {status_icon} [{evt.get('timestamp','')[:16]}] {evt.get('module','')} ({evt.get('layer','')}): {evt.get('message','')}"
+            )
+        latest_text = "\n".join(latest_lines) if latest_lines else "暂无事件记录"
+        
+        return {
+            "runtime_total_modules": summary["total_modules"],
+            "runtime_active_modules": summary["active_modules"],
+            "runtime_exec_active": summary["layers"]["execution_layer"]["active"],
+            "runtime_gov_active": summary["layers"]["governance_layer"]["active"],
+            "runtime_cockpit_active": summary["layers"]["cockpit_layer"]["active"],
+            "runtime_latest_events_text": latest_text,
+        }
+    except Exception as e:
+        print(f"[WARN] 加载 Runtime Event 汇总失败: {e}")
+        return {
+            "runtime_total_modules": 17,
+            "runtime_active_modules": 0,
+            "runtime_exec_active": 0,
+            "runtime_gov_active": 0,
+            "runtime_cockpit_active": 0,
+            "runtime_latest_events_text": f"加载失败: {e}",
+        }
+
+
 def generate_daily_report():
     if not TEMPLATE_PATH.exists():
         raise FileNotFoundError(f"Template not found: {TEMPLATE_PATH}")
@@ -265,6 +301,10 @@ def generate_daily_report():
     summary.update(emotion_data)
     summary.update(history_data)
     
+    # 加载 Runtime Event 汇总
+    runtime_data = load_runtime_event_summary()
+    summary.update(runtime_data)
+    
     report = template
     for key, value in summary.items():
         placeholder = "{{" + key + "}}"
@@ -290,7 +330,8 @@ def generate_daily_report():
         "情绪分数",
         "市场阶段",
         "风险等级",
-        "情绪历史趋势"
+        "情绪历史趋势",
+        "Runtime Event Summary"
     ]
     report_text = output_path.read_text(encoding="utf-8")
     missing = []

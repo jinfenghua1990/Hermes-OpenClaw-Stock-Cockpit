@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "phase": "Phase-2.4B",
   "mode": "OBSERVE_ONLY",
   "governance_overview": {
@@ -21,6 +21,16 @@
     "portfolio_risk": "",
     "governance_risk": "",
     "operational_risk": ""
+  },
+  "runtime_events": {
+    "total_modules": 17,
+    "active_modules": 0,
+    "layers": {
+      "execution_layer": {"total": 7, "active": 0},
+      "governance_layer": {"total": 7, "active": 0},
+      "cockpit_layer": {"total": 3, "active": 0}
+    },
+    "latest_events": []
   },
   "alerts": [],
   "user_decision_only": true
