@@ -1,0 +1,33 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Attribution output structure for robot and governance evaluation.
+
+attribution_dimensions:
+  - research_accuracy
+  - consensus_alignment
+  - governance_compliance
+  - risk_signal_quality
+  - replay_consistency
+
+output_schema:
+  required_fields:
+    - attribution_id
+    - timestamp
+    - robot_id
+    - evaluated_dimension
+    - evaluation_score
+    - supporting_replay_reference
+    - governance_status
+    - review_notes
+
+constraints:
+  no_auto_weight_adjustment: true
+  no_auto_learning: true
+  user_review_required: true
+
+storage:
+  path: governance/attribution/
+  github_sync_required: true
+
+status: active
