@@ -1,7 +1,7 @@
 {
-  "schema_version": "2.6B",
-  "phase": "Phase-2.6B Paper Auto Decision",
-  "generated_at": "2026-05-13T18:20:01.083279",
+  "schema_version": "2.6C",
+  "phase": "Phase-2.6C Paper Auto Decision",
+  "generated_at": "2026-05-13T18:34:14",
   "date": "2026-05-13",
   "paper_only": true,
   "real_trade_prohibited": true,
@@ -11,15 +11,23 @@
       "date": "2026-05-13",
       "股票代码": "301282",
       "股票名称": "金禄电子",
-      "decision": "paper_buy",
-      "action": "buy",
-      "reason": "AI评分97.09≥75 RSI=21.1<75 风险通过 建议仓位0% 0股",
+      "decision": "paper_skip",
+      "action": "skip",
+      "buy_timing": "next_day_low_buy",
+      "entry_zone_min": 30.74,
+      "entry_zone_max": 30.9,
+      "max_chase_price": 31.52,
+      "stop_loss": 28.29,
+      "take_profit_watch": 43.51,
+      "position_size_pct": 0,
+      "quantity": 0,
+      "reason": "资金数据缺失（total_assets=0），需次日前置确认，建议仓位0股参考",
+      "skip_reason": "invalid_price_structure: stop_loss(35.43) >= current_price(30.75)，止损方向错误！; support(36.53) > current_price(30.75)，支撑位错误！",
       "AI评分": 97.09,
       "RSI": 21.12,
       "操作建议": "低吸机会 🔔",
       "所属模式": "回踩止跌型",
-      "建议股数": 0,
-      "generated_at": "2026-05-13 18:20:01"
+      "generated_at": "2026-05-13 18:34:14"
     },
     {
       "date": "2026-05-13",
@@ -27,13 +35,22 @@
       "股票名称": "沃尔核材",
       "decision": "paper_skip",
       "action": "skip",
-      "reason": "操作建议=观察，非买入信号",
+      "buy_timing": "watch_only",
+      "entry_zone_min": 23.3,
+      "entry_zone_max": 23.62,
+      "max_chase_price": 24.09,
+      "stop_loss": 17.45,
+      "take_profit_watch": 27.02,
+      "position_size_pct": 0,
+      "quantity": 0,
+      "reason": "操作建议=观察，非明确买入信号",
+      "skip_reason": "invalid_price_structure: take_profit_watch(19.08) <= current_price(23.5)，止盈位错误！",
       "AI评分": 81.0,
       "RSI": 35.44,
       "操作建议": "观察",
       "所属模式": "回踩止跌型",
-      "建议股数": 0,
-      "generated_at": "2026-05-13 18:20:01"
+      "generated_at": "2026-05-13 18:34:14",
+      "pressure_price": 25.85
     },
     {
       "date": "2026-05-13",
@@ -41,13 +58,22 @@
       "股票名称": "沪电股份",
       "decision": "paper_skip",
       "action": "skip",
-      "reason": "操作建议=观察 ⚠️，非买入信号",
+      "buy_timing": "watch_only",
+      "entry_zone_min": 107.35,
+      "entry_zone_max": 109.22,
+      "max_chase_price": 111.4,
+      "stop_loss": 95.87,
+      "take_profit_watch": 124.98,
+      "position_size_pct": 0,
+      "quantity": 0,
+      "reason": "操作建议=观察 ⚠️，非明确买入信号",
+      "skip_reason": "invalid_price_structure: take_profit_watch(104.83) <= current_price(108.68)，止盈位错误！",
       "AI评分": 52.78,
       "RSI": 76.22,
       "操作建议": "观察 ⚠️",
       "所属模式": "综合候选",
-      "建议股数": 0,
-      "generated_at": "2026-05-13 18:20:01"
+      "generated_at": "2026-05-13 18:34:14",
+      "pressure_price": 119.55
     },
     {
       "date": "2026-05-13",
@@ -55,29 +81,119 @@
       "股票名称": "利通电子",
       "decision": "paper_skip",
       "action": "skip",
-      "reason": "操作建议=观察 ⚠️，非买入信号",
+      "buy_timing": "watch_only",
+      "entry_zone_min": 164.24,
+      "entry_zone_max": 163.63,
+      "max_chase_price": 166.89,
+      "stop_loss": 109.57,
+      "take_profit_watch": 187.24,
+      "position_size_pct": 0,
+      "quantity": 0,
+      "reason": "操作建议=观察 ⚠️，非明确买入信号",
+      "skip_reason": "invalid_price_structure: take_profit_watch(119.8) <= current_price(162.82)，止盈位错误！",
       "AI评分": 28.35,
       "RSI": 81.9,
       "操作建议": "观察 ⚠️",
       "所属模式": "综合候选",
-      "建议股数": 0,
-      "generated_at": "2026-05-13 18:20:01"
+      "generated_at": "2026-05-13 18:34:14",
+      "support_price": 146.54,
+      "pressure_price": 179.1
     }
   ],
   "summary": {
     "total_picks": 4,
-    "paper_buy": 1,
-    "paper_skip": 3,
+    "paper_buy": 0,
+    "paper_skip": 4,
     "paper_hold": 0,
     "paper_sell": 0,
-    "buy_symbols": [
-      "301282"
-    ],
+    "await_capital_confirm": 1,
+    "buy_symbols": [],
     "sell_symbols": [],
     "skip_symbols": [
+      "301282",
       "002130",
       "002463",
       "603629"
     ]
-  }
+  },
+  "validation_timestamp": "2026-05-13T18:51:25",
+  "validation_phase": "Phase-2.6C-R1 Risk Price Validation",
+  "validation_results": [
+    {
+      "symbol": "301282",
+      "name": "金禄电子",
+      "current_price": 30.75,
+      "is_valid": false,
+      "warnings": [],
+      "errors": [
+        "stop_loss(35.43) >= current_price(30.75)，止损方向错误！",
+        "support(36.53) > current_price(30.75)，支撑位错误！"
+      ],
+      "original_decision": "paper_skip",
+      "forced_skip": true,
+      "forced_skip_reason": "invalid_price_structure: stop_loss(35.43) >= current_price(30.75)，止损方向错误！; support(36.53) > current_price(30.75)，支撑位错误！",
+      "corrected_values": {
+        "stop_loss": 28.29
+      }
+    },
+    {
+      "symbol": "002130",
+      "name": "沃尔核材",
+      "current_price": 23.5,
+      "is_valid": false,
+      "warnings": [
+        "current_price(23.5) > pressure(19.08)，已突破压力位"
+      ],
+      "errors": [
+        "take_profit_watch(19.08) <= current_price(23.5)，止盈位错误！"
+      ],
+      "original_decision": "paper_skip",
+      "forced_skip": true,
+      "forced_skip_reason": "invalid_price_structure: take_profit_watch(19.08) <= current_price(23.5)，止盈位错误！",
+      "corrected_values": {
+        "pressure_price": 25.85,
+        "take_profit_watch": 27.02
+      }
+    },
+    {
+      "symbol": "002463",
+      "name": "沪电股份",
+      "current_price": 108.68,
+      "is_valid": false,
+      "warnings": [
+        "current_price(108.68) > pressure(104.83)，已突破压力位"
+      ],
+      "errors": [
+        "take_profit_watch(104.83) <= current_price(108.68)，止盈位错误！"
+      ],
+      "original_decision": "paper_skip",
+      "forced_skip": true,
+      "forced_skip_reason": "invalid_price_structure: take_profit_watch(104.83) <= current_price(108.68)，止盈位错误！",
+      "corrected_values": {
+        "pressure_price": 119.55,
+        "take_profit_watch": 124.98
+      }
+    },
+    {
+      "symbol": "603629",
+      "name": "利通电子",
+      "current_price": 162.82,
+      "is_valid": false,
+      "warnings": [
+        "stop_loss(109.57) 低于现价162.82超过30%，可能过于激进",
+        "current_price(162.82) > pressure(119.8)，已突破压力位"
+      ],
+      "errors": [
+        "take_profit_watch(119.8) <= current_price(162.82)，止盈位错误！"
+      ],
+      "original_decision": "paper_skip",
+      "forced_skip": true,
+      "forced_skip_reason": "invalid_price_structure: take_profit_watch(119.8) <= current_price(162.82)，止盈位错误！",
+      "corrected_values": {
+        "support_price": 146.54,
+        "pressure_price": 179.1,
+        "take_profit_watch": 187.24
+      }
+    }
+  ]
 }

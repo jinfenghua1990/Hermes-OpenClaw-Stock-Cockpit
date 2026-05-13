@@ -70,7 +70,31 @@
 
 ---
 
-## 9. Runtime Event Health
+## 11. Paper Trading Summary
+
+- **模式**: {{paper_trading_mode}} ({{paper_trading_kill_switch}})
+- **持仓数量**: {{paper_trading_position_count}}
+- **总持仓市值**: ¥{{paper_trading_total_value}}
+- **浮动盈亏**: ¥{{paper_trading_floating_pnl}} ({{paper_trading_floating_ratio}})
+
+### 11.1 交易统计
+
+- **买入**: {{paper_trading_buy_trades}} 笔
+- **卖出**: {{paper_trading_sell_trades}} 笔
+- **实现盈亏**: ¥{{paper_trading_realized_pnl}}
+
+### 11.2 持仓详情
+
+{{paper_trading_positions_detail}}
+
+### 11.3 风险状态
+
+- **状态**: {{paper_trading_risk_status}}
+- **最大仓位占比**: {{paper_trading_largest_ratio}}
+
+---
+
+## 12. Runtime Event Health
 
 - **活跃模块**: {{rehealth_active_today}}/{{rehealth_total_modules}}
 - **缺失模块**: {{rehealth_missing_today}}
@@ -78,7 +102,7 @@
 - **Error 模块**: {{rehealth_error_modules}}
 - **总体状态**: {{rehealth_status}}
 
-## 10. Runtime Event Summary
+## 13. Runtime Event Summary
 
 - **总模块数**: {{runtime_total_modules}}
 - **活跃模块数**: {{runtime_active_modules}}

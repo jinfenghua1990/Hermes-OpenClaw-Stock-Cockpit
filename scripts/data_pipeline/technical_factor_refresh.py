@@ -138,10 +138,10 @@ def process_stock(code):
         rows = list(csv.DictReader(f))
     if len(rows) < 60: return None  # 至少60天数据才够算MA60+RSI14
 
-    closes = [float(r["close"]) for r in rows]
-    highs  = [float(r["high"])  for r in rows]
-    lows   = [float(r["low"])   for r in rows]
-    vols   = [float(r["volume"]) for r in rows]
+    closes = [float(r["close"]) for r in rows if r.get("close","").strip()]
+    highs  = [float(r["high"])  for r in rows if r.get("high","").strip()]
+    lows   = [float(r["low"])   for r in rows if r.get("low","").strip()]
+    vols   = [float(r["volume"]) for r in rows if r.get("volume","").strip()]
     dates  = [r["date"]        for r in rows]
 
     ma5   = calc_ma(closes, 5)

@@ -286,6 +286,86 @@ def load_runtime_event_health() -> dict:
         }
 
 
+def load_paper_trading_summary() -> dict:
+    """加载 Paper Trading 数据（日报用）"""
+    try:
+        sys.path.insert(0, str(BASE_DIR.parent / "paper_trading"))
+        from position_manager import PositionManager
+        from pnl_tracker import PnLTracker
+        
+        pm = PositionManager()
+        tracker = PnLTracker()
+        
+        positions = pm.get_positions()
+        pnl_report = tracker.get_today_report()
+        summary = pnl_report.get("summary", {})
+        
+        # 计算浮动盈亏
+        floating = tracker.calculate_floating_pnl(positions)
+        
+        # 构建持仓详情文本
+        if positions:
+            pos_lines = []
+            for p in positions:
+                sym = p.get("symbol", "")
+                name = p.get("name", "")
+                qty = p.get("quantity", 0)
+                avg = p.get("avg_price", 0)
+                cur = p.get("current_price", avg)
+                pnl = (cur - avg) * qty
+                pnl_pct = (cur - avg) / avg * 100 if avg > 0 else 0
+                pos_lines.append(
+                    f"- {sym} {name}: {qty}股 @ {cur}（均价{avg}, 浮盈{pnl:+.2f} {pnl_pct:+.2f}%）"
+                )
+            positions_detail = "\n".join(pos_lines)
+        else:
+            positions_detail = "暂无持仓"
+        
+        # 读取风险状态
+        risk_file = BASE_DIR.parent / "paper_trading" / "reports" / "risk_status_report.json"
+        risk_status = "normal"
+        largest_ratio = "0%"
+        if risk_file.exists():
+            try:
+                with open(risk_file, "r", encoding="utf-8") as f:
+                    risk_data = json.load(f)
+                    risk_status = risk_data.get("status", "normal")
+                    largest_ratio = f"{risk_data.get('current_exposure', {}).get('largest_position_ratio', 0):.2%}"
+            except Exception:
+                pass
+        
+        return {
+            "paper_trading_mode": pm.positions.get("mode", "PAPER_TRADING"),
+            "paper_trading_kill_switch": "观察模式" if pm.kill_switch else "正常模式",
+            "paper_trading_position_count": len(positions),
+            "paper_trading_total_value": f"{floating.get('total_market_value', 0):.2f}",
+            "paper_trading_floating_pnl": f"{floating.get('total_floating_pnl', 0):+.2f}",
+            "paper_trading_floating_ratio": f"{floating.get('total_floating_ratio', 0):+.2%}",
+            "paper_trading_buy_trades": summary.get("buy_trades", 0),
+            "paper_trading_sell_trades": summary.get("sell_trades", 0),
+            "paper_trading_realized_pnl": f"{summary.get('total_pnl', 0):+.2f}",
+            "paper_trading_positions_detail": positions_detail,
+            "paper_trading_risk_status": risk_status,
+            "paper_trading_largest_ratio": largest_ratio,
+        }
+    except Exception as e:
+        print(f"[WARN] 加载 Paper Trading 数据失败: {e}")
+        return {
+            "paper_trading_mode": "PAPER_TRADING",
+            "paper_trading_kill_switch": "未知",
+            "paper_trading_position_count": 0,
+            "paper_trading_total_value": "0.00",
+            "paper_trading_floating_pnl": "0.00",
+            "paper_trading_floating_ratio": "0.00%",
+            "paper_trading_buy_trades": 0,
+            "paper_trading_sell_trades": 0,
+            "paper_trading_realized_pnl": "0.00",
+            "paper_trading_positions_detail": f"加载失败: {e}",
+            "paper_trading_risk_status": "unknown",
+            "paper_trading_largest_ratio": "0%",
+        }
+
+
 def generate_daily_report():
     if not TEMPLATE_PATH.exists():
         raise FileNotFoundError(f"Template not found: {TEMPLATE_PATH}")
@@ -336,6 +416,10 @@ def generate_daily_report():
     rehealth_data = load_runtime_event_health()
     summary.update(rehealth_data)
     
+    # 加载 Paper Trading 数据
+    paper_trading_data = load_paper_trading_summary()
+    summary.update(paper_trading_data)
+    
     report = template
     for key, value in summary.items():
         placeholder = "{{" + key + "}}"
@@ -362,7 +446,10 @@ def generate_daily_report():
         "市场阶段",
         "风险等级",
         "情绪历史趋势",
-        "Runtime Event Summary"
+        "Runtime Event Summary",
+        "Paper Trading Summary",
+        "浮动盈亏",
+        "持仓详情",
     ]
     report_text = output_path.read_text(encoding="utf-8")
     missing = []

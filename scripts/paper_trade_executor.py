@@ -30,6 +30,7 @@ CANDIDATE_FILE   = CRON_BASE / "configs" / "candidate_stocks.json"
 CAND_RANKINGS    = CRON_BASE / "portfolio" / "candidate_rankings.json"
 SHADOW_PORTFOLIO = CRON_BASE / "portfolio" / "shadow_portfolio.json"
 TRADE_LOG        = CRON_BASE / "portfolio" / "trade_log.json"
+DECISION_LOG     = CRON_BASE / "reports"  / "paper_decision_log.json"
 REGIME_JSON      = CRON_BASE / "market" / "market_regime.json"
 KILL_SWITCH_J    = CRON_BASE / "config" / "paper_trade_enabled.json"
 LOG_FILE         = CRON_BASE / "cron" / "logs" / "paper_trade.log"
@@ -287,6 +288,7 @@ BASELINE = {
     "mode_3": {"name": "超跌反弹",        "signal": "buy",  "aggressive": False},
     "mode_4": {"name": "止损/换仓",       "signal": "sell", "aggressive": False},
     "phase2_candidate": {"name": "AI选股候选",  "signal": "buy",  "aggressive": True},
+    "phase2_decision": {"name": "Paper决策层", "signal": "buy",  "aggressive": True},
 }
 
 # =============================================================================
@@ -297,7 +299,42 @@ def load_cand_rankings() -> dict:
         return load_json(CAND_RANKINGS)
     return {}
 
-def generate_candidates(unified: dict, events: dict) -> List[dict]:
+def load_decision_log() -> dict:
+    return load_json(DECISION_LOG)
+
+def generate_candidates_from_decision(unified: dict, events: dict) -> List[dict]:
+    """Phase-2.6B: 从 paper_decision_log.json 读取决策，不再直接读 top_picks"""
+    decision_data = load_decision_log()
+    decisions = decision_data.get("decisions", [])
+
+    # 过滤出 paper_buy / paper_sell
+    candidates = []
+    for d in decisions:
+        if d.get("decision") not in ("paper_buy", "paper_sell"):
+            continue
+        sym = d.get("股票代码", "")
+        name = d.get("股票名称", "")
+        action = "buy" if d.get("action") == "buy" else "sell"
+        reason = d.get("reason", "")
+        mode = "phase2_decision"
+
+        candidates.append({
+            "mode":       mode,
+            "action":     action,
+            "symbol":     sym,
+            "name":       name,
+            "reason":     reason,
+            "price":      None,          # 需要另外查
+            "shares":     d.get("建议股数", 0),
+            "pattern":    d.get("所属模式", ""),
+            "score":      d.get("AI评分", 0),
+            "event":      None,
+            "aggressive": d.get("AI评分", 0) >= 90,
+            "rsi":        d.get("RSI", 50),
+            "position_mult": 1.0,
+            "sector_notes": "",
+        })
+    return candidates
     """Phase-2.0: 从 candidate_rankings.json 读取候选信号
     同时保留持仓止损的 event-driven 逻辑"""
     candidates = []
@@ -786,9 +823,27 @@ def execute():
         feishu_status = f"⚠️ 【Risk_off】降低仓位，只观察不开新仓\n{regime.get('signals',[])[0] if regime.get('signals') else ''}"
         feishu(feishu_status)
 
-    # ── 生成候选 ───────────────────────────────────────────────────────
-    candidates = generate_candidates(unified, events)
-    log(f"候选信号: {len(candidates)}个")
+    # ── Phase-2.6B: 从 decision_log 读取信号 ─────────────────────────────
+    decision_candidates = generate_candidates_from_decision(unified, events)
+    log(f"Decision Layer 候选: {len(decision_candidates)}个")
+
+    # ── 持仓止损检查（event-driven，保留）───────────────────────────────
+    event_driven = []
+    for pos in positions:
+        sym = pos.get("symbol", "")
+        if sym in anomaly_syms:
+            continue
+        for ev in all_events:
+            if ev.get("symbol") == sym and ev.get("type") == "ma5_breakdown":
+                event_driven.append({
+                    "mode": "mode_4", "action": "sell",
+                    "symbol": sym, "name": pos.get("name", ""),
+                    "reason": f"MA5止损: {ev['detail']}",
+                    "event": ev,
+                })
+
+    # 合并：decision_log 优先，event-driven 兜底
+    candidates = decision_candidates + event_driven
 
     if not candidates:
         log("无候选信号，退出")

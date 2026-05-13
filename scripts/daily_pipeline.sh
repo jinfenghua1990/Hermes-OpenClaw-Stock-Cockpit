@@ -6,6 +6,7 @@ echo "=================================================="
 
 # 设置工作目录
 cd "$(dirname "$0")/.." || exit 1
+CRON_BASE="/Users/gino/project_ai_trading"
 
 # 创建日志目录
 mkdir -p logs
@@ -72,6 +73,10 @@ python reports/build_report_index.py
 if [ $? -ne 0 ]; then
     echo "[WARNING] Report index update failed"
 fi
+
+# 9. 发送日报到飞书
+echo "[9/9] Send Daily Report to Feishu"
+python3 "${CRON_BASE}/cron/scripts/notification_router.py" daily_report pre_market 2>/dev/null || echo "[WARNING] Feishu notification skipped"
 
 # 记录结束时间
 END_TIME=$(date '+%Y-%m-%d %H:%M:%S')
