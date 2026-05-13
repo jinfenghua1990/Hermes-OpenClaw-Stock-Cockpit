@@ -7,6 +7,7 @@ Includes:
 - Phase-2.7A Market Structure summary
 - Phase-2.7B Paper Execution summary
 - Phase-2.7D Governance Scalability extension
+- Phase-2.7D Source Trace Governance
 """
 
 import json
@@ -97,11 +98,35 @@ def _load_phase_2_7d_extension() -> dict:
     return ext
 
 
-def _build_decisions(paper_decisions):
+def _default_source_trace(d: dict, symbol: str, snapshot_uuid: str, now: str):
+    source_agent = d.get("source_agent") or d.get("agent_id") or "robot_1"
+    source_module = d.get("source_module") or "paper_decision_engine"
+    data_source = d.get("data_source") or d.get("source") or "paper_decision_log"
+    data_as_of = d.get("data_as_of") or d.get("risk_data_as_of") or d.get("generated_at") or now
+    trace_id = d.get("trace_id") or str(uuid.uuid4())[:8]
+
+    return {
+        "symbol": symbol,
+        "source_agent": source_agent,
+        "source_module": source_module,
+        "data_source": data_source,
+        "data_as_of": data_as_of,
+        "trace_id": trace_id,
+        "parent_trace_id": d.get("parent_trace_id", ""),
+        "replay_snapshot": snapshot_uuid,
+        "confidence": d.get("confidence", d.get("structure_confidence", 0.0)),
+        "schema": "phase_2_7d_source_trace",
+    }
+
+
+def _build_decisions(paper_decisions, snapshot_uuid: str, now: str):
     decisions_out = []
     for d in paper_decisions:
+        symbol = d.get("股票代码", d.get("symbol", ""))
+        source_trace = d.get("source_trace") or _default_source_trace(d, symbol, snapshot_uuid, now)
+
         decisions_out.append({
-            "股票代码": d.get("股票代码", d.get("symbol", "")),
+            "股票代码": symbol,
             "股票名称": d.get("股票名称", d.get("name", "")),
             "decision": d.get("decision", "no_action"),
             "action": d.get("action", ""),
@@ -122,13 +147,44 @@ def _build_decisions(paper_decisions):
             "execution_id": d.get("execution_id", ""),
             "agent_trace": d.get("agent_trace", []),
             "arbitration_result": d.get("arbitration_result", {}),
+            "source_agent": source_trace.get("source_agent"),
+            "source_module": source_trace.get("source_module"),
+            "data_source": source_trace.get("data_source"),
+            "data_as_of": source_trace.get("data_as_of"),
+            "trace_id": source_trace.get("trace_id"),
+            "source_trace": source_trace,
         })
     return decisions_out
+
+
+def _source_trace_summary(decisions_out):
+    total = len(decisions_out)
+    missing_source_agent = sum(1 for d in decisions_out if not d.get("source_agent"))
+    missing_data_source = sum(1 for d in decisions_out if not d.get("data_source"))
+    missing_data_as_of = sum(1 for d in decisions_out if not d.get("data_as_of"))
+    missing_trace_id = sum(1 for d in decisions_out if not d.get("trace_id"))
+
+    status = "PASS"
+    if missing_data_as_of > 0:
+        status = "CRITICAL"
+    elif missing_source_agent > 0 or missing_data_source > 0 or missing_trace_id > 0:
+        status = "WARNING"
+
+    return {
+        "status": status,
+        "total": total,
+        "missing_source_agent": missing_source_agent,
+        "missing_data_source": missing_data_source,
+        "missing_data_as_of": missing_data_as_of,
+        "missing_trace_id": missing_trace_id,
+        "source_trace_required": True,
+    }
 
 
 def generate_replay_snapshot():
     today = datetime.now().strftime("%Y-%m-%d")
     now = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+    snapshot_uuid = str(uuid.uuid4())[:8]
     snap_dir = SELF_DIR / "snapshots"
     snap_dir.mkdir(exist_ok=True)
 
@@ -138,7 +194,7 @@ def generate_replay_snapshot():
 
     validation_results = decision_log.get("validation_results", [])
     paper_decisions = decision_log.get("decisions", [])
-    decisions_out = _build_decisions(paper_decisions)
+    decisions_out = _build_decisions(paper_decisions, snapshot_uuid, now)
 
     paper_skip_count = sum(
         1 for d in paper_decisions
@@ -149,6 +205,7 @@ def generate_replay_snapshot():
     fallback_struct_count = sum(1 for d in decisions_out if d.get("structure_type") == "fallback_ma20")
 
     phase_2_7d_extension = _load_phase_2_7d_extension()
+    source_trace_summary = _source_trace_summary(decisions_out)
 
     snapshot = {
         "snapshot_date": today,
@@ -158,6 +215,7 @@ def generate_replay_snapshot():
         "account_mode": "PAPER_ONLY",
         "observation_freeze": True,
         "risk_validation_enabled": True,
+        "source_trace_required": True,
         "governance_snapshot_path": str(BASE / "governance" / "snapshots" / f"{today}.json"),
         "daily_report_path": str(BASE / "reports" / "history" / f"{today}.md"),
         "health_check_status": gov_snap.get("health_check_status", "WARNING"),
@@ -173,6 +231,7 @@ def generate_replay_snapshot():
             "valid_count": len(decisions_out) - invalid_struct_count,
             "valid_rate": round((len(decisions_out) - invalid_struct_count) / len(decisions_out), 3) if decisions_out else 0,
         },
+        "source_trace_summary": source_trace_summary,
         "top_picks_count": len(top_picks.get("top_picks", [])),
         "paper_decision_count": len(paper_decisions),
         "paper_skip_count": paper_skip_count,
@@ -185,7 +244,7 @@ def generate_replay_snapshot():
         "execution_reconciliation": phase_2_7d_extension.get("execution_reconciliation"),
         "baseline_drift_detected": phase_2_7d_extension.get("baseline_drift_detected", False),
         "runtime_cycle_id": today,
-        "snapshot_uuid": str(uuid.uuid4())[:8],
+        "snapshot_uuid": snapshot_uuid,
     }
 
     out_path = snap_dir / f"{today}.json"
@@ -196,6 +255,7 @@ def generate_replay_snapshot():
     print(f"   Date: {today} | UUID: {snapshot['snapshot_uuid']}")
     print(f"   TopPicks: {snapshot['top_picks_count']} | Decisions: {snapshot['paper_decision_count']}")
     print(f"   Invalid price structure: {invalid_count} | Paper skip: {paper_skip_count}")
+    print(f"   Source Trace: {source_trace_summary['status']}")
     print(f"   Phase: {snapshot['phase']}")
     return snapshot
 
