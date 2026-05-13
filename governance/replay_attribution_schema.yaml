@@ -1,0 +1,44 @@
+version: 1.0
+phase: Phase-2.4B
+purpose: >
+  Define replay and attribution structure for post-analysis and governance review.
+
+replay_dimensions:
+  - symbol
+  - timestamp
+  - workflow_id
+  - participating_robots
+  - consensus_label
+  - final_score
+  - portfolio_risk
+  - market_environment
+  - final_outcome
+
+robot_attribution:
+  enabled: true
+  metrics:
+    - signal_quality
+    - risk_accuracy
+    - false_positive_rate
+    - consensus_alignment
+
+post_analysis:
+  required: true
+  fields:
+    - what_happened
+    - why_it_happened
+    - which_robot_was_correct
+    - governance_failure
+    - data_issue
+    - replay_summary
+
+constraints:
+  no_auto_learning: true
+  no_weight_auto_adjustment: true
+  user_review_required: true
+
+storage:
+  replay_reports_path: replay_engine/history/
+  attribution_reports_path: governance/attribution/
+
+status: active
