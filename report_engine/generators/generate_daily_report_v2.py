@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """
-# Phase-2.6C 重构日报生成器
-# 第一页：Top Picks（含完整溯源）+ 核心观点 + 风险提醒 + 次日策略
-# 后面才放：runtime / health / governance
+Phase-2.7D 日报生成器
+- Top Picks 完整溯源
+- Risk Validation
+- Market Structure
+- Source Trace: source_agent / source_module / data_source / data_as_of / trace_id
 """
-import json, sys
+
+import json
 from pathlib import Path
 from datetime import datetime
 
@@ -13,363 +16,176 @@ TOP_PICKS_FILE = BASE / "reports/top_picks.json"
 AI_SUMMARY_FILE = BASE / "reports/ai_market_summary.md"
 EMOTION_FILE = BASE / "emotion_engine/cache/market_emotion_snapshot.json"
 PAPER_POSITIONS = BASE / "portfolio/unified_positions.json"
-SYSTEM_SNAP = BASE / "system_monitor/system_snapshot.json"
-HEALTH_FILE = BASE / "system_health/runtime_event_health_check.py"
-DECISION_LOG  = BASE / "reports/paper_decision_log.json"
-TRACE_LOG     = BASE / "reports/decision_trace_log.json"
-def render_risk_validation_summary(dec_data):
-    """Phase-2.6C-R1 渲染风险价格校验结果"""
-    vr_list = dec_data.get('validation_results', [])
-    if not vr_list:
-        return None
-
-    lines = []
-    pass_cnt  = sum(1 for r in vr_list if r['is_valid'])
-    fail_cnt  = len(vr_list) - pass_cnt
-    overall   = '✅ pass' if fail_cnt == 0 else '❌ error'
-
-    lines.append(f"**风险价格校验**: {overall} | {pass_cnt}✅ | {fail_cnt}❌")
-    for r in vr_list:
-        sym   = r['symbol']
-        name  = r['name']
-        valid = r['is_valid']
-        errs  = r.get('errors', [])
-        warns = r.get('warnings', [])
-        corr  = r.get('corrected_values', {})
-
-        if not valid:
-            lines.append(f"- **{name}** ({sym}): ❌ invalid_price_structure")
-            for e in errs:
-                lines.append(f"  - 错误: {e}")
-        elif warns:
-            lines.append(f"- **{name}** ({sym}): ⚠️ warning")
-            for w in warns:
-                lines.append(f"  - 警告: {w}")
-
-    return '\n'.join(lines) if lines else None
-OUTPUT_PATH = BASE / "reports/history/{date}.md"
+DECISION_LOG = BASE / "reports/paper_decision_log.json"
 REPORTS_DIR = BASE / "reports/history"
 
 REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 TODAY = datetime.now().strftime("%Y-%m-%d")
 
 
-def load_json(path):
+def load_json(path, default=None):
     try:
-        with open(path) as f:
-            return json.load(f)
-    except:
-        return {}
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+    except Exception:
+        return default or {}
 
 
 def load_text(path):
     try:
-        with open(path) as f:
-            return f.read().strip()
-    except:
+        return Path(path).read_text(encoding="utf-8").strip()
+    except Exception:
         return ""
 
 
-def render_top_picks(picks, decisions=None):
-    """渲染 Top Picks，含 Paper Decision"""
-    if not picks:
-        return "**暂无精选个股，建议观望。**"
-
-    # 构建决策字典 {代码: decision}
-    dec_map = {}
-    if decisions:
-        for d in decisions:
-            sym = d.get("股票代码", "")
-            dec_map[sym] = d
-
-    lines = []
-    for i, p in enumerate(picks, 1):
-        pct = p.get('涨跌幅', 0)
-        pct_str = f"+{pct:.2f}%" if pct >= 0 else f"{pct:.2f}%"
-        risks = p.get('风险点', [])
-        risks_str = " / ".join(risks) if risks else "无"
-        obs = p.get('建议观察位', {})
-        action = p.get('操作建议', '观察')
-        score = p.get('AI评分', 0)
-
-        sym = p.get('股票代码', '')
-        dec = dec_map.get(sym, {})
-        decision = dec.get('decision', 'no_action')
-        reason   = dec.get('reason', '')
-
-        # 决策标签
-        emoji = {'paper_buy': '📗', 'paper_skip': '🚫', 'paper_hold': '📋', 'paper_sell': '📕'}.get(decision, '⚪')
-        decision_label = {'paper_buy': '✅买入', 'paper_skip': '🚫跳过', 'paper_hold': '📋持有', 'paper_sell': '📕卖出'}.get(decision, '—')
-
-        lines.append(
-            f"{i}. **{p['股票名称']}** ({p['股票代码']})  {pct_str}\n"
-            f"   - 模式：{p['所属模式']}｜AI评分：{score}｜{action}\n"
-            f"   - 入选原因：{p.get('入选原因', '—')}\n"
-            f"   - 风险点：{risks_str}\n"
-            f"   - 观察位：支撑 {obs.get('支撑位', '-')} / 压力 {obs.get('压力位', '-')}\n"
-            f"   - 🔔 **系统决策：{decision_label}** {emoji}\n"
-            f"     原因：{reason}"
-        )
-    return "\n\n".join(lines)
-
-
-def render_paper_decisions_summary(decisions):
-    """渲染 Paper Decision 汇总"""
-    if not decisions:
-        return "**暂无系统决策。**"
-
-    buys  = [d for d in decisions if d.get('decision') == 'paper_buy']
-    sells = [d for d in decisions if d.get('decision') == 'paper_sell']
-    skips = [d for d in decisions if d.get('decision') in ('paper_skip', 'await_price_confirm', 'await_capital_confirm')]
-    holds = [d for d in decisions if d.get('decision') == 'paper_hold']
-    await_caps = [d for d in decisions if d.get('decision') == 'await_capital_confirm']
-
-    lines = []
-    if buys:
-        names = [f"**{d['股票名称']}**({d['股票代码']})" for d in buys]
-        lines.append(f"📗 **买入**：{', '.join(names)}")
-        for d in buys:
-            zone = f"{d.get('entry_zone_min','?')}~{d.get('entry_zone_max','?')}"
-            sl = d.get('stop_loss', '?')
-            lines.append(f"   {d['股票名称']}：买入区间{zone} | 止损{sl} | {d['quantity']}股")
-    if await_caps:
-        names = [f"**{d['股票名称']}**({d['股票代码']})" for d in await_caps]
-        lines.append(f"⏳ **待资金确认**：{', '.join(names)}")
-        for d in await_caps:
-            zone = f"{d.get('entry_zone_min','?')}~{d.get('entry_zone_max','?')}"
-            lines.append(f"   {d['股票名称']}：{zone} | 需确认可用资金后操作")
-    if sells:
-        names = [f"**{d['股票名称']}**({d['股票代码']})" for d in sells]
-        lines.append(f"📕 **卖出**：{', '.join(names)}")
-    if skips:
-        lines.append(f"🚫 **跳过**（{len(skips)}只）：{', '.join(d['股票名称'] for d in skips)}")
-    if not lines:
-        return "**暂无交易决策。**"
-    return "\n".join(lines)
-
-
-def render_trace_picks(picks, decisions):
-    """Phase-2.6C 渲染每只 Top Pick 的完整溯源信息"""
-    if not picks:
-        return "**暂无精选个股。**"
-
-    dec_map = {}
-    for d in (decisions or []):
-        dec_map[d.get('股票代码', '')] = d
-
-    lines = []
-    for i, p in enumerate(picks, 1):
-        sym = p.get('股票代码', '')
-        name = p.get('股票名称', '')
-        price = p.get('价格') or p.get('last_price', '?')
-        chg = p.get('涨跌幅', 0)
-        rsi = p.get('RSI', '?')
-        mode = p.get('所属模式', '?')
-        score = p.get('AI评分', 0)
-        obs = p.get('建议观察位', {})
-        support = obs.get('支撑位', obs.get('support_price', '?'))
-        pressure = obs.get('压力位', obs.get('pressure_price', '?'))
-        action = p.get('操作建议', '?')
-        reasons = p.get('入选原因', '?')
-        dec = dec_map.get(sym, {})
-
-        decision = dec.get('decision', 'no_action')
-        buy_timing = dec.get('buy_timing', '?')
-        zone_min = dec.get('entry_zone_min', '?')
-        zone_max = dec.get('entry_zone_max', '?')
-        # Phase-2.7A: 市场结构字段
-        structure_type = dec.get('structure_type', '?')
-        structure_conf = dec.get('structure_confidence', 0.0)
-        swing_low = dec.get('swing_low', 0.0)
-        swing_high = dec.get('swing_high', 0.0)
-        support_price = dec.get('support_price', 0.0)
-        pressure_price = dec.get('pressure_price', 0.0)
-        max_chase = dec.get('max_chase_price', '?')
-        stop_loss = dec.get('stop_loss', '?')
-        tp_watch = dec.get('take_profit_watch', '?')
-        qty = dec.get('quantity', 0)
-        pos_pct = dec.get('position_size_pct', 0)
-        skip_r = dec.get('skip_reason', '?')
-        # Phase-2.6D: Risk Validation 字段
-        rv_passed = dec.get('risk_validation_passed')
-        rv_reason = dec.get('validation_reason')
-        rv_errors = dec.get('validation_errors', [])
-        rv_warnings = dec.get('validation_warnings', [])
-        rv_ts = dec.get('risk_data_as_of', '?')
-        corrected = dec.get('corrected_values', {})
-
-        # 决策标签
-        dec_map_emoji = {
-            'paper_buy': '📗', 'paper_skip': '🚫', 'paper_hold': '📋',
-            'paper_sell': '📕', 'await_capital_confirm': '⏳', 'await_price_confirm': '⏳'
-        }
-        dec_map_label = {
-            'paper_buy': '✅买入', 'paper_skip': '🚫跳过', 'paper_hold': '📋持有',
-            'paper_sell': '📕卖出', 'await_capital_confirm': '⏳待资金确认', 'await_price_confirm': '⏳待价格确认'
-        }
-        emoji = dec_map_emoji.get(decision, '⚪')
-        label = dec_map_label.get(decision, decision)
-
-        chg_str = f"+{chg:.2f}%" if chg >= 0 else f"{chg:.2f}%"
-        zone_str = f"{zone_min}~{zone_max}" if zone_min and zone_max else '?'
-        qty_str = f"{qty}股" if qty else "待确认"
-
-        lines.append(f"**{i}. {name} ({sym})**  {chg_str} {emoji} {label}")
-        lines.append(f"   - 数据时间：{dec.get('generated_at', '?')}")
-        lines.append(f"   - 现价：{price} | 涨跌幅：{chg_str} | RSI：{rsi}")
-        # Phase-2.7A: 市场结构
-        if structure_type and structure_type != '?':
-            st_emoji = '📊'
-            lines.append(f"   - {st_emoji} 结构：{structure_type} | 置信度：{structure_conf:.0%}" if isinstance(structure_conf, float) else f"   - {st_emoji} 结构：{structure_type} | 置信度：{structure_conf}")
-            lines.append(f"     支撑：{swing_low:.2f} | 压力：{swing_high:.2f} | 建议：{support_price:.2f}~{pressure_price:.2f}")
-        lines.append(f"   - MA20：{p.get('MA20', p.get('ma20', '?'))} | 支撑/压力：{support}/{pressure}")
-        # Phase-2.6D: Risk Validation 状态
-        if rv_passed is False:
-            lines.append(f"   - 风险校验：❌ FAIL | reason: {rv_reason or 'invalid_price_structure'}")
-            for e in rv_errors:
-                lines.append(f"     ❌ {e}")
-            for w in rv_warnings:
-                lines.append(f"     ⚠️  {w}")
-            if corrected:
-                lines.append(f"     🔧 建议修正: {corrected}")
-            lines.append(f"   - 决策：🚫 PAPER_SKIP | reason: {rv_reason or 'invalid_price_structure'}")
-            lines.append(f"   - 禁止展示买入建议 | 禁止进入 paper_trade_executor")
-        elif rv_passed is True:
-            lines.append(f"   - 风险校验：✅ PASS | risk_data_as_of: {rv_ts}")
-            lines.append(f"   - 建议：{action}（{mode} | AI评分 {score}）")
-            if decision in ('paper_buy',):
-                lines.append(f"   - 买入时机：{buy_timing}")
-                lines.append(f"   - 买入区间：{zone_str}")
-                lines.append(f"   - 不追高价：>{max_chase} 放弃")
-                lines.append(f"   - 止损位：{stop_loss} | 止盈观察：{tp_watch}")
-                lines.append(f"   - 建议仓位：{pos_pct:.1f}% | 建议数量：{qty_str}")
-            elif decision in ('await_capital_confirm', 'await_price_confirm'):
-                lines.append(f"   - 买入区间：{zone_str}")
-                lines.append(f"   - 原因：{skip_r}")
-            else:
-                lines.append(f"   - 跳过原因：{skip_r}")
-        else:
-            lines.append(f"   - 风险校验：⚠️ 无校验数据")
-            lines.append(f"   - 建议：{action}（{mode} | AI评分 {score}）")
-            lines.append(f"   - 跳过原因：{skip_r}")
-        # 数据来源简表
-        lines.append(f"   - 数据链路：OpenClaw → robot_3(因子) → robot_4(模式) → action_engine → paper_decision_engine → paper_risk_controller")
-        if i < len(picks):
-            lines.append("")
-
-    return "\n".join(lines)
-
-
-def render_paper_trade(positions, trade_log):
-    """渲染模拟账户"""
+def _fmt_pct(v):
     try:
-        capital = positions.get('capital', {})
-        total = capital.get('total_assets', 0)
-        avail = capital.get('avail_balance', 0)
-        pos_list = positions.get('positions', [])
-        
-        lines = [f"- **持仓**：{len(pos_list)} 只  |  **总资产**：¥{total:,.0f}  |  **可用**：¥{avail:,.0f}"]
-        
-        if pos_list:
-            for pos in pos_list[:5]:
-                profit = pos.get('profit_ratio', 0)
-                profit_str = f"+{profit:.1f}%" if profit >= 0 else f"{profit:.1f}%"
-                lines.append(
-                    f"  • {pos.get('name','?')} ({pos.get('symbol','?')}) "
-                    f"{pos.get('volume',0)}股｜盈亏 {profit_str}"
-                )
-        else:
-            lines.append("  暂无持仓（空仓观望）")
-        
-        # 交易统计
-        trades = trade_log.get('trades', [])
-        today_trades = [t for t in trades if str(t.get('time','')).startswith(TODAY)]
-        if today_trades:
-            buys = sum(1 for t in today_trades if t.get('action') == 'buy')
-            sells = sum(1 for t in today_trades if t.get('action') == 'sell')
-            lines.append(f"- **今日交易**：{buys}笔买入 / {sells}笔卖出")
-        else:
-            lines.append("- **今日交易**：无操作")
-        
-        return "\n".join(lines)
-    except Exception as e:
-        return f"- 模拟账户数据获取失败: {e}"
+        v = float(v)
+        return f"+{v:.2f}%" if v >= 0 else f"{v:.2f}%"
+    except Exception:
+        return "—"
 
 
-def render_runtime_summary():
-    """渲染运行时状态（一句话版）"""
-    health = load_json(BASE / "reports/runtime_event_health.json")
-    freeze_file = BASE / "reports/freeze_integrity.json"
-    freeze = load_json(freeze_file)
-    
-    modules_active = health.get('active_today', 0)
-    modules_total = health.get('total_modules', 21)
-    runtime_status = health.get('status', 'unknown')
-    freeze_status = freeze.get('status', 'unknown') if freeze else 'unknown'
-    
+def _decision_label(decision):
+    return {
+        "paper_buy": "📗 买入",
+        "paper_skip": "🚫 跳过",
+        "paper_hold": "📋 持有",
+        "paper_sell": "📕 卖出",
+        "await_capital_confirm": "⏳ 待资金确认",
+        "await_price_confirm": "⏳ 待价格确认",
+    }.get(decision, decision or "—")
+
+
+def _source_line(d, p):
+    source_trace = d.get("source_trace", {}) if isinstance(d, dict) else {}
+    source_agent = d.get("source_agent") or source_trace.get("source_agent") or "unknown_agent"
+    source_module = d.get("source_module") or source_trace.get("source_module") or "unknown_module"
+    data_source = d.get("data_source") or source_trace.get("data_source") or p.get("data_source") or "unknown_source"
+    data_as_of = d.get("data_as_of") or source_trace.get("data_as_of") or d.get("generated_at") or "unknown_time"
+    trace_id = d.get("trace_id") or source_trace.get("trace_id") or "unknown_trace"
+    replay_snapshot = source_trace.get("replay_snapshot") or d.get("replay_snapshot") or "latest"
+
     return (
-        f"- Runtime：{modules_active}/{modules_total} 活跃｜{runtime_status}\n"
-        f"- Freeze Integrity：{freeze_status}\n"
-        f"- Phase-2.6C Decision Traceability"
+        f"   - 来源：agent={source_agent} | module={source_module} | "
+        f"data_source={data_source} | data_as_of={data_as_of} | "
+        f"trace_id={trace_id} | replay={replay_snapshot}"
     )
 
 
-def render_daily_review_old():
-    """从旧版日报提取关键数据"""
-    old_report = BASE / "report_engine/outputs/2026-05-13.md"
-    if not old_report.exists():
-        return None
-    with open(old_report) as f:
-        content = f.read()
-    return content
+def render_top_picks(picks, decisions):
+    if not picks:
+        return "**暂无精选个股，建议观望。**"
+
+    dec_map = {d.get("股票代码", d.get("symbol", "")): d for d in decisions or []}
+    lines = []
+
+    for i, p in enumerate(picks, 1):
+        sym = p.get("股票代码", p.get("symbol", ""))
+        name = p.get("股票名称", p.get("name", "未知股票"))
+        dec = dec_map.get(sym, {})
+        decision = dec.get("decision", "no_action")
+        pct = _fmt_pct(p.get("涨跌幅", p.get("change_pct", 0)))
+        mode = p.get("所属模式", p.get("mode", "—"))
+        score = p.get("AI评分", p.get("ai_score", "—"))
+        reason = p.get("入选原因", "—")
+
+        structure_type = dec.get("structure_type", p.get("structure_type", "unknown"))
+        structure_conf = dec.get("structure_confidence", p.get("structure_confidence", "—"))
+        support_price = dec.get("support_price", p.get("support_price", "—"))
+        pressure_price = dec.get("pressure_price", p.get("pressure_price", "—"))
+
+        rv_passed = dec.get("risk_validation_passed")
+        rv_reason = dec.get("validation_reason", "")
+        rv_errors = dec.get("validation_errors", [])
+
+        lines.append(f"**{i}. {name} ({sym})**  {pct} | {_decision_label(decision)}")
+        lines.append(f"   - 模式：{mode} | AI评分：{score}")
+        lines.append(f"   - 入选原因：{reason}")
+        lines.append(f"   - 市场结构：{structure_type} | 置信度：{structure_conf} | 支撑/压力：{support_price}/{pressure_price}")
+
+        if rv_passed is False:
+            lines.append(f"   - 风险校验：❌ FAIL | reason={rv_reason or 'invalid_price_structure'}")
+            for e in rv_errors:
+                lines.append(f"     - {e}")
+        elif rv_passed is True:
+            lines.append("   - 风险校验：✅ PASS")
+        else:
+            lines.append("   - 风险校验：⚠️ 未提供")
+
+        lines.append(_source_line(dec, p))
+        lines.append("")
+
+    return "\n".join(lines).strip()
+
+
+def render_paper_decisions_summary(decisions):
+    if not decisions:
+        return "**暂无系统决策。**"
+
+    counts = {}
+    for d in decisions:
+        k = d.get("decision", "unknown")
+        counts[k] = counts.get(k, 0) + 1
+
+    lines = ["| Decision | Count |", "|---|---:|"]
+    for k, v in sorted(counts.items()):
+        lines.append(f"| {k} | {v} |")
+    return "\n".join(lines)
+
+
+def render_risk_validation_summary(decision_data):
+    vr_list = decision_data.get("validation_results", [])
+    if not vr_list:
+        return "**暂无校验数据。**"
+
+    pass_cnt = sum(1 for r in vr_list if r.get("is_valid"))
+    fail_cnt = len(vr_list) - pass_cnt
+    lines = [f"**风险价格校验**: {pass_cnt}✅ | {fail_cnt}❌"]
+
+    for r in vr_list:
+        if not r.get("is_valid"):
+            lines.append(f"- **{r.get('name','?')}** ({r.get('symbol','?')}): ❌ invalid_price_structure")
+            for e in r.get("errors", []):
+                lines.append(f"  - 错误: {e}")
+    return "\n".join(lines)
+
+
+def render_paper_trade(positions):
+    capital = positions.get("capital", {}) if isinstance(positions, dict) else {}
+    pos_list = positions.get("positions", []) if isinstance(positions, dict) else []
+    total = capital.get("total_assets", 0)
+    avail = capital.get("avail_balance", 0)
+    lines = [f"- 持仓：{len(pos_list)} 只 | 总资产：¥{total:,.0f} | 可用：¥{avail:,.0f}"]
+    if not pos_list:
+        lines.append("- 当前空仓或暂无持仓快照。")
+    return "\n".join(lines)
 
 
 def main():
-    print("=== Phase-2.6A 日报生成器 ===")
-    
-    # 加载数据
-    top_picks_data = load_json(TOP_PICKS_FILE)
+    top_picks_data = load_json(TOP_PICKS_FILE, {})
+    decision_data = load_json(DECISION_LOG, {})
     ai_summary = load_text(AI_SUMMARY_FILE)
-    emotion = load_json(EMOTION_FILE)
-    positions = load_json(PAPER_POSITIONS)
-    trade_log = load_json(BASE / "portfolio/trade_log.json")
-    decision_data = load_json(DECISION_LOG)
+    emotion = load_json(EMOTION_FILE, {})
+    positions = load_json(PAPER_POSITIONS, {})
+
+    picks = top_picks_data.get("top_picks", [])
     decisions = decision_data.get("decisions", [])
-    
-    picks = top_picks_data.get('top_picks', [])
-    emotion_data = emotion.get('emotion_analysis', {})
-    market_metrics = emotion.get('market_metrics', {})
-    
-    # 提取关键数据
-    emotion_score = emotion_data.get('emotion_score', 40)
-    market_phase = emotion_data.get('market_phase', 'unknown')
-    risk_level = emotion_data.get('market_risk_level', 'high')
-    strongest = emotion_data.get('strongest_mode', '未知')
-    weakest = emotion_data.get('weakest_mode', '未知')
-    
-    phase_map = {
-        'recovery_phase': '复苏阶段',
-        'breakout_phase': '突破阶段',
-        'defensive_phase': '防御阶段',
-        'trend_phase': '趋势阶段',
-        'consolidation_phase': '震荡阶段',
-    }
-    risk_emoji = {'low': '🟢', 'medium': '🟡', 'medium_high': '🟠', 'high': '🔴'}.get(risk_level, '⚪')
-    phase_cn = phase_map.get(market_phase, market_phase)
-    
-    # ========== 构建新版日报 ==========
+    emotion_data = emotion.get("emotion_analysis", {})
+
+    emotion_score = emotion_data.get("emotion_score", "—")
+    market_phase = emotion_data.get("market_phase", "unknown")
+    risk_level = emotion_data.get("market_risk_level", "unknown")
+
     report_lines = [
         f"# 📊 今日市场复盘 — {TODAY}",
         "",
-        "---",
+        "## 🔝 Top Picks 精选（含机器人来源与数据源）",
         "",
-        "## 🔝 Top Picks 精选（含完整溯源）",
-        "",
-        render_trace_picks(picks, decisions),
+        render_top_picks(picks, decisions),
         "",
         "---",
         "",
-        "## 🤖 Paper Decision 决策层",
+        "## 🤖 Paper Decision 决策汇总",
         "",
         render_paper_decisions_summary(decisions),
         "",
@@ -377,65 +193,47 @@ def main():
         "",
         "## 🧠 AI 市场总结",
         "",
-        ai_summary or f"情绪评分 {emotion_score}/100，当前市场 {phase_cn}，{risk_emoji} {risk_level}。",
+        ai_summary or f"情绪评分 {emotion_score}/100，市场阶段 {market_phase}，风险等级 {risk_level}。",
         "",
         "---",
         "",
         "## 📋 模拟账户状态",
         "",
-        render_paper_trade(positions, trade_log),
+        render_paper_trade(positions),
         "",
         "---",
         "",
         "## 🛡️ Risk Validation 风险价格校验",
         "",
-        render_risk_validation_summary(decision_data) or "**暂无校验数据。**",
+        render_risk_validation_summary(decision_data),
         "",
         "---",
         "",
-        "## 🏥 系统状态",
+        "## 🧾 Source Trace Policy",
         "",
-        render_runtime_summary(),
+        "每条数据类分析必须包含：source_agent / source_module / data_source / data_as_of / trace_id。",
         "",
-        "---",
-        "",
-        "*来源：Cockpit AI 量化系统 | Phase-2.6C Decision Traceability | Hermes-股票*",
+        "*来源：Hermes AI Research Governance Cockpit | Phase-2.7D Source Trace Governance*",
     ]
-    
+
     report_content = "\n".join(report_lines)
-    
-    # 写入历史
     output_file = REPORTS_DIR / f"{TODAY}.md"
-    with open(output_file, 'w') as f:
-        f.write(report_content)
-    print(f"写入: {output_file}")
-    
-    # 同步更新 index
+    output_file.write_text(report_content, encoding="utf-8")
+
     index_file = REPORTS_DIR / "index.json"
-    index = load_json(index_file) if index_file.exists() else {"reports": []}
+    index = load_json(index_file, {"reports": []})
     reports = index.get("reports", [])
-    entry = {"date": TODAY, "file": f"{TODAY}.md", "top_picks_count": len(picks)}
-    # 去重
-    dates = {r['date'] for r in reports}
-    if TODAY not in dates:
-        reports.insert(0, entry)
-    index['reports'] = reports
-    index['last_updated'] = datetime.now().isoformat()
-    with open(index_file, 'w') as f:
-        json.dump(index, f, ensure_ascii=False, indent=2)
-    print(f"更新: {index_file}")
-    
-    print(f"\n✅ 日报生成完成")
-    print(f"   Top Picks: {len(picks)} 只")
-    print(f"   情绪: {emotion_score}/100 | {phase_cn} | {risk_emoji} {risk_level}")
-    
-    # 打印报告内容预览
-    print("\n" + "="*50)
-    print(report_content[:2000])
-    print("="*50)
-    
+    if TODAY not in {r.get("date") for r in reports}:
+        reports.insert(0, {"date": TODAY, "file": f"{TODAY}.md", "top_picks_count": len(picks)})
+    index["reports"] = reports
+    index["last_updated"] = datetime.now().isoformat()
+    index_file.write_text(json.dumps(index, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    print(f"✅ 日报生成完成: {output_file}")
+    print(f"   Top Picks: {len(picks)}")
+    print("   Source Trace: ENABLED")
     return report_content
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
