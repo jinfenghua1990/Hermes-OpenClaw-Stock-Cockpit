@@ -1,0 +1,111 @@
+# Hermes Team Governance — 官方团队注册表
+# 冻结时间: 2026-05-13
+# 状态: 🧊 FREEZE ACTIVE
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 【一、正式团队注册表】
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# 团队定义：不可动态创建/删除，仅在此处声明
+official_team:
+
+  MAIN:
+    role: coordinator_and_audit
+    description: 系统管理员 · 调度协调 · 审计汇总
+    status: active
+    permissions: supervisor_only
+    constraints:
+      - 禁止自行创建 robot
+      - 禁止临时扩展团队
+      - 禁止使用未注册 robot
+      - 禁止修改团队结构
+      - 只允许调度 official_team
+      - 只允许汇总 official_team 输出
+      - 维护 GitHub 中央治理
+      - 执行 Freeze/Audit
+
+  OpenClaw:
+    role: execution_layer
+    description: 原始数据采集执行层（K线/行情/财务数据抓取）
+    status: active
+    permissions: execute_read_only
+
+  robot_2:
+    role: research_engine
+    description: 综合研究分析引擎（消息面/技术面/资金面/题材逻辑）
+    status: active
+    permissions: analyze_read_only
+
+  robot_3:
+    role: feature_engine
+    description: 特征工程引擎（技术指标/因子计算/数据质量）
+    status: active
+    permissions: compute_read_only
+
+  robot_4:
+    role: strategy_scan
+    description: 策略扫描引擎（四种选股模式扫描/候选股生成）
+    status: active
+    permissions: scan_read_only
+
+  robot_5:
+    role: report_engine
+    description: 报告引擎（日报/周报/健康检查/汇总输出）
+    status: active
+    permissions: report_read_only
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 【二、保留位（未部署）】
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+reserved_team:
+
+  robot_6:
+    status: reserved
+    deployed: false
+    notes: 待分配 · 非正式团队成员
+
+  robot_7:
+    status: reserved
+    deployed: false
+    notes: 待分配 · 非正式团队成员
+
+  robot_8:
+    status: reserved
+    deployed: false
+    notes: 待分配 · 非正式团队成员
+
+  robot_9:
+    status: reserved
+    deployed: false
+    notes: 待分配 · 非正式团队成员
+
+  robot_10:
+    status: reserved
+    deployed: false
+    notes: 待分配 · 非正式团队成员
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 【三、治理规则】
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+governance_rules:
+  dynamic_robot_creation: false
+  temporary_role_creation: false
+  unregistered_robot_access: blocked
+  official_robot_registry_required: true
+
+  # 变更审批（任何团队变更均需人工审核）
+  change_approval:
+    required: true
+    approver: MAIN + 用户确认
+    workflow: create_pr → user_audit → merge
+
+  # 审计周期
+  audit_schedule:
+    frequency: 每周一次
+    items:
+      - 检查 robot 成员是否越权
+      - 检查是否有未注册 robot 被调用
+      - 检查 Governance 文件未被篡改
+      - 检查 Freeze 状态是否被解除

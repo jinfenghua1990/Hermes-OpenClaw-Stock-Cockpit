@@ -1,0 +1,39 @@
+{
+  "freeze_status": "ACTIVE",
+  "freeze_version": "v1.0",
+  "freeze_timestamp": "2026-05-13T10:25:00+08:00",
+  "phase": "Phase-2.4B",
+  "mode": "OBSERVE_ONLY",
+  "official_team": ["MAIN", "OpenClaw", "robot_2", "robot_3", "robot_4", "robot_5"],
+  "reserved_team": ["robot_6", "robot_7", "robot_8", "robot_9", "robot_10"],
+  "governance_rules": {
+    "dynamic_robot_creation": false,
+    "temporary_role_creation": false,
+    "unregistered_robot_access": "blocked",
+    "official_robot_registry_required": true
+  },
+  "change_control": {
+    "required": true,
+    "approver": "MAIN + 用户确认",
+    "workflow": "create_pr → user_audit → merge"
+  },
+  "audit_schedule": {
+    "frequency": "每周一次",
+    "items": [
+      "检查 robot 成员是否越权",
+      "检查是否有未注册 robot 被调用",
+      "检查 Governance 文件未被篡改",
+      "检查 Freeze 状态是否被解除"
+    ]
+  },
+  "current_principles": {
+    "do_not_add": ["Robot", "AI自治", "自动学习", "自动交易", "Baseline修改"],
+    "focus_areas": ["团队治理", "数据治理", "Health治理", "一致性治理"]
+  },
+  "system_metrics": {
+    "coverage_pct": 91.06,
+    "daily_pipeline": "operational",
+    "report_pipeline": "operational",
+    "health": "warning_accepted"
+  }
+}
