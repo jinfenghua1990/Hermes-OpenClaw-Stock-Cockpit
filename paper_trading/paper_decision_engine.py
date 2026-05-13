@@ -197,6 +197,19 @@ def process():
         reasons = p.get('入选原因', '')
         risks   = p.get('风险点', [])
 
+        # Phase-2.7A: 市场结构字段（来自 market_structure_engine）
+        structure_type = p.get('structure_type', 'unknown')
+        structure_confidence = p.get('structure_confidence', 0.0)
+        structure_source = p.get('structure_source', 'unknown')
+        structure_version = p.get('structure_version', '2.7a')
+        swing_low = p.get('swing_low', 0.0)
+        swing_high = p.get('swing_high', 0.0)
+        # structure invalid → 直接 paper_skip
+        if structure_type == 'invalid':
+            action = 'paper_skip'
+            decision = 'paper_skip'
+            reason = 'invalid_price_structure'
+
         # 买入区间
         zone_min, zone_max, max_chase = build_entry_zone(price, chg)
 
@@ -294,6 +307,9 @@ def process():
             'support_data_as_of': factor_ts,
             'pressure_data_as_of': factor_ts,
             'risk_data_as_of': factor_ts,
+            # Phase-2.7A: 市场结构
+            'structure_type': structure_type,
+            'structure_confidence': structure_confidence,
         }
         rv = validate_risk_price_structure(risk_payload)
         # 如果校验失败 → 强制 paper_skip，禁止进入 paper_trade_executor
@@ -407,6 +423,13 @@ def process():
             'RSI': rsi,
             '操作建议': action,
             '所属模式': mode,
+            # Phase-2.7A: 市场结构字段
+            'structure_type': structure_type,
+            'structure_confidence': structure_confidence,
+            'structure_source': structure_source,
+            'structure_version': structure_version,
+            'swing_low': swing_low,
+            'swing_high': swing_high,
             # Phase-2.6D: risk_validation fields
             'risk_validation_passed': rv.get('validation_passed'),
             'validation_reason': rv.get('reason'),

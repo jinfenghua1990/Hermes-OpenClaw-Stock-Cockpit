@@ -177,6 +177,13 @@ def render_trace_picks(picks, decisions):
         buy_timing = dec.get('buy_timing', '?')
         zone_min = dec.get('entry_zone_min', '?')
         zone_max = dec.get('entry_zone_max', '?')
+        # Phase-2.7A: 市场结构字段
+        structure_type = dec.get('structure_type', '?')
+        structure_conf = dec.get('structure_confidence', 0.0)
+        swing_low = dec.get('swing_low', 0.0)
+        swing_high = dec.get('swing_high', 0.0)
+        support_price = dec.get('support_price', 0.0)
+        pressure_price = dec.get('pressure_price', 0.0)
         max_chase = dec.get('max_chase_price', '?')
         stop_loss = dec.get('stop_loss', '?')
         tp_watch = dec.get('take_profit_watch', '?')
@@ -210,6 +217,11 @@ def render_trace_picks(picks, decisions):
         lines.append(f"**{i}. {name} ({sym})**  {chg_str} {emoji} {label}")
         lines.append(f"   - 数据时间：{dec.get('generated_at', '?')}")
         lines.append(f"   - 现价：{price} | 涨跌幅：{chg_str} | RSI：{rsi}")
+        # Phase-2.7A: 市场结构
+        if structure_type and structure_type != '?':
+            st_emoji = '📊'
+            lines.append(f"   - {st_emoji} 结构：{structure_type} | 置信度：{structure_conf:.0%}" if isinstance(structure_conf, float) else f"   - {st_emoji} 结构：{structure_type} | 置信度：{structure_conf}")
+            lines.append(f"     支撑：{swing_low:.2f} | 压力：{swing_high:.2f} | 建议：{support_price:.2f}~{pressure_price:.2f}")
         lines.append(f"   - MA20：{p.get('MA20', p.get('ma20', '?'))} | 支撑/压力：{support}/{pressure}")
         # Phase-2.6D: Risk Validation 状态
         if rv_passed is False:

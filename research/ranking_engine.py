@@ -3,10 +3,12 @@
 Phase-2.6A Research Intelligence Layer
 Ranking Engine — 对候选股重新评分排序，生成 Top Picks
 """
-import json, os, sys
+import json, os, sys, glob
 from datetime import datetime
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(BASE, 'core'))
+from market_structure_engine import build_market_structure
 CANDIDATE_FILE = f"{BASE}/portfolio/candidate_rankings.json"
 OBS_POOL_FILE = f"{BASE}/portfolio/observation_pool.json"
 OUTPUT_DIR = f"{BASE}/reports"
@@ -154,6 +156,51 @@ def get_action(price: float, rsi: float, pct: float, pattern: str) -> str:
         return "观察"
 
 
+def _load_kline_for_symbol(symbol: str) -> list:
+    """Phase-2.7A: 加载 K 线数据"""
+    today = datetime.now().strftime("%Y-%m-%d")
+    patterns = [
+        os.path.join(BASE, "mx_data_output", f"*{symbol}*raw.json"),
+        os.path.join(BASE, "mx_data_output", f"*{symbol}*.json"),
+    ]
+    for pat in patterns:
+        files = glob.glob(pat)
+        if files:
+            try:
+                data = json.load(open(files[0]))
+                if isinstance(data, dict) and "klines" in data:
+                    return data["klines"]
+                if isinstance(data, list):
+                    return data
+                if isinstance(data, dict) and "data" in data:
+                    return data["data"]
+            except:
+                pass
+    return []
+
+def _load_indicators_for_candidate(c: dict, symbol: str) -> dict:
+    """Phase-2.7A: 从候选股数据提取指标"""
+    result = {}
+    for key in ("close", "ma5", "ma10", "ma20", "MA5", "MA10", "MA20", "收盘", "MA5均线", "MA20均线"):
+        if key in c and c[key]:
+            result[key.lower().replace('均线','').replace('收盘','close')] = c[key]
+    # 从 features/cache 补充
+    cache_file = os.path.join(BASE, "features", "cache", "daily_features.json")
+    if os.path.exists(cache_file):
+        try:
+            cache = json.load(open(cache_file))
+            if isinstance(cache, dict) and symbol in cache:
+                item = cache[symbol]
+                for key in ("ma5", "ma10", "ma20", "close"):
+                    if key in item and key not in result:
+                        result[key] = item[key]
+        except:
+            pass
+    if result:
+        result["data_as_of"] = c.get("timestamp", c.get("data_as_of", ""))
+    return result
+
+
 def build_top_picks(candidates: list, top_n: int = 8) -> list:
     """构建Top Picks"""
     picks = []
@@ -176,9 +223,13 @@ def build_top_picks(candidates: list, top_n: int = 8) -> list:
         # 观察位（支撑/压力）
         ma5 = c.get('MA5', price)
         ma20 = c.get('MA20', price)
-        observe_price = round(ma20 * 0.99, 2) if price > ma20 else round(ma5 * 0.99, 2)
-        pressure_price = round(ma20 * 1.05, 2)
-        
+        # Phase-2.7A: 使用真实市场结构引擎生成支撑/压力
+        kline_data = _load_kline_for_symbol(symbol)
+        indicators = _load_indicators_for_candidate(c, symbol)
+        ms = build_market_structure(symbol, kline_data, indicators)
+        observe_price = ms.get('support_price', observe_price)
+        pressure_price = ms.get('pressure_price', pressure_price)
+
         # 风险点
         risks = []
         if rsi > 70:
@@ -189,9 +240,9 @@ def build_top_picks(candidates: list, top_n: int = 8) -> list:
             risks.append("量比异常")
         if not risks:
             risks.append("无明显风险")
-        
+
         action = get_action(price, rsi, pct, pattern)
-        
+
         picks.append({
             "股票代码": c.get('股票代码', ''),
             "股票名称": c.get('股票名称', ''),
@@ -204,6 +255,16 @@ def build_top_picks(candidates: list, top_n: int = 8) -> list:
                 "支撑位": observe_price,
                 "压力位": pressure_price
             },
+            # Phase-2.7A: 市场结构字段
+            "support_price": ms.get('support_price', 0.0),
+            "pressure_price": ms.get('pressure_price', 0.0),
+            "swing_low": ms.get('swing_low', 0.0),
+            "swing_high": ms.get('swing_high', 0.0),
+            "structure_type": ms.get('structure_type', 'unknown'),
+            "structure_confidence": ms.get('structure_confidence', 0.0),
+            "structure_source": ms.get('structure_source', 'unknown'),
+            "structure_version": ms.get('structure_version', '2.7a'),
+            "structure_data_as_of": ms.get('data_as_of', ''),
             "操作建议": action,
             "价格": price,
             "涨跌幅": pct,

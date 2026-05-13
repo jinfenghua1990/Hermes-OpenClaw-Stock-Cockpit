@@ -209,6 +209,14 @@ function TopPicks({ data, decisions, riskValidation }) {
               <div style={{ fontSize: 10, color: 'var(--text-dim)' }}>
                 {p.入选原因}
               </div>
+              {/* Phase-2.7A: 市场结构字段 */}
+              {p.structure_type && p.structure_type !== '?' && (
+                <div style={{ fontSize: 10, color: 'var(--blue-bright)', marginTop: 2 }}>
+                  📊 {p.structure_type} | 置信度 {typeof p.structure_confidence === 'number' ? `${(p.structure_confidence * 100).toFixed(0)}%` : p.structure_confidence}
+                  {p.swing_low > 0 && p.swing_high > 0 && ` | swing ${p.swing_low.toFixed(2)}/${p.swing_high.toFixed(2)}`}
+                  {p.support_price > 0 && p.pressure_price > 0 && ` | 建议 ${p.support_price.toFixed(2)}~${p.pressure_price.toFixed(2)}`}
+                </div>
+              )}
             </div>
           );
         })}
@@ -473,7 +481,7 @@ function DailyReport({ reportPath }) {
 function Footer({ lastUpdate }) {
   return (
     <div className="footer">
-      Hermes AI Trading Cockpit — Phase-2.6E Replay Snapshot Persistence | 最后更新: {lastUpdate || '—'}
+      Hermes AI Trading Cockpit — Phase-2.7A Market Structure Engine | 最后更新: {lastUpdate || '—'}
     </div>
   );
 }

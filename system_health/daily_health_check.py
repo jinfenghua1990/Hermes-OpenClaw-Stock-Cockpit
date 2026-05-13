@@ -195,6 +195,19 @@ def check_risk_price_validation():
         return {"status": "error", "message": f"检查风控时出错: {str(e)}"}
 
 
+# ══ Helper: 加载最新 replay snapshot ═══════════════════════════════════════
+def _load_latest_replay_snapshot():
+    """读取今日 replay snapshot 文件，供各检查函数复用。"""
+    today = datetime.datetime.now().strftime("%Y-%m-%d")
+    snap_path = BASE_DIR / "replay_engine" / "snapshots" / f"{today}.json"
+    if snap_path.exists():
+        try:
+            return json.loads(snap_path.read_text())
+        except:
+            pass
+    return None
+
+
 # ══ Phase-2.6E: Replay Snapshot Persistence Check ══════════════════════════
 def check_replay_snapshot_persistence():
     """
@@ -234,6 +247,54 @@ def check_replay_snapshot_persistence():
             }
     except Exception as e:
         return {"status": "error", "message": f"检查 replay snapshot 时出错: {str(e)}"}
+
+
+# ══ Phase-2.7A: Market Structure Health Check ═══════════════════════════════
+def check_market_structure_health():
+    """
+    检查市场结构数据质量。
+    规则：
+    - valid_structure_rate >= 90%：SUCCESS
+    - valid_structure_rate >= 70% 且 < 90%：WARNING
+    - valid_structure_rate < 70%：CRITICAL
+    - invalid 结构数量 > 0：至少 WARNING
+    """
+    try:
+        snap = _load_latest_replay_snapshot()
+        if not snap:
+            return {"status": "success", "message": "Replay snapshot 不存在，跳过结构健康检查"}
+        decisions = snap.get("decisions", [])
+        if not decisions:
+            return {"status": "success", "message": "无 decision 数据，跳过结构健康检查"}
+        total = len(decisions)
+        invalid_count = sum(1 for d in decisions if d.get("structure_type") == "invalid")
+        fallback_count = sum(1 for d in decisions if d.get("structure_type") == "fallback_ma20")
+        valid_count = total - invalid_count
+        valid_rate = valid_count / total if total > 0 else 0
+        # 判断状态
+        if invalid_count > 0:
+            status = "warning"
+        elif valid_rate >= 0.90:
+            status = "success"
+        elif valid_rate >= 0.70:
+            status = "warning"
+        else:
+            status = "critical"
+        msg = (
+            f"有效结构率 {valid_rate:.0%} | invalid: {invalid_count} | "
+            f"fallback_ma20: {fallback_count} | valid: {valid_count}/{total}"
+        )
+        return {
+            "status": status,
+            "message": msg,
+            "valid_structure_rate": round(valid_rate, 3),
+            "invalid_count": invalid_count,
+            "fallback_count": fallback_count,
+            "valid_count": valid_count,
+            "total": total,
+        }
+    except Exception as e:
+        return {"status": "error", "message": f"检查市场结构时出错: {str(e)}"}
 
 
 def check_emotion_snapshot():
@@ -448,6 +509,8 @@ def generate_health_report():
         "risk_price_validation": check_risk_price_validation(),
         # Phase-2.6E: Replay Snapshot Persistence
         "replay_snapshot_persistence": check_replay_snapshot_persistence(),
+        # Phase-2.7A: Market Structure Health
+        "market_structure_health": check_market_structure_health(),
         "system_monitor": check_system_monitor(),
         "runtime_event_health": check_runtime_event_health(),
         "snapshot_consistency": check_snapshot_consistency(),
