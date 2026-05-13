@@ -1,0 +1,66 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Unified governance event system for MAIN and official robots.
+
+event_schema:
+  required_fields:
+    - event_id
+    - timestamp
+    - actor
+    - event_type
+    - severity
+    - phase
+    - governance_state
+    - description
+
+severity_levels:
+  info:
+    description: normal operational event
+  warning:
+    description: governance inconsistency detected
+  critical:
+    description: freeze violation or prohibited behavior
+
+event_types:
+  - pipeline_started
+  - pipeline_completed
+  - health_check_completed
+  - report_generated
+  - consensus_generated
+  - governance_change_attempt
+  - freeze_violation_attempt
+  - unregistered_robot_detected
+  - github_sync_completed
+  - risk_override_triggered
+
+routing:
+  MAIN:
+    receives:
+      - all
+  OpenClaw:
+    receives:
+      - operational
+  robot_2:
+    receives:
+      - research_related
+  robot_3:
+    receives:
+      - factor_related
+  robot_4:
+    receives:
+      - strategy_related
+  robot_5:
+    receives:
+      - governance_related
+
+constraints:
+  no_dynamic_robot_creation: true
+  official_registry_required: true
+  no_hidden_event_types: true
+
+storage:
+  path: governance/events/
+  github_sync_required: true
+
+status: active
