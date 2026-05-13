@@ -1,0 +1,13 @@
+{
+  "phase": "Phase-2.4B",
+  "effective_success_statuses": [
+    "success",
+    "warning_accepted"
+  ],
+  "accepted_warning": {
+    "kline_update": "pre-close session or accepted post-close data delay"
+  },
+  "freeze_mode": "OBSERVE_ONLY",
+  "next_run": "15:10 post-close kline update plus health check",
+  "priority": "data_foundation_first"
+}
