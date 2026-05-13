@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "phase": "Phase-2.6A",
+  "generated_at": "2026-05-13T18:04:30.063809",
+  "watchlist": [
+    {
+      "code": "301282",
+      "name": "金禄电子",
+      "pattern": "回踩止跌型",
+      "action": "低吸机会 🔔",
+      "score": 97.09
+    },
+    {
+      "code": "002130",
+      "name": "沃尔核材",
+      "pattern": "回踩止跌型",
+      "action": "观察",
+      "score": 81.0
+    },
+    {
+      "code": "002463",
+      "name": "沪电股份",
+      "pattern": "综合候选",
+      "action": "观察 ⚠️",
+      "score": 52.78
+    },
+    {
+      "code": "603629",
+      "name": "利通电子",
+      "pattern": "综合候选",
+      "action": "观察 ⚠️",
+      "score": 28.35
+    }
+  ],
+  "trade_prohibited": true,
+  "note": "观察列表，不自动交易"
+}

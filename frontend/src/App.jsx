@@ -136,6 +136,91 @@ function SnapshotConsistency({ data }) {
 }
 
 /* ────────────────────────────────────────────────────────────
+   Top Picks
+──────────────────────────────────────────────────────────── */
+function TopPicks({ data }) {
+  if (!data) return <Card><div className="loading">加载中...</div></Card>;
+  const picks = data.top_picks || [];
+  if (picks.length === 0) return (
+    <Card>
+      <div style={{ fontSize: 12, color: 'var(--text-dim)' }}>暂无精选个股</div>
+    </Card>
+  );
+  return (
+    <Card>
+      <div className="flex-between" style={{ marginBottom: 10 }}>
+        <span style={{ fontSize: 13, fontWeight: 600 }}>🔝 Top Picks</span>
+        <span style={{ fontSize: 11, color: 'var(--text-dim)' }}>{picks.length} 只</span>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {picks.map((p, i) => {
+          const pct = p.涨跌幅 || 0;
+          const pctColor = pct >= 0 ? 'var(--green)' : 'var(--red)';
+          const actionColor = p.操作建议?.includes('🔔') ? 'var(--blue-bright)' : p.操作建议?.includes('⚠️') ? 'var(--yellow)' : 'var(--text-dim)';
+          return (
+            <div key={i} style={{
+              border: '1px solid var(--border)',
+              borderRadius: 6,
+              padding: '8px 10px',
+              background: '#0a0a15'
+            }}>
+              <div className="flex-between" style={{ marginBottom: 4 }}>
+                <div>
+                  <strong style={{ fontSize: 13, color: 'var(--text)' }}>{p.股票名称}</strong>
+                  <span style={{ fontSize: 11, color: 'var(--text-dim)', marginLeft: 6 }}>{p.股票代码}</span>
+                </div>
+                <span style={{ fontSize: 12, color: pctColor, fontWeight: 600 }}>
+                  {pct >= 0 ? '+' : ''}{pct.toFixed(2)}%
+                </span>
+              </div>
+              <div style={{ fontSize: 11, color: 'var(--text-dim)', marginBottom: 3 }}>
+                <span style={{ color: 'var(--blue-bright)' }}>{p.所属模式}</span>
+                <span style={{ marginLeft: 8 }}>AI {p.AI评分}</span>
+                <span style={{ marginLeft: 8, color: actionColor }}>{p.操作建议}</span>
+              </div>
+              <div style={{ fontSize: 10, color: 'var(--text-dim)' }}>
+                {p.入选原因}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </Card>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────
+   Emotion Snapshot
+──────────────────────────────────────────────────────────── */
+function EmotionSnapshot({ data }) {
+  if (!data) return <Card><div className="loading">加载中...</div></Card>;
+  const em = data.emotion_analysis || {};
+  const score = em.emotion_score || 0;
+  const phase = em.market_phase || 'unknown';
+  const risk = em.market_risk_level || 'high';
+  const phaseMap = { recovery_phase: '复苏', breakout_phase: '突破', defensive_phase: '防御', consolidation_phase: '震荡', trend_phase: '趋势' };
+  const riskColor = { low: 'var(--green)', medium: 'var(--yellow)', medium_high: 'var(--orange)', high: 'var(--red)' };
+  return (
+    <Card>
+      <div className="flex-between" style={{ marginBottom: 8 }}>
+        <span style={{ fontSize: 12 }}>🧠 市场情绪</span>
+        <span style={{ fontSize: 11, color: riskColor[risk] || 'var(--text-dim)', fontWeight: 600 }}>
+          {risk.toUpperCase()}
+        </span>
+      </div>
+      <div style={{ fontSize: 28, fontWeight: 700, color: score >= 50 ? 'var(--green)' : 'var(--red)', marginBottom: 4 }}>
+        {score}/100
+      </div>
+      <div style={{ fontSize: 11, color: 'var(--text-dim)', marginBottom: 4 }}>
+        {phaseMap[phase] || phase} | {em.strongest_mode || '—'}
+      </div>
+      <div style={{ fontSize: 10, color: 'var(--text-dim)' }}>
+        突破型: {data.market_metrics?.mode2_count || 0} | 小阳型: {data.market_metrics?.mode3_count || 0}
+      </div>
+    </Card>
+  );
+}
+/* ────────────────────────────────────────────────────────────
    Freeze Integrity
 ──────────────────────────────────────────────────────────── */
 function FreezeIntegrity({ data }) {
@@ -306,7 +391,7 @@ function DailyReport({ reportPath }) {
 function Footer({ lastUpdate }) {
   return (
     <div className="footer">
-      Hermes AI Trading Cockpit — Phase-2.5 | 最后更新: {lastUpdate || '—'}
+      Hermes AI Trading Cockpit — Phase-2.6A Research Intelligence | 最后更新: {lastUpdate || '—'}
     </div>
   );
 }
@@ -325,6 +410,8 @@ export default function App() {
   const [reportDelivery, setReportDelivery] = useState(null);
   const [paperTrade, setPaperTrade] = useState(null);
   const [paperPositions, setPaperPositions] = useState(null);
+  const [topPicks, setTopPicks] = useState(null);
+  const [emotionData, setEmotionData] = useState(null);
 
   // Clock
   useEffect(() => {
@@ -353,6 +440,8 @@ export default function App() {
         fetchJSON(`${BASE}/reports/report_delivery_status.json`),
         fetchJSON(`${BASE}/paper_trading/reports/daily_pnl_report.json`),
         fetchJSON(`${BASE}/paper_trading/reports/positions_snapshot_report.json`),
+        fetchJSON(`${BASE}/reports/top_picks.json`),
+        fetchJSON(`${BASE}/emotion_engine/cache/market_emotion_snapshot.json`),
       ]);
       setHealth(healthData);
       setRuntimeHealth(rhData);
@@ -361,6 +450,8 @@ export default function App() {
       setReportDelivery(rdData);
       setPaperTrade(ptData);
       setPaperPositions(ppData);
+      setTopPicks(tpData);
+      setEmotionData(emData);
       setLastUpdate(new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }));
     }
     load();
@@ -378,7 +469,7 @@ export default function App() {
         <div className="header-title">🤖 HERMES COCKPIT</div>
         <div className="header-right">
           <span className="header-clock">{clock}</span>
-          <span className="badge badge-pass">Phase-2.5</span>
+          <span className="badge badge-pass">Phase-2.6A</span>
           <span className="badge badge-info">{mode}</span>
         </div>
       </div>
@@ -386,52 +477,60 @@ export default function App() {
       {/* Main */}
       <div className="main">
 
-        {/* A. System Status */}
-        <Section title="A. System Status">
-          <SystemStatus
-            phase={phase}
-            mode={mode}
-            freeze={freeze?.freeze_status || freeze?.freeze_state || 'ACTIVE'}
-            soul={freeze?.observe_only ? 'OBSERVE_ONLY' : '—'}
-            uptime={health ? `${health.active_today || 0}/${health.total_modules || 0}` : '—'}
-          />
-        </Section>
+      {/* A. Top Picks + Emotion (Phase-2.6A Research Intelligence) */}
+      <Section title="A. 🔝 Top Picks">
+        <div className="grid-2">
+          <TopPicks data={topPicks} />
+          <EmotionSnapshot data={emotionData} />
+        </div>
+      </Section>
 
-        {/* B. Health Gates */}
-        <Section title="B. Health Gates">
-          <div className="grid-2">
-            <RuntimeEventHealth data={runtimeHealth} />
-            <FreezeIntegrity data={freeze} />
-            <SnapshotConsistency data={consistency} />
-            <ReportDelivery data={reportDelivery} />
-          </div>
-        </Section>
+      {/* B. System Status */}
+      <Section title="B. System Status">
+        <SystemStatus
+          phase={phase}
+          mode={mode}
+          freeze={freeze?.freeze_status || freeze?.freeze_state || 'ACTIVE'}
+          soul={freeze?.observe_only ? 'OBSERVE_ONLY' : '—'}
+          uptime={health ? `${health.active_today || 0}/${health.total_modules || 0}` : '—'}
+        />
+      </Section>
 
-        {/* C. Paper Trade */}
-        <Section title="C. Paper Trade">
-          <div className="grid-2">
-            <PaperTrade report={paperTrade} positions={paperPositions} />
-            {paperTrade && (
-              <Card>
-                <div style={{ marginBottom: 8 }}>风控状态</div>
-                <div style={{ fontSize: 11, color: 'var(--text-dim)' }}>
-                  <div>✅ KILL_SWITCH: {paperTrade.kill_switch ? 'ON' : 'OFF (观察)'}</div>
-                  <div>✅ 单股仓位上限: 30%</div>
-                  <div>✅ 单日最多: 10 笔</div>
-                  <div>✅ 熔断阈值: 连续3笔亏损</div>
-                  <div>✅ 禁止 &gt;300 元股</div>
-                  <hr className="divider" />
-                  <div style={{ color: 'var(--green)' }}>🛡️ 风控通过 — 可正常交易</div>
-                </div>
-              </Card>
-            )}
-          </div>
-        </Section>
+      {/* C. Health Gates (Governance) */}
+      <Section title="C. Health Gates">
+        <div className="grid-2">
+          <RuntimeEventHealth data={runtimeHealth} />
+          <FreezeIntegrity data={freeze} />
+          <SnapshotConsistency data={consistency} />
+          <ReportDelivery data={reportDelivery} />
+        </div>
+      </Section>
 
-        {/* D. Daily Report */}
-        <Section title="D. Daily Report">
-          <DailyReport reportPath={`file://${BASE}/report_engine/outputs/2026-05-13.md`} />
-        </Section>
+      {/* D. Paper Trade */}
+      <Section title="D. Paper Trade">
+        <div className="grid-2">
+          <PaperTrade report={paperTrade} positions={paperPositions} />
+          {paperTrade && (
+            <Card>
+              <div style={{ marginBottom: 8 }}>风控状态</div>
+              <div style={{ fontSize: 11, color: 'var(--text-dim)' }}>
+                <div>✅ KILL_SWITCH: {paperTrade.kill_switch ? 'ON' : 'OFF (观察)'}</div>
+                <div>✅ 单股仓位上限: 30%</div>
+                <div>✅ 单日最多: 10 笔</div>
+                <div>✅ 熔断阈值: 连续3笔亏损</div>
+                <div>✅ 禁止 &gt;300 元股</div>
+                <hr className="divider" />
+                <div style={{ color: 'var(--green)' }}>🛡️ 风控通过 — 可正常交易</div>
+              </div>
+            </Card>
+          )}
+        </div>
+      </Section>
+
+      {/* E. Daily Report */}
+      <Section title="E. Daily Report">
+        <DailyReport reportPath={`file://${BASE}/reports/history/2026-05-13.md`} />
+      </Section>
 
       </div>
 
