@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "phase": "Phase-2.6C Data Provenance",
+  "generated_at": "2026-05-13T18:34:14",
+  "date": "2026-05-13",
+  "total_picks": 4,
+  "decision_summary": {
+    "paper_buy": 0,
+    "paper_sell": 0,
+    "paper_skip": 4,
+    "paper_hold": 0,
+    "await_price_confirm": 0
+  },
+  "buy_candidates": [],
+  "skip_candidates": [
+    {
+      "symbol": "301282",
+      "name": "金禄电子",
+      "skip_reason": "资金数据缺失（total_assets=0），需次日前置确认，建议仓位0股参考"
+    },
+    {
+      "symbol": "002130",
+      "name": "沃尔核材",
+      "skip_reason": "操作建议=观察，非明确买入信号"
+    },
+    {
+      "symbol": "002463",
+      "name": "沪电股份",
+      "skip_reason": "操作建议=观察 ⚠️，非明确买入信号"
+    },
+    {
+      "symbol": "603629",
+      "name": "利通电子",
+      "skip_reason": "操作建议=观察 ⚠️，非明确买入信号"
+    }
+  ],
+  "data_sources_summary": {
+    "kline": "OpenClaw / openclaw/data_output/",
+    "price": "OpenClaw / mx_data_output/",
+    "factors": "robot_3 / features/cache/daily_technical_factors.json",
+    "mode_scan": "robot_4 / mode_scan/output/",
+    "ranking": "action_engine / reports/top_picks.json",
+    "risk": "paper_risk_controller / paper_trading/reports/risk_status_report.json",
+    "decision": "paper_decision_engine / reports/paper_decision_log.json"
+  },
+  "agent_chain": "MAIN → OpenClaw → robot_3 → robot_4 → action_engine → paper_decision_engine → paper_risk_controller"
+}

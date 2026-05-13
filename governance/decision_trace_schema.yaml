@@ -1,0 +1,161 @@
+version: 1.0
+phase: Phase-2.6C
+purpose: Decision traceability and data provenance for every Top Pick conclusion
+
+# ==================================================
+# 每个 Top Pick 必须有的基础字段
+# ==================================================
+top_pick_fields:
+  identification:
+    - symbol          # 股票代码
+    - name            # 股票名称
+
+  timestamps:
+    - report_time       # 报表生成时间（谁最先产出该股的时间）
+    - decision_time     # paper_decision_engine 决策时间
+    - market_time       # 数据对应的市场时间
+    - data_as_of        # 数据截止时间
+
+  price_data:
+    - last_price        # 最新价
+    - change_pct        # 涨跌幅
+    - volume_ratio      # 量比
+    - rsi               # RSI
+    - ma5               # MA5
+    - ma20              # MA20
+    - support_price     # 支撑位
+    - pressure_price   # 压力位
+
+  decision_data:
+    - decision          # paper_buy / paper_skip / paper_hold / paper_sell / await_price_confirm
+    - action            # buy / skip / hold / sell / watch_only
+    - buy_timing        # intraday_buy / next_day_low_buy / close_buy / watch_only
+    - entry_zone_min    # 买入区间最低
+    - entry_zone_max    # 买入区间最高
+    - max_chase_price   # 不追高价（超过此价放弃）
+    - stop_loss         # 止损位
+    - take_profit_watch # 止盈观察位
+    - position_size     # 仓位比例（%）
+    - quantity           # 建议股数
+    - reason            # 买入/跳过原因
+    - skip_reason       # 跳过原因（当 decision=paper_skip 时）
+
+  data_sources:
+    kline_source:        # K线数据来源
+      engine: string     # OpenClaw
+      file: string      # 原始 CSV/JSON 路径
+      timestamp: string
+    price_source:        # 价格数据来源
+      engine: string
+      file: string
+      timestamp: string
+    factor_source:       # 因子数据来源
+      engine: string     # robot_3
+      file: string       # features/cache/daily_technical_factors.json
+      timestamp: string
+    mode_scan_source:    # 模式扫描来源
+      engine: string     # robot_4
+      file: string       # mode_scan/output/
+      timestamp: string
+    ranking_source:      # 排名引擎来源
+      engine: string     # action_engine
+      file: string       # reports/top_picks.json
+      timestamp: string
+    risk_source:         # 风控来源
+      engine: string     # robot_5 / paper_risk_controller
+      file: string
+      timestamp: string
+    paper_decision_source:
+      engine: string     # paper_decision_engine
+      file: string       # reports/paper_decision_log.json
+      timestamp: string
+
+  agent_trace:
+    - agent: MAIN           # 系统协调者
+      role: coordinator
+      input_file: string
+      output_file: string
+      timestamp: string
+      status: completed
+    - agent: OpenClaw       # 数据采集
+      role: data_fetch
+      input_file: string
+      output_file: string
+      timestamp: string
+      status: completed
+    - agent: robot_3        # 因子计算
+      role: factor_compute
+      input_file: string
+      output_file: string
+      timestamp: string
+      status: completed
+    - agent: robot_4        # 模式匹配
+      role: mode_scan
+      input_file: string
+      output_file: string
+      timestamp: string
+      status: completed
+    - agent: action_engine  # 排名引擎
+      role: ranking
+      input_file: string
+      output_file: string
+      timestamp: string
+      status: completed
+    - agent: paper_decision_engine
+      role: decision
+      input_file: string
+      output_file: string
+      timestamp: string
+      status: completed
+    - agent: paper_risk_controller
+      role: risk_check
+      input_file: string
+      output_file: string
+      timestamp: string
+      status: completed
+
+# ==================================================
+# 决策字段定义
+# ==================================================
+decision_values:
+  - paper_buy          # 系统决策买入
+  - paper_skip         # 系统决策跳过
+  - paper_hold         # 系统决策持有
+  - paper_sell         # 系统决策卖出
+  - await_price_confirm  # 等待价格确认
+
+action_values:
+  - buy
+  - skip
+  - hold
+  - sell
+  - watch_only
+
+buy_timing_values:
+  - intraday_buy       # 盘中买入（已入买入区间）
+  - next_day_low_buy   # 次日低吸（次日开盘确认）
+  - close_buy          # 尾盘买入
+  - watch_only         # 仅观察，不建议操作
+
+# ==================================================
+# 强制规则
+# ==================================================
+rules:
+  no_zero_quantity_buy:  # paper_buy 禁止 quantity=0
+    description: "paper_buy 不允许 quantity=0"
+    exception: "status=await_price_confirm 时允许"
+  price_required_for_buy:
+    description: "paper_buy 不允许 price 为空"
+    exception: "decision=await_price_confirm 时允许"
+  skip_must_have_reason:
+    description: "paper_skip 必须有 skip_reason"
+  avoid_no_buy:
+    description: "action=avoid 的标的禁止 paper_buy"
+
+# ==================================================
+# 输出文件
+# ==================================================
+output_files:
+  decision_trace_log: reports/decision_trace_log.json
+  data_provenance_summary: reports/data_provenance_summary.json
+  daily_report: reports/history/{date}.md

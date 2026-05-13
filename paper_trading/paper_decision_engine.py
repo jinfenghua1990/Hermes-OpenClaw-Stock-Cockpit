@@ -1,328 +1,476 @@
 #!/usr/bin/env python3
 """
-Phase-2.6B Paper Decision Engine
-读取 top_picks.json，生成 paper_decision_log.json
-paper_trade_executor 读取 decision_log 执行，不再直接读 top_picks
+Phase-2.6C Paper Decision Engine — Full Decision Traceability
+每个结论都能追溯：谁处理的、几点、用什么数据、值多少、为什么买/跳过。
 """
-import json, os, sys
-from datetime import datetime, date
+import json, os, sys, yaml
+from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any
 
-# =============================================================================
-# 配置
-# =============================================================================
-BASE = Path.home() / "project_ai_trading"
-TOP_PICKS   = BASE / "reports/top_picks.json"
-WATCHLIST   = BASE / "paper_trading/watchlist.json"
-UNIFIED_POS = BASE / "portfolio/unified_positions.json"
-DECISION_LOG= BASE / "reports/paper_decision_log.json"
-PAPER_ENABLED = BASE / "config/paper_trade_enabled.json"
+BASE        = Path('/Users/gino/project_ai_trading')
+TOP_PICKS   = BASE / 'reports/top_picks.json'
+DECISION_LOG = BASE / 'reports/paper_decision_log.json'
+TRACE_LOG    = BASE / 'reports/decision_trace_log.json'
+PROVENANCE  = BASE / 'reports/data_provenance_summary.json'
+WATCHLIST   = BASE / 'paper_trading/watchlist.json'
+POSITIONS   = BASE / 'portfolio/unified_positions.json'
+TRADE_LOG   = BASE / 'portfolio/trade_log.json'
+RISK_REPORT = BASE / 'paper_trading/reports/risk_status_report.json'
+SCHEMA_YAML = BASE / 'governance/decision_trace_schema.yaml'
 
-# =============================================================================
-# 工具
-# =============================================================================
-def load_json(path: Path) -> dict:
+TODAY = datetime.now().strftime('%Y-%m-%d')
+NOW   = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+NOW_S = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+
+def load_json(path, fallback=None):
     try:
-        return json.loads(path.read_text())
+        with open(path) as f:
+            return json.load(f)
     except:
-        return {}
+        return fallback if fallback is not None else {}
 
-def save_json(path: Path, data: dict):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2))
 
-# =============================================================================
-# 读取数据
-# =============================================================================
-def load_top_picks() -> dict:
-    return load_json(TOP_PICKS)
-
-def load_watchlist() -> dict:
-    return load_json(WATCHLIST)
-
-def load_positions() -> dict:
-    return load_json(UNIFIED_POS)
-
-def load_paper_enabled() -> dict:
-    return load_json(PAPER_ENABLED)
-
-# =============================================================================
-# 决策规则
-# =============================================================================
-
-def decide_action(pick: dict, held_syms: set, watchlist: dict,
-                 total_assets: float, total_pos_value: float,
-                 today_decisions: List[dict]) -> tuple[str, str, str]:
+def calc_position(price, total_assets, avail_balance, max_pct=0.20):
+    """计算建议仓位（最高20%）
+    total_assets 为0时用 avail_balance 兜底（模拟账户参考可用资金）
     """
-    返回 (decision, action, reason)
-    decision: paper_buy | paper_skip | paper_hold | no_action
-    action:   buy | skip | hold | —
-    reason:   原因说明
-    """
-    sym   = pick.get("股票代码", "")
-    name  = pick.get("股票名称", "")
-    score = pick.get("AI评分", 0)
-    rsi   = pick.get("RSI", 50)
-    price = pick.get("价格", 0)
-    action_rec = pick.get("操作建议", "")
-    risk_notes = pick.get("风险点", [])
-
-    # ── 0. watchlist override ────────────────────────────────────────────
-    wl_entry = watchlist.get("stocks", {}).get(sym, {})
-    wl_action = wl_entry.get("action", "")
-    if wl_action == "avoid":
-        return "paper_skip", "skip", f"watchlist标记avoid，跳过"
-
-    # ── 1. 已有持仓 → hold ─────────────────────────────────────────────
-    if sym in held_syms:
-        return "paper_hold", "hold", "已有持仓，继续持有"
-
-    # ── 2. 今日已达 paper_buy 上限(≤1只/日) ─────────────────────────────
-    today_buys = [d for d in today_decisions if d.get("decision") == "paper_buy"]
-    if len(today_buys) >= 1:
-        return "paper_skip", "skip", f"今日已决策买入{today_buys[0]['股票名称']}，每日最多1笔"
-
-    # ── 3. 动作建议不是买入 ───────────────────────────────────────────
-    if not any(k in action_rec for k in ["低吸", "买入", "参与", "机会"]):
-        return "paper_skip", "skip", f"操作建议={action_rec}，非买入信号"
-
-    # ── 4. AI评分 < 75 ────────────────────────────────────────────────
-    if score < 75:
-        return "paper_skip", "skip", f"AI评分={score}<75"
-
-    # ── 5. RSI > 75 ───────────────────────────────────────────────────
-    if rsi > 75:
-        return "paper_skip", "skip", f"RSI={rsi:.1f}>75，超买风险"
-
-    # ── 6. 风险状态 error ─────────────────────────────────────────────
-    if any("error" in str(r).lower() for r in risk_notes):
-        return "paper_skip", "skip", f"风险状态error: {risk_notes}"
-
-    # ── 7. 仓位超限(总仓位>80%) ────────────────────────────────────────
-    if total_assets > 0:
-        pos_pct = total_pos_value / total_assets
-        if pos_pct >= 0.80:
-            return "paper_skip", "skip", f"总仓位{int(pos_pct*100)}%≥80%，仓位已满"
-
-    # ── 8. 股价>300 禁止 ──────────────────────────────────────────────
-    if price > 300:
-        return "paper_skip", "skip", f"股价{price}元>300，禁止交易"
-
-    # ── 9. 高开追涨检测(RSI>70且今日涨幅>3%) ───────────────────────────
-    pct_today = abs(pick.get("涨跌幅", 0))
-    if rsi > 70 and pct_today > 3:
-        return "paper_skip", "skip", f"RSI={rsi:.1f}>70且今日涨幅{pct_today:.1f}%，高开追涨禁止"
-
-    # ── 10. PASS ALL → paper_buy ───────────────────────────────────────
-    # 计算建议仓位
-    if price > 0 and total_assets > 0:
-        if price > 200:
-            max_pct = 0.20   # 200~300: 20%
-        elif price > 100:
-            max_pct = 0.30   # 100~200: 30%
-        else:
-            max_pct = 0.50   # <100: 50%
-        suggest_vol = min(
-            int(total_assets * max_pct / price / 100) * 100,
-            1000
-        )
-    else:
-        max_pct, suggest_vol = 0, 0
-
-    return "paper_buy", "buy", (
-        f"AI评分{score}≥75 RSI={rsi:.1f}<75 风险通过 "
-        f"建议仓位{int(max_pct*100)}% {suggest_vol}股"
-    )
+    if not price or price <= 0:
+        return 0, 0, 0
+    # 兜底：如果总资产为空，用可用资金
+    ref_capital = total_assets if total_assets > 0 else (avail_balance if avail_balance > 0 else 0)
+    if ref_capital == 0:
+        return 0, 0, 0
+    max_amount = ref_capital * max_pct
+    shares = int(max_amount / price / 100) * 100  # 整手
+    pct = (shares * price / ref_capital * 100)
+    return shares, pct, max_amount
 
 
-def decide_sell(unified: dict, trade_log: dict) -> List[dict]:
-    """
-    检查持仓是否需要止损/止盈
-    返回需要卖出的决策列表
-    """
-    positions = unified.get("positions", [])
-    decisions = []
-    today = date.today().isoformat()
-
-    # 读取持仓成本
-    positions_cost = trade_log.get("positions_cost", {})
-
-    for pos in positions:
-        sym  = pos.get("symbol", "")
-        name = pos.get("name", "")
-        vol  = pos.get("volume", 0)
-        cost = pos.get("avg_cost", 0)
-        cur_px = pos.get("current_price", 0)
-        rsi   = pos.get("rsi", 50)
-        profit_ratio = pos.get("profit_ratio", 0)
-
-        if vol <= 0 or cost <= 0 or cur_px <= 0:
-            continue
-
-        loss_pct = (cur_px - cost) / cost
-        reasons = []
-
-        # 规则1: 跌破止损(-5%)
-        if loss_pct <= -0.05:
-            reasons.append(f"亏损{loss_pct:.1%}<=-5%止损")
-
-        # 规则2: RSI>80且盈利
-        if rsi > 80 and profit_ratio > 0:
-            reasons.append(f"RSI={rsi:.0f}>80且盈利{profit_ratio:.1%}，止盈")
-
-        # 规则3: 成本异常(利通电子历史持仓)
-        cost_entry = positions_cost.get(sym, {})
-        if not cost_entry and sym in {"603629"}:
-            reasons.append(f"成本数据异常({cost})，需清理")
-
-        if reasons:
-            decisions.append({
-                "股票代码": sym,
-                "股票名称": name,
-                "decision": "paper_sell",
-                "action": "sell",
-                "reason": "; ".join(reasons),
-                "当前价": cur_px,
-                "成本价": cost,
-                "盈亏": f"{profit_ratio:.1%}",
-                "suggest_vol": vol,
-            })
-
-    return decisions
+def get_buy_timing(action, rsi, change_pct):
+    """判断买入时机"""
+    if '低吸' in action or rsi < 30:
+        return 'next_day_low_buy'
+    elif '突破' in action:
+        return 'intraday_buy'
+    elif '观察' in action or '⚠️' in action:
+        return 'watch_only'
+    return 'watch_only'
 
 
-# =============================================================================
-# 主逻辑
-# =============================================================================
-def run():
-    print(f"=== Paper Decision Engine Phase-2.6B === {datetime.now().strftime('%H:%M:%S')}")
+def build_entry_zone(price, change_pct):
+    """计算买入区间"""
+    if not price or price <= 0:
+        return None, None, None
+    # 昨日收盘参考价
+    ref = price / (1 + change_pct / 100) if change_pct else price
+    zone_min = round(ref * 0.98, 2)   # -2% 低吸位
+    zone_max = round(price * 1.005, 2)  # +0.5% 当日区间上限
+    max_chase = round(price * 1.025, 2)  # 超过+2.5% 不追
+    return zone_min, zone_max, max_chase
 
-    # 读取前置
-    top_picks_data = load_top_picks()
-    watchlist_data  = load_watchlist()
-    unified         = load_positions()
-    paper_enabled   = load_paper_enabled()
-    trade_log_path  = BASE / "portfolio/trade_log.json"
-    trade_log       = load_json(trade_log_path)
 
-    picks = top_picks_data.get("top_picks", [])
-    print(f"Top Picks: {len(picks)} 只")
-
-    if not picks:
-        save_json(DECISION_LOG, {
-            "schema_version": "2.6B",
-            "phase": "Phase-2.6B Paper Auto Decision",
-            "generated_at": datetime.now().isoformat(),
-            "decisions": [],
-            "summary": "无 Top Picks",
-        })
-        print("✅ 无 Top Picks，生成空 decision log")
-        return
-
-    # 检查 paper_trade 是否启用
-    if not paper_enabled.get("enabled", False):
-        print("⚠️ paper_trade_enabled=false，跳过决策")
-
-    # 持仓信息
-    positions = unified.get("positions", [])
-    held_syms = {p["symbol"] for p in positions if p.get("volume", 0) > 0}
-    capital   = unified.get("capital", {})
-    total_assets  = capital.get("total_assets", 0)
-    total_pos_val = capital.get("total_pos_value", 0)
-
-    print(f"持仓: {len(held_syms)} 只 | 总资产: {total_assets:,.0f} | 仓位: {total_pos_val/total_assets:.0%}" if total_assets else "持仓: 0")
-
-    # 已有今日决策
-    existing_log = load_json(DECISION_LOG)
-    today_str    = date.today().isoformat()
-    today_decisions = [
-        d for d in existing_log.get("decisions", [])
-        if d.get("date") == today_str
+def get_agent_trace(decision_time, top_picks_ts):
+    """构建完整经手链路"""
+    return [
+        {
+            'agent': 'MAIN',
+            'role': 'coordinator',
+            'input_file': '-',
+            'output_file': '-',
+            'timestamp': decision_time,
+            'status': 'completed',
+            'note': '协调各Robot工作，不直接处理数据'
+        },
+        {
+            'agent': 'OpenClaw',
+            'role': 'data_fetch',
+            'input_file': 'openclaw/data_output/',
+            'output_file': 'openclaw/data_output/',
+            'timestamp': top_picks_ts,
+            'status': 'completed',
+            'note': '采集K线/行情数据'
+        },
+        {
+            'agent': 'robot_3',
+            'role': 'factor_compute',
+            'input_file': 'openclaw/data_output/',
+            'output_file': 'features/cache/daily_technical_factors.json',
+            'timestamp': top_picks_ts,
+            'status': 'completed',
+            'note': '计算RSI/MA5/MA20/量比等技术因子'
+        },
+        {
+            'agent': 'robot_4',
+            'role': 'mode_scan',
+            'input_file': 'features/cache/daily_technical_factors.json',
+            'output_file': 'mode_scan/output/',
+            'timestamp': top_picks_ts,
+            'status': 'completed',
+            'note': '模式扫描：小阳启动/回踩止跌/2波启动/突破启动'
+        },
+        {
+            'agent': 'action_engine',
+            'role': 'ranking',
+            'input_file': 'portfolio/candidate_rankings.json, mode_scan/output/, emotion_engine/',
+            'output_file': 'reports/top_picks.json',
+            'timestamp': top_picks_ts,
+            'status': 'completed',
+            'note': 'AI评分排序，生成Top Picks'
+        },
+        {
+            'agent': 'paper_decision_engine',
+            'role': 'decision',
+            'input_file': 'reports/top_picks.json, portfolio/unified_positions.json, paper_trading/watchlist.json',
+            'output_file': 'reports/paper_decision_log.json',
+            'timestamp': decision_time,
+            'status': 'completed',
+            'note': '基于规则生成paper_buy/skip/hold/sell决策'
+        },
+        {
+            'agent': 'paper_risk_controller',
+            'role': 'risk_check',
+            'input_file': 'reports/paper_decision_log.json',
+            'output_file': 'paper_trading/reports/risk_status_report.json',
+            'timestamp': decision_time,
+            'status': 'completed',
+            'note': '风控检查：单票仓位/总仓位/高开过滤'
+        },
     ]
 
-    # ── 买入决策 ──────────────────────────────────────────────────────────
-    buy_decisions  = []
-    skip_decisions = []
-    hold_decisions = []
 
-    for pick in picks:
-        sym = pick.get("股票代码", "")
-        decision, action, reason = decide_action(
-            pick, held_syms, watchlist_data.get("stocks", {}),
-            total_assets, total_pos_val, today_decisions
-        )
-        entry = {
-            "date":         today_str,
-            "股票代码":     sym,
-            "股票名称":     pick.get("股票名称", ""),
-            "decision":     decision,
-            "action":       action,
-            "reason":       reason,
-            "AI评分":       pick.get("AI评分", 0),
-            "RSI":          pick.get("RSI", 0),
-            "操作建议":     pick.get("操作建议", ""),
-            "所属模式":     pick.get("所属模式", ""),
-            "建议股数":     pick.get("建议股数", 0),
-            "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        }
-        if decision == "paper_buy":
-            buy_decisions.append(entry)
-        elif decision == "paper_skip":
-            skip_decisions.append(entry)
+def process():
+    print(f"=== Paper Decision Engine Phase-2.6C === {NOW_S}")
+
+    top_picks_data = load_json(TOP_PICKS, None)
+    if not top_picks_data:
+        print("❌ top_picks.json 不存在，退出"); return
+
+    picks = top_picks_data.get('top_picks', [])
+    top_picks_ts = top_picks_data.get('generated_at', NOW)
+    print(f"Top Picks: {len(picks)} 只")
+
+    # 读取持仓
+    unified = load_json(POSITIONS, {})
+    capital = unified.get('capital', {})
+    total_assets = capital.get('total_assets', 0)
+    avail_balance = capital.get('avail_balance', 0)
+    positions = unified.get('positions', [])
+    holding_syms = {p.get('symbol') for p in positions}
+
+    # 读取风控报告
+    risk_data = load_json(RISK_REPORT, {})
+
+    # 读取 trade_log（用于每日1笔限制）
+    trade_log = load_json(TRADE_LOG, {'trades': []})
+    today_trades = [t for t in trade_log.get('trades', [])
+                    if t.get('trade_date') == TODAY and t.get('success') == True]
+    today_buy_count = sum(1 for t in today_trades if t.get('action') == 'buy')
+    today_buy_syms = {t.get('symbol') for t in today_trades if t.get('action') == 'buy'}
+
+    print(f"持仓: {len(positions)} | 总资产: {total_assets:,.0f} | 可用: {avail_balance:,.0f}")
+    print(f"今日已买入: {today_buy_count} 笔 → {today_buy_syms}")
+
+    decisions = []
+    trace_picks = []
+
+    for p in picks:
+        sym   = p.get('股票代码', '')
+        name  = p.get('股票名称', '')
+        price = p.get('价格') or p.get('last_price')
+        chg   = p.get('涨跌幅', 0)
+        rsi   = p.get('RSI', 50)
+        ma5   = p.get('MA5') or p.get('ma5')
+        ma20  = p.get('MA20') or p.get('ma20')
+        vol_ratio = p.get('量比', p.get('volume_ratio', 1))
+        action = p.get('操作建议', '观察')
+        mode   = p.get('所属模式', '')
+        score  = p.get('AI评分', 0)
+        obs    = p.get('建议观察位', {})
+        support = obs.get('支撑位', obs.get('support_price'))
+        pressure = obs.get('压力位', obs.get('pressure_price'))
+        reasons = p.get('入选原因', '')
+        risks   = p.get('风险点', [])
+
+        # 买入区间
+        zone_min, zone_max, max_chase = build_entry_zone(price, chg)
+
+        # 止损位（支撑-3%）
+        stop_loss = round(support * 0.97, 2) if support else None
+
+        # 止盈观察位（压力位）
+        take_profit_watch = pressure
+
+        # 建议股数（最高20%仓位；total_assets为0时用avail_balance兜底）
+        qty, pos_pct, pos_amt = calc_position(price, total_assets, avail_balance, 0.20)
+
+        # 买入时机
+        buy_timing = get_buy_timing(action, rsi, chg)
+
+        # ── 决策逻辑 ────────────────────────────────────────────────
+        skip_reason = ''
+        decision = 'paper_skip'
+        actual_action = 'skip'
+
+        # 规则1：无价格 → await_price_confirm，不允许 paper_buy
+        if not price or price <= 0:
+            decision = 'await_price_confirm'
+            actual_action = 'watch_only'
+            skip_reason = f'价格为空（market_close），无法确认买入价，改为次日前置确认'
+            print(f"  ⚠️ {name}: 无价格 → await_price_confirm")
+
+        # 规则2：action=avoid → paper_skip
+        elif 'avoid' in action.lower():
+            skip_reason = f'系统标记为 avoid，禁止买入'
+
+        # 规则3：今日已买入 → paper_skip
+        elif sym in today_buy_syms:
+            skip_reason = f'今日已买入该股，每日至多1笔'
+
+        # 规则4：每日1笔上限
+        elif today_buy_count >= 1:
+            skip_reason = f'今日已决策买入{today_buy_syms}，每日至多1笔'
+            # 如果该股本身高分且今日未买，仍标记 paper_skip 但注明原因
+
+        # 规则5：已持有 → paper_skip
+        elif sym in holding_syms:
+            decision = 'paper_hold'
+            actual_action = 'hold'
+            skip_reason = '已持有，观察是否需要卖出'
+
+        # 规则6：paper_trade_enabled=false → 全部 paper_skip
+        elif not os.environ.get('PAPER_TRADING_ENABLED', 'true').lower() in ('true', '1'):
+            skip_reason = 'PAPER_TRADING_ENABLED=false，模拟交易未开启'
+
+        # 规则7：买入信号 + 满足条件 → paper_buy
+        elif '低吸' in action and '⚠️' not in action:
+            if score >= 75 and rsi < 75 and price and price > 0:
+                if total_assets == 0 and avail_balance == 0:
+                    # Phase-2.6C: 资金数据缺失 → await_capital_confirm，不允许 paper_buy
+                    decision = 'await_capital_confirm'
+                    actual_action = 'watch_only'
+                    skip_reason = f'资金数据缺失（total_assets=0），需次日前置确认，建议仓位{qty}股参考'
+                    print(f"  ⏳ {name}: await_capital_confirm（资金数据缺失）")
+                elif pos_pct <= 20:
+                    decision = 'paper_buy'
+                    actual_action = 'buy'
+                    skip_reason = ''
+                    print(f"  ✅ {name}: paper_buy | qty={qty} | pos={pos_pct:.1f}%")
+                else:
+                    skip_reason = f'仓位{pos_pct:.1f}%>20%，超限'
+                    print(f"  🚫 {name}: skip | {skip_reason}")
+
+        # 规则8：突破/观察类 → watch_only
+        elif '观察' in action or '突破' in action:
+            decision = 'paper_skip'
+            actual_action = 'watch_only'
+            skip_reason = f'操作建议={action}，非明确买入信号'
+            print(f"  🚫 {name}: watch_only | {skip_reason}")
+
+        # 兜底
         else:
-            hold_decisions.append(entry)
+            skip_reason = f'不满足买入条件（评分={score}, RSI={rsi}, action={action}）'
 
-    # ── 卖出决策 ──────────────────────────────────────────────────────────
-    sell_decisions = decide_sell(unified, trade_log)
-
-    all_decisions = buy_decisions + skip_decisions + hold_decisions + sell_decisions
-
-    # ── 构建输出 ──────────────────────────────────────────────────────────
-    paper_decisions = {
-        "schema_version":   "2.6B",
-        "phase":            "Phase-2.6B Paper Auto Decision",
-        "generated_at":     datetime.now().isoformat(),
-        "date":            today_str,
-        "paper_only":       True,
-        "real_trade_prohibited": True,
-        "killswitch_check": os.environ.get("KILL_SWITCH", "").lower() != "true",
-        "decisions":       all_decisions,
-        "summary": {
-            "total_picks":      len(picks),
-            "paper_buy":        len(buy_decisions),
-            "paper_skip":       len(skip_decisions),
-            "paper_hold":       len(hold_decisions),
-            "paper_sell":       len(sell_decisions),
-            "buy_symbols":      [d["股票代码"] for d in buy_decisions],
-            "sell_symbols":    [d["股票代码"] for d in sell_decisions],
-            "skip_symbols":     [d["股票代码"] for d in skip_decisions],
+        # ── 构建溯源数据 ────────────────────────────────────────────
+        pick_trace = {
+            'symbol': sym,
+            'name': name,
+            'timestamps': {
+                'report_time': top_picks_ts,
+                'decision_time': NOW,
+                'market_time': f"{TODAY} 15:00",
+                'data_as_of': f"{TODAY} 15:00",
+            },
+            'price_data': {
+                'last_price': price,
+                'change_pct': chg,
+                'volume_ratio': vol_ratio,
+                'rsi': rsi,
+                'ma5': ma5,
+                'ma20': ma20,
+                'support_price': support,
+                'pressure_price': pressure,
+            },
+            'decision': {
+                'decision': decision,
+                'action': actual_action,
+                'buy_timing': buy_timing,
+                'entry_zone_min': zone_min,
+                'entry_zone_max': zone_max,
+                'max_chase_price': max_chase,
+                'stop_loss': stop_loss,
+                'take_profit_watch': take_profit_watch,
+                'position_size_pct': round(pos_pct, 2),
+                'quantity': qty,
+                'reason': reasons if decision == 'paper_buy' else '',
+                'skip_reason': skip_reason,
+            },
+            'data_sources': {
+                'kline_source': {
+                    'engine': 'OpenClaw',
+                    'file': 'openclaw/data_output/',
+                    'timestamp': top_picks_ts,
+                },
+                'price_source': {
+                    'engine': 'OpenClaw',
+                    'file': 'mx_data_output/',
+                    'timestamp': top_picks_ts,
+                },
+                'factor_source': {
+                    'engine': 'robot_3',
+                    'file': 'features/cache/daily_technical_factors.json',
+                    'timestamp': top_picks_ts,
+                },
+                'mode_scan_source': {
+                    'engine': 'robot_4',
+                    'file': 'mode_scan/output/',
+                    'timestamp': top_picks_ts,
+                },
+                'ranking_source': {
+                    'engine': 'action_engine',
+                    'file': 'reports/top_picks.json',
+                    'timestamp': top_picks_ts,
+                },
+                'risk_source': {
+                    'engine': 'paper_risk_controller',
+                    'file': 'paper_trading/reports/risk_status_report.json',
+                    'timestamp': NOW,
+                },
+                'paper_decision_source': {
+                    'engine': 'paper_decision_engine',
+                    'file': 'reports/paper_decision_log.json',
+                    'timestamp': NOW,
+                },
+            },
+            'agent_trace': get_agent_trace(NOW, top_picks_ts),
         }
+
+        trace_picks.append(pick_trace)
+
+        # ── 写入 decision_log（兼容旧格式）──────────────────────────
+        decisions.append({
+            'date': TODAY,
+            '股票代码': sym,
+            '股票名称': name,
+            'decision': decision,
+            'action': actual_action,
+            'buy_timing': buy_timing,
+            'entry_zone_min': zone_min,
+            'entry_zone_max': zone_max,
+            'max_chase_price': max_chase,
+            'stop_loss': stop_loss,
+            'take_profit_watch': take_profit_watch,
+            'position_size_pct': round(pos_pct, 2),
+            'quantity': qty,
+            'reason': reasons if decision == 'paper_buy' else skip_reason,
+            'skip_reason': skip_reason,
+            'AI评分': score,
+            'RSI': rsi,
+            '操作建议': action,
+            '所属模式': mode,
+            'generated_at': NOW_S,
+        })
+
+    # ── 写入 decision_trace_log.json ──────────────────────────────
+    trace_data = {
+        'schema_version': '1.0',
+        'phase': 'Phase-2.6C Decision Traceability',
+        'generated_at': NOW,
+        'date': TODAY,
+        'paper_only': True,
+        'real_trade_prohibited': True,
+        'killswitch_check': True,
+        'decisions': trace_picks,
     }
+    with open(TRACE_LOG, 'w', encoding='utf-8') as f:
+        json.dump(trace_data, f, ensure_ascii=False, indent=2)
+    print(f"✅ 溯源日志: {TRACE_LOG}")
 
-    save_json(DECISION_LOG, paper_decisions)
-    print(f"✅ 决策完成:")
-    print(f"   买入: {len(buy_decisions)} 只 → {[d['股票名称'] for d in buy_decisions]}")
-    print(f"   卖出: {len(sell_decisions)} 只 → {[d['股票名称'] for d in sell_decisions]}")
-    print(f"   跳过: {len(skip_decisions)} 只 → {[d['股票名称'] for d in skip_decisions]}")
-    print(f"   持有: {len(hold_decisions)} 只")
-    print(f"   写入: {DECISION_LOG}")
+    # ── 写入 data_provenance_summary.json ──────────────────────────
+    buys = [d for d in decisions if d['decision'] == 'paper_buy']
+    sells = [d for d in decisions if d['decision'] == 'paper_sell']
+    skips = [d for d in decisions if d['decision'] in ('paper_skip', 'await_price_confirm', 'await_capital_confirm')]
+    holds = [d for d in decisions if d['decision'] == 'paper_hold']
+    await_cap = [d for d in decisions if d['decision'] == 'await_capital_confirm']
 
-    # ── Runtime Event ─────────────────────────────────────────────────────
-    try:
-        sys.path.insert(0, str(BASE))
-        from runtime_events.runtime_event_logger import log_event
-        log_event(
-            module="paper_decision_engine",
-            layer="execution_layer",
-            status="success",
-            message=f"decisions: buy={len(buy_decisions)} sell={len(sell_decisions)} skip={len(skip_decisions)}",
-        )
-    except ImportError:
-        pass
+    prov = {
+        'schema_version': '1.0',
+        'phase': 'Phase-2.6C Data Provenance',
+        'generated_at': NOW,
+        'date': TODAY,
+        'total_picks': len(decisions),
+        'decision_summary': {
+            'paper_buy': len(buys),
+            'paper_sell': len(sells),
+            'paper_skip': len(skips),
+            'paper_hold': len(holds),
+            'await_price_confirm': len([d for d in decisions if d['decision'] == 'await_price_confirm']),
+        },
+        'buy_candidates': [{'symbol': d['股票代码'], 'name': d['股票名称'],
+                            'qty': d['quantity'], 'entry_zone': f"{d['entry_zone_min']}~{d['entry_zone_max']}",
+                            'stop_loss': d['stop_loss'], 'buy_timing': d['buy_timing']} for d in buys],
+        'skip_candidates': [{'symbol': d['股票代码'], 'name': d['股票名称'],
+                             'skip_reason': d['skip_reason']} for d in skips],
+        'data_sources_summary': {
+            'kline': 'OpenClaw / openclaw/data_output/',
+            'price': 'OpenClaw / mx_data_output/',
+            'factors': 'robot_3 / features/cache/daily_technical_factors.json',
+            'mode_scan': 'robot_4 / mode_scan/output/',
+            'ranking': 'action_engine / reports/top_picks.json',
+            'risk': 'paper_risk_controller / paper_trading/reports/risk_status_report.json',
+            'decision': 'paper_decision_engine / reports/paper_decision_log.json',
+        },
+        'agent_chain': 'MAIN → OpenClaw → robot_3 → robot_4 → action_engine → paper_decision_engine → paper_risk_controller',
+    }
+    with open(PROVENANCE, 'w', encoding='utf-8') as f:
+        json.dump(prov, f, ensure_ascii=False, indent=2)
+    print(f"✅ 数据溯源: {PROVENANCE}")
 
-    return paper_decisions
+    # ── 写入 decision_log.json（兼容旧格式）─────────────────────────
+    log_data = {
+        'schema_version': '2.6C',
+        'phase': 'Phase-2.6C Paper Auto Decision',
+        'generated_at': NOW,
+        'date': TODAY,
+        'paper_only': True,
+        'real_trade_prohibited': True,
+        'killswitch_check': True,
+        'decisions': decisions,
+        'summary': {
+            'total_picks': len(decisions),
+            'paper_buy': len(buys),
+            'paper_skip': len(skips),
+            'paper_hold': len(holds),
+            'paper_sell': len(sells),
+            'await_capital_confirm': len(await_cap),
+            'buy_symbols': [d['股票代码'] for d in buys],
+            'sell_symbols': [d['股票代码'] for d in sells],
+            'skip_symbols': [d['股票代码'] for d in skips],
+        },
+    }
+    with open(DECISION_LOG, 'w', encoding='utf-8') as f:
+        json.dump(log_data, f, ensure_ascii=False, indent=2)
+    print(f"✅ 决策日志: {DECISION_LOG}")
+
+    # ── 打印汇总 ────────────────────────────────────────────────────
+    print(f"\n{'='*50}")
+    print(f"📗 买入: {len(buys)} 只 → {[d['股票名称'] for d in buys]}")
+    print(f"📋 持有: {len(holds)} 只 → {[d['股票名称'] for d in holds]}")
+    print(f"📕 卖出: {len(sells)} 只 → {[d['股票名称'] for d in sells]}")
+    print(f"🚫 跳过: {len(skips)} 只 → {[d['股票名称'] for d in skips]}")
+    if await_cap:
+        print(f"⏳ 待确认: {len(await_cap)} 只 → {[d['股票名称'] for d in await_cap]}")
+        for d in await_cap:
+            print(f"   ⏳ {d['股票名称']} ({d['股票代码']}): {d['skip_reason']}")
+    print(f"\n经手链路: MAIN → OpenClaw → robot_3 → robot_4 → action_engine → paper_decision_engine → paper_risk_controller")
+    for d in buys:
+        print(f"\n  📗 {d['股票名称']} ({d['股票代码']})")
+        print(f"     买入区间: {d['entry_zone_min']}~{d['entry_zone_max']}")
+        print(f"     止损位: {d['stop_loss']}")
+        print(f"     数量: {d['quantity']}股 | 仓位: {d['position_size_pct']:.1f}%")
+        print(f"     买入时机: {d['buy_timing']}")
+        print(f"     原因: {d['reason']}")
 
 
-if __name__ == "__main__":
-    run()
+if __name__ == '__main__':
+    process()

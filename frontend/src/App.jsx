@@ -411,7 +411,7 @@ function DailyReport({ reportPath }) {
 function Footer({ lastUpdate }) {
   return (
     <div className="footer">
-      Hermes AI Trading Cockpit — Phase-2.6A Research Intelligence | 最后更新: {lastUpdate || '—'}
+      Hermes AI Trading Cockpit — Phase-2.6C Decision Traceability | 最后更新: {lastUpdate || '—'}
     </div>
   );
 }
@@ -492,7 +492,7 @@ export default function App() {
         <div className="header-title">🤖 HERMES COCKPIT</div>
         <div className="header-right">
           <span className="header-clock">{clock}</span>
-          <span className="badge badge-pass">Phase-2.6A</span>
+          <span className="badge badge-pass">Phase-2.6C</span>
           <span className="badge badge-info">{mode}</span>
         </div>
       </div>
