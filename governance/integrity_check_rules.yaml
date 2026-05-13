@@ -1,0 +1,56 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Daily governance integrity validation rules.
+
+integrity_checks:
+  registry_integrity:
+    enabled: true
+    required_file: governance/team_register.yaml
+
+  freeze_integrity:
+    enabled: true
+    required_file: governance/freeze_status.json
+
+  sovereignty_integrity:
+    enabled: true
+    required_file: governance/SOVEREIGNTY.md
+
+  prohibited_action_scan:
+    enabled: true
+    blocked_keywords:
+      - auto_trade
+      - auto_learning
+      - baseline_mutation
+      - hidden_strategy
+      - dynamic_robot_creation
+
+  unregistered_robot_scan:
+    enabled: true
+    action: critical_alert
+
+  github_sync_validation:
+    enabled: true
+
+validation_output:
+  required_fields:
+    - timestamp
+    - integrity_status
+    - critical_issues
+    - warnings
+    - governance_state
+
+severity_policy:
+  warning:
+    description: non-critical governance inconsistency
+  critical:
+    description: freeze violation or governance corruption
+
+constraints:
+  no_auto_fix: true
+  user_review_required: true
+
+storage:
+  path: governance/integrity_reports/
+
+status: active
