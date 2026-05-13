@@ -1,0 +1,44 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Define operational governance states for the AI organization system.
+
+states:
+  stable:
+    description: all governance systems operational
+
+  warning_accepted:
+    description: known warning exists but system remains governed
+
+  degraded:
+    description: operational inconsistency detected
+
+  critical:
+    description: governance integrity risk or freeze violation
+
+transitions:
+  stable_to_warning:
+    trigger:
+      - temporary_pipeline_warning
+      - coverage_delay
+
+  warning_to_degraded:
+    trigger:
+      - repeated_integrity_warning
+      - github_sync_failure
+
+  degraded_to_critical:
+    trigger:
+      - freeze_violation
+      - unregistered_robot_detected
+      - hidden_strategy_change
+
+recovery_rules:
+  requires_user_review: true
+  governance_controller_required: true
+
+constraints:
+  no_hidden_state_change: true
+  immutable_history_required: true
+
+status: active
