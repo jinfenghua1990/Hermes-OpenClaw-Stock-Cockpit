@@ -1,0 +1,37 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Detect configured modules that are not actively running.
+
+alert_rules:
+  inactive_for_1_day:
+    severity: warning
+
+  inactive_for_3_days:
+    severity: elevated
+
+  inactive_for_7_days:
+    severity: critical
+
+tracked_modules:
+  - OpenClaw
+  - consensus_engine
+  - replay_engine
+  - integrity_check
+  - governance_controller
+  - dashboard_snapshot
+  - attribution_engine
+
+alert_output:
+  required_fields:
+    - module_name
+    - last_execution
+    - inactive_duration
+    - severity
+    - governance_state
+
+constraints:
+  no_hidden_modules: true
+  github_sync_required: true
+
+status: active
