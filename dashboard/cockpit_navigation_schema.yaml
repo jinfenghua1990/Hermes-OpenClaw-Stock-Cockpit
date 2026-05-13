@@ -1,0 +1,42 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Navigation structure for Governance Cockpit UI.
+
+navigation_sections:
+  - governance_overview
+  - system_health
+  - consensus_center
+  - risk_heatmap
+  - replay_center
+  - attribution_center
+  - integrity_alerts
+  - audit_trail
+  - pipeline_monitor
+
+section_permissions:
+  governance_overview:
+    access: MAIN
+  system_health:
+    access: official_team
+  consensus_center:
+    access: official_team
+  risk_heatmap:
+    access: official_team
+  replay_center:
+    access: MAIN
+  attribution_center:
+    access: MAIN
+  integrity_alerts:
+    access: MAIN
+  audit_trail:
+    access: MAIN
+  pipeline_monitor:
+    access: official_team
+
+constraints:
+  no_execution_controls: true
+  no_trade_controls: true
+  no_hidden_navigation: true
+
+status: active
