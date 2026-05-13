@@ -1,15 +1,23 @@
 #!/bin/bash
 # Phase-2.4B-Stable 每日健康检查脚本
-# 每天收盘后16:30执行
+# 每天收盘后15:10执行
 
 cd /Users/gino/project_ai_trading
 
 echo "=================================================="
-echo "Phase-2.4B-Stable 每日健康检查"
+echo "Phase-2.4B-Stable 收盘后K线更新 + 健康检查"
 echo "开始时间: $(date)"
 echo "=================================================="
 
-# 执行健康检查
+# Step-1: 收盘后更新K线
+python3 data/update_kline.py
+
+echo ""
+echo "=================================================="
+echo "K线更新完成"
+echo "=================================================="
+
+# Step-2: 执行健康检查
 python3 system_health/daily_health_check.py
 
 echo ""
@@ -18,7 +26,7 @@ echo "健康检查完成"
 echo "完成时间: $(date)"
 echo "=================================================="
 
-# 更新历史索引
+# Step-3: 更新历史索引
 python3 system_health/summarize_health_reports.py
 
 echo ""
@@ -37,4 +45,5 @@ fi
 
 echo ""
 echo "Phase-2.4B-Stable 稳定运行期"
+echo "当前模式: OBSERVE_ONLY"
 echo "禁止: 自动学习、baseline修改、权重调整、自动交易、AI自治"
