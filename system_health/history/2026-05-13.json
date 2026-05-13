@@ -1,16 +1,16 @@
 {
-  "timestamp": "2026-05-13T08:32:12.443311",
+  "timestamp": "2026-05-13T08:53:12.505813",
   "date": "2026-05-13",
   "phase": "Phase-2.4B-Stable",
   "overall_status": "warning",
   "status_counts": {
-    "success": 3,
-    "warning": 6,
+    "success": 4,
+    "warning": 5,
     "error": 0
   },
   "critical_metrics": {
     "daily_pipeline_success": false,
-    "factor_valid_count": 1,
+    "factor_valid_count": 4788,
     "mode_candidate_count": 0,
     "emotion_score": 0,
     "market_phase": "stable",
@@ -22,9 +22,9 @@
       "message": "未找到今日K线更新记录"
     },
     "factor_cache": {
-      "status": "warning",
-      "message": "有效因子缓存数量: 1",
-      "valid_count": 1,
+      "status": "success",
+      "message": "有效因子缓存数量: 4788",
+      "valid_count": 4788,
       "threshold": 4000
     },
     "mode_scan": {
@@ -50,8 +50,8 @@
     },
     "git_push": {
       "status": "success",
-      "message": "最新提交已推送: 86c7916 set SOUL to observe only mode",
-      "last_commit": "86c7916 set SOUL to observe only mode"
+      "message": "最新提交已推送: fc98bcd add Phase-2.4B system status tracking",
+      "last_commit": "fc98bcd add Phase-2.4B system status tracking"
     },
     "system_monitor": {
       "status": "success",
@@ -59,7 +59,6 @@
     }
   },
   "warnings": [
-    "因子缓存数量不足: 1 < 4000",
     "日报未生成",
     "情绪快照缺失"
   ],

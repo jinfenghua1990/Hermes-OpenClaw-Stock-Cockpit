@@ -53,21 +53,31 @@ def check_factor_cache():
             return {"status": "error", "message": "因子缓存目录不存在"}
         
         cache_files = list(factor_cache_dir.glob("*_factors.json"))
-        valid_count = 0
+        total_valid_count = 0
         
         for cache_file in cache_files:
             try:
                 with open(cache_file, 'r') as f:
                     data = json.load(f)
-                    if data.get("valid", False):
-                        valid_count += 1
-            except:
+                    
+                    # 优先读取顶层的valid字段
+                    if "valid" in data and isinstance(data["valid"], (int, float)):
+                        total_valid_count += int(data["valid"])
+                    # 如果没有valid字段，但有factors字段，计算factors数量
+                    elif "factors" in data and isinstance(data["factors"], dict):
+                        total_valid_count += len(data["factors"])
+                    else:
+                        # 如果都没有，尝试计算总记录数
+                        total_valid_count += len(data)
+                        
+            except Exception as e:
+                print(f"警告: 读取缓存文件 {cache_file.name} 时出错: {str(e)}")
                 continue
         
         return {
-            "status": "success" if valid_count >= 4000 else "warning",
-            "message": f"有效因子缓存数量: {valid_count}",
-            "valid_count": valid_count,
+            "status": "success" if total_valid_count >= 4000 else "warning",
+            "message": f"有效因子缓存数量: {total_valid_count}",
+            "valid_count": total_valid_count,
             "threshold": 4000
         }
     except Exception as e:

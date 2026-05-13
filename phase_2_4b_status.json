@@ -12,7 +12,7 @@
     "last_health_check": "2026-05-13",
     "last_check_status": "warning",
     "key_metrics": {
-      "factor_valid_count": 1,
+      "factor_valid_count": 4788,
       "mode_candidate_count": 0,
       "emotion_score": 0,
       "daily_pipeline_success": false
@@ -29,7 +29,7 @@
     {
       "date": "2026-05-13",
       "status": "warning",
-      "factor_count": 1,
+      "factor_count": 4788,
       "candidate_count": 0,
       "report_generated": false,
       "snapshot_generated": false
