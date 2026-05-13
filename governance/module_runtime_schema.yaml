@@ -1,0 +1,51 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Runtime monitoring structure for all governance, research, execution, and cockpit modules.
+
+runtime_layers:
+  execution_layer:
+    modules:
+      - OpenClaw
+      - kline_update
+      - symbol_normalizer
+      - coverage_monitor
+      - report_pipeline
+
+  research_layer:
+    modules:
+      - robot_2
+      - robot_3
+      - robot_4
+
+  governance_layer:
+    modules:
+      - robot_5
+      - consensus_engine
+      - replay_engine
+      - integrity_check
+      - audit_engine
+      - governance_controller
+      - snapshot_generator
+
+  cockpit_layer:
+    modules:
+      - dashboard_snapshot
+      - widget_runtime
+      - cockpit_sync
+
+runtime_schema:
+  required_fields:
+    - module_name
+    - runtime_status
+    - call_count
+    - last_execution
+    - error_count
+    - governance_state
+
+constraints:
+  immutable_runtime_logs: true
+  github_sync_required: true
+  no_hidden_runtime: true
+
+status: active
