@@ -1,0 +1,38 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Permission model for Governance Cockpit UI.
+
+roles:
+  MAIN:
+    permissions:
+      - governance_overview
+      - integrity_alerts
+      - replay_center
+      - attribution_center
+      - audit_trail
+      - pipeline_monitor
+      - system_health
+      - consensus_center
+      - risk_heatmap
+
+  OpenClaw:
+    permissions:
+      - system_health
+      - pipeline_monitor
+      - consensus_center
+      - risk_heatmap
+
+  official_robot:
+    permissions:
+      - system_health
+      - consensus_center
+      - risk_heatmap
+
+restrictions:
+  no_trade_execution: true
+  no_position_controls: true
+  no_baseline_controls: true
+  no_hidden_permissions: true
+
+status: active
