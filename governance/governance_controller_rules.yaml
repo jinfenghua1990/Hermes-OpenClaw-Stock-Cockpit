@@ -1,0 +1,43 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Central governance controller rules for system-wide protection.
+
+controller_logic:
+  integrity_critical:
+    action:
+      - block_consensus_generation
+      - block_pipeline_execution
+      - generate_critical_alert
+
+  freeze_violation_detected:
+    action:
+      - lock_governance_state
+      - require_user_review
+
+  unregistered_robot_detected:
+    action:
+      - block_robot_execution
+      - create_governance_alert
+
+  github_sync_failure:
+    action:
+      - mark_operational_warning
+      - require_manual_review
+
+  health_check_failure:
+    action:
+      - mark_pipeline_warning
+      - preserve_freeze_state
+
+constraints:
+  no_auto_trade: true
+  no_auto_learning: true
+  no_self_expansion: true
+  no_hidden_override: true
+
+controller_authority:
+  MAIN: coordinator_only
+  USER: final_authority
+
+status: active
