@@ -1,0 +1,97 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: >
+  Define how MAIN aggregates official robot outputs into a unified consensus
+  without creating trading instructions or modifying baseline strategy.
+
+team_scope:
+  official_only: true
+  allowed_members:
+    - MAIN
+    - OpenClaw
+    - robot_2
+    - robot_3
+    - robot_4
+    - robot_5
+  blocked_members:
+    - robot_6
+    - robot_7
+    - robot_8
+    - robot_9
+    - robot_10
+
+consensus_inputs:
+  robot_2:
+    role: research_engine
+    accepted_dimensions:
+      - news
+      - fundamentals
+      - theme_logic
+      - event_verification
+  robot_3:
+    role: feature_engine
+    accepted_dimensions:
+      - technical_factors
+      - indicators
+      - volume_price
+      - feature_quality
+  robot_4:
+    role: strategy_scan
+    accepted_dimensions:
+      - original_four_modes
+      - strategy_match
+      - candidate_score
+      - pattern_status
+  robot_5:
+    role: report_engine
+    accepted_dimensions:
+      - risk_summary
+      - report_packaging
+      - governance_summary
+      - final_readable_output
+
+consensus_labels:
+  bullish:
+    description: Positive research and trend, but not a buy instruction.
+  cautious_bullish:
+    description: Positive long logic with meaningful short-term risk.
+  neutral:
+    description: Mixed signals or insufficient confidence.
+  cautious_bearish:
+    description: Risk signals dominate, but not a sell instruction.
+  bearish:
+    description: Negative consensus, but not a sell instruction.
+
+risk_override:
+  enabled: true
+  rule: >
+    If portfolio risk is HIGH or single-position exposure exceeds the configured
+    limit, final consensus must include risk_override=true regardless of research score.
+  exposure_limit_percent: 30
+  high_risk_labels:
+    - HIGH
+    - EXTREME
+
+output_schema:
+  symbol: string
+  timestamp: string
+  participating_robots: list
+  consensus_label: string
+  research_bias: string
+  technical_status: string
+  strategy_status: string
+  risk_level: string
+  risk_override: boolean
+  final_note: string
+  user_decision_only: true
+
+prohibited_outputs:
+  - buy_instruction
+  - sell_instruction
+  - auto_trade
+  - auto_rebalance
+  - baseline_mutation
+  - auto_learning
+
+status: active
