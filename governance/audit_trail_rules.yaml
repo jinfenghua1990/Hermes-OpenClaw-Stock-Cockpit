@@ -1,0 +1,54 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: >
+  Define mandatory audit trail behavior for MAIN, OpenClaw, and official robots.
+
+mandatory_logging:
+  enabled: true
+  required_fields:
+    - timestamp
+    - actor
+    - action
+    - target
+    - status
+    - phase
+    - governance_state
+
+tracked_actions:
+  - kline_update
+  - health_check
+  - report_generation
+  - consensus_generation
+  - score_aggregation
+  - github_push
+  - governance_change
+  - freeze_change_attempt
+
+blocked_actions:
+  - unregistered_robot_execution
+  - baseline_mutation
+  - auto_trade
+  - auto_learning
+  - hidden_strategy_change
+
+audit_severity:
+  info:
+    description: normal operation
+  warning:
+    description: governance inconsistency detected
+  critical:
+    description: freeze violation or prohibited action attempt
+
+freeze_protection:
+  observation_only_required: true
+  freeze_override_requires:
+    - MAIN
+    - USER_APPROVAL
+
+log_storage:
+  primary_path: governance/audit_logs/
+  retention_days: 180
+  github_sync_required: true
+
+status: active
