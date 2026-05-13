@@ -1,0 +1,114 @@
+{
+  "phase": "Phase-2.4B-Stable",
+  "description": "稳定运行14-30天，禁止自动学习、baseline修改、权重调整、自动交易、AI自治",
+  "daily_checks": [
+    {
+      "name": "kline_update",
+      "description": "K线更新是否成功",
+      "required": true,
+      "warning_threshold": null
+    },
+    {
+      "name": "factor_cache",
+      "description": "技术因子缓存是否生成",
+      "required": true,
+      "warning_threshold": 4000
+    },
+    {
+      "name": "mode_scan",
+      "description": "四模式扫描是否完成",
+      "required": true,
+      "warning_threshold": null
+    },
+    {
+      "name": "daily_report",
+      "description": "日报是否生成",
+      "required": true,
+      "warning_threshold": null
+    },
+    {
+      "name": "emotion_snapshot",
+      "description": "情绪快照是否生成",
+      "required": true,
+      "warning_threshold": null
+    },
+    {
+      "name": "emotion_history",
+      "description": "情绪历史分析是否更新",
+      "required": false,
+      "warning_threshold": null
+    },
+    {
+      "name": "replay_cache",
+      "description": "Replay缓存是否正常",
+      "required": false,
+      "warning_threshold": 24
+    },
+    {
+      "name": "git_push",
+      "description": "GitHub push是否成功",
+      "required": true,
+      "warning_threshold": null
+    }
+  ],
+  "critical_metrics": [
+    {
+      "name": "daily_pipeline_success",
+      "description": "每日流水线是否成功",
+      "type": "boolean"
+    },
+    {
+      "name": "factor_valid_count",
+      "description": "有效技术因子缓存数量",
+      "type": "integer",
+      "min": 4000
+    },
+    {
+      "name": "mode_candidate_count",
+      "description": "四模式候选数量",
+      "type": "integer",
+      "min": 1
+    },
+    {
+      "name": "emotion_score",
+      "description": "情绪分数",
+      "type": "float",
+      "range": [-100, 100]
+    },
+    {
+      "name": "market_phase",
+      "description": "市场阶段",
+      "type": "string",
+      "allowed_values": ["stable", "volatile", "trending", "consolidation"]
+    },
+    {
+      "name": "risk_level",
+      "description": "风险等级",
+      "type": "string",
+      "allowed_values": ["low", "medium", "high"]
+    }
+  ],
+  "prohibited_actions": [
+    "auto_learn",
+    "modify_baseline",
+    "adjust_weights",
+    "auto_trade",
+    "ai_autonomy"
+  ],
+  "stability_goal": {
+    "min_days": 14,
+    "max_days": 30,
+    "start_date": "2026-05-13",
+    "target_completion_date": "2026-06-12"
+  },
+  "next_phase_evaluation": {
+    "mode": "SOUL_INSIGHT_MODE",
+    "not_mode": "AUTO_LEARNING_MODE",
+    "criteria": [
+      "连续稳定运行14天以上",
+      "所有关键指标达标",
+      "无严重警告",
+      "系统监控稳定"
+    ]
+  }
+}
