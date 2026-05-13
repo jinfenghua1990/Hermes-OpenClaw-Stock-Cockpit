@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "phase": "Phase-2.4B",
+  "mode": "OBSERVE_ONLY",
+  "purpose": "Final consensus summary generated from official robot workflow.",
+  "constraints": {
+    "user_decision_only": true,
+    "auto_trade": false,
+    "baseline_mutation": false,
+    "auto_learning": false
+  },
+  "workflow": {
+    "execution_layer": "OpenClaw",
+    "research_layer": [
+      "robot_2",
+      "robot_3",
+      "robot_4"
+    ],
+    "governance_layer": [
+      "robot_5"
+    ],
+    "final_coordinator": "MAIN"
+  },
+  "summary_schema": {
+    "symbol": "",
+    "timestamp": "",
+    "consensus_label": "",
+    "final_score": 0,
+    "research_bias": "",
+    "technical_status": "",
+    "strategy_status": "",
+    "risk_level": "",
+    "risk_override": false,
+    "governance_status": "",
+    "portfolio_exposure": "",
+    "final_note": "",
+    "user_decision_only": true
+  },
+  "status": "template_active"
+}
