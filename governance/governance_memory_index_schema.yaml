@@ -1,0 +1,34 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Long-term governance memory indexing structure.
+
+memory_categories:
+  - freeze_events
+  - integrity_reports
+  - consensus_history
+  - governance_alerts
+  - risk_overrides
+  - pipeline_failures
+  - audit_events
+
+index_schema:
+  required_fields:
+    - memory_id
+    - timestamp
+    - category
+    - actor
+    - severity
+    - linked_report
+    - governance_state
+
+constraints:
+  immutable_history_required: true
+  no_hidden_memory_modification: true
+  github_sync_required: true
+
+storage:
+  index_path: governance/memory_index/
+  retention_days: 365
+
+status: active
