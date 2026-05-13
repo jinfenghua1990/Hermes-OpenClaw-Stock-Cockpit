@@ -497,8 +497,8 @@ def process():
 
     # ── 写入 decision_log.json（兼容旧格式）─────────────────────────
     log_data = {
-        'schema_version': '2.6C',
-        'phase': 'Phase-2.6C Paper Auto Decision',
+        'schema_version': '2.7B',
+        'phase': 'Phase-2.7B Paper Execution Bridge',
         'generated_at': NOW,
         'date': TODAY,
         'paper_only': True,
@@ -532,6 +532,14 @@ def process():
     with open(DECISION_LOG, 'w', encoding='utf-8') as f:
         json.dump(log_data, f, ensure_ascii=False, indent=2)
     print(f"✅ 决策日志: {DECISION_LOG}")
+
+    # Phase-2.7B: 注入 paper_order_intent
+    sys.path.insert(0, str(BASE / 'execution_bridge'))
+    from eastmoney_paper_bridge import run_bridge
+    bridge_result = run_bridge()
+    log_data['execution_summary'] = bridge_result.get('execution_summary', {})
+    with open(DECISION_LOG, 'w', encoding='utf-8') as f:
+        json.dump(log_data, f, ensure_ascii=False, indent=2)
 
     # ── 打印汇总 ────────────────────────────────────────────────────
     print(f"\n{'='*50}")

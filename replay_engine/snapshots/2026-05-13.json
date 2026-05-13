@@ -1,7 +1,7 @@
 {
   "snapshot_date": "2026-05-13",
-  "generated_at": "2026-05-13T22:37:39",
-  "phase": "Phase-2.7A",
+  "generated_at": "2026-05-13T22:48:48",
+  "phase": "Phase-2.7B",
   "soul_mode": "OBSERVE_ONLY",
   "account_mode": "PAPER_ONLY",
   "observation_freeze": true,
@@ -42,7 +42,10 @@
       "swing_low": 0.0,
       "swing_high": 0.0,
       "support_price": 0.0,
-      "pressure_price": 0.0
+      "pressure_price": 0.0,
+      "paper_order_intent": {},
+      "execution_status": "unknown",
+      "execution_id": ""
     },
     {
       "股票代码": "002130",
@@ -60,7 +63,10 @@
       "swing_low": 0.0,
       "swing_high": 0.0,
       "support_price": 0.0,
-      "pressure_price": 0.0
+      "pressure_price": 0.0,
+      "paper_order_intent": {},
+      "execution_status": "unknown",
+      "execution_id": ""
     },
     {
       "股票代码": "002463",
@@ -78,7 +84,10 @@
       "swing_low": 0.0,
       "swing_high": 0.0,
       "support_price": 0.0,
-      "pressure_price": 0.0
+      "pressure_price": 0.0,
+      "paper_order_intent": {},
+      "execution_status": "unknown",
+      "execution_id": ""
     },
     {
       "股票代码": "603629",
@@ -96,9 +105,19 @@
       "swing_low": 0.0,
       "swing_high": 0.0,
       "support_price": 0.0,
-      "pressure_price": 0.0
+      "pressure_price": 0.0,
+      "paper_order_intent": {},
+      "execution_status": "unknown",
+      "execution_id": ""
     }
   ],
+  "execution_summary": {
+    "manual_pending_count": 0,
+    "manual_filled_count": 1,
+    "manual_cancelled_count": 0,
+    "skipped_count": 0,
+    "total_count": 1
+  },
   "runtime_cycle_id": "2026-05-13",
-  "snapshot_uuid": "d5afc169"
+  "snapshot_uuid": "1b5e6f53"
 }

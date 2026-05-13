@@ -217,6 +217,24 @@ function TopPicks({ data, decisions, riskValidation }) {
                   {p.support_price > 0 && p.pressure_price > 0 && ` | 建议 ${p.support_price.toFixed(2)}~${p.pressure_price.toFixed(2)}`}
                 </div>
               )}
+              {/* Phase-2.7B: 执行状态 */}
+              {dec.execution_status && dec.execution_status !== 'unknown' && (
+                <div style={{ fontSize: 10, marginTop: 2 }}>
+                  <span style={{
+                    color: {'manual_pending': 'var(--yellow)', 'manual_filled': 'var(--green)', 'manual_cancelled': 'var(--orange)', 'skipped': 'var(--text-dim)'}[dec.execution_status] || 'var(--text-dim)'
+                  }}>
+                    {dec.execution_status === 'manual_pending' ? '⏳ 待人工确认' :
+                     dec.execution_status === 'manual_filled' ? '✅ 已成交' :
+                     dec.execution_status === 'manual_cancelled' ? '❌ 已取消' :
+                     dec.execution_status === 'skipped' ? '🚫 已跳过' : dec.execution_status}
+                  </span>
+                  {dec.paper_order_intent && dec.paper_order_intent.side !== 'NONE' && (
+                    <span style={{ color: 'var(--text-dim)', marginLeft: 6 }}>
+                      {dec.paper_order_intent.side} {dec.paper_order_intent.intent_price > 0 ? `@${dec.paper_order_intent.intent_price}` : ''} ×{dec.paper_order_intent.suggested_quantity || 0}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           );
         })}
@@ -304,6 +322,22 @@ function RuntimeMetrics({ data }) {
             <div style={{ fontSize: 10 }}>{replay_snapshot_uuid}</div>
           </>
         )}
+        {/* Phase-2.7B: Execution 区块 */}
+        <div style={{ borderTop: '1px solid var(--border)', marginTop: 4, paddingTop: 4 }}>
+          <div style={{ fontSize: 10, color: 'var(--blue-bright)', marginBottom: 2 }}>📡 Execution Bridge</div>
+          <div>Execution Mode</div>
+          <div style={{ fontSize: 10, color: 'var(--yellow)' }}>MANUAL_CONFIRM</div>
+          <div>Execution Target</div>
+          <div style={{ fontSize: 10 }}>Eastmoney Paper</div>
+          <div>Manual Pending</div>
+          <div style={{ color: (runtimeMetrics?.manual_pending_count || 0) > 0 ? 'var(--yellow)' : 'var(--green)' }}>{runtimeMetrics?.manual_pending_count || 0}</div>
+          <div>Manual Filled</div>
+          <div style={{ color: 'var(--green)' }}>{runtimeMetrics?.manual_filled_count || 0}</div>
+          <div>Manual Cancelled</div>
+          <div style={{ color: 'var(--orange)' }}>{runtimeMetrics?.manual_cancelled_count || 0}</div>
+          <div>Skipped</div>
+          <div style={{ color: 'var(--text-dim)' }}>{runtimeMetrics?.skipped_count || 0}</div>
+        </div>
       </div>
     </Card>
   );
@@ -481,7 +515,7 @@ function DailyReport({ reportPath }) {
 function Footer({ lastUpdate }) {
   return (
     <div className="footer">
-      Hermes AI Trading Cockpit — Phase-2.7A Market Structure Engine | 最后更新: {lastUpdate || '—'}
+      Hermes AI Trading Cockpit — Phase-2.7B Paper Execution Bridge | 最后更新: {lastUpdate || '—'}
     </div>
   );
 }
@@ -570,6 +604,11 @@ export default function App() {
         replay_snapshot_status: hcHist?.checks?.replay_snapshot_persistence?.status || 'UNKNOWN',
         replay_snapshot_date: hcHist?.checks?.replay_snapshot_persistence?.snapshot_date || null,
         replay_snapshot_uuid: hcHist?.checks?.replay_snapshot_persistence?.snapshot_uuid || '?',
+        // Phase-2.7B: Execution Bridge
+        manual_pending_count: govSnap?.execution_summary?.manual_pending_count || 0,
+        manual_filled_count: govSnap?.execution_summary?.manual_filled_count || 0,
+        manual_cancelled_count: govSnap?.execution_summary?.manual_cancelled_count || 0,
+        skipped_count: govSnap?.execution_summary?.skipped_count || 0,
       });
       setLastUpdate(new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }));
     }

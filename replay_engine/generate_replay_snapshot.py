@@ -17,6 +17,44 @@ def load_json(path, default=None):
     except:
         return default or {}
 
+def _load_execution_summary() -> dict:
+    """Phase-2.7B: 从 paper_execution_log.jsonl 统计 execution 汇总。"""
+    log_file = BASE / "execution_bridge" / "paper_execution_log.jsonl"
+    if not log_file.exists():
+        return {
+            "manual_pending_count": 0,
+            "manual_filled_count": 0,
+            "manual_cancelled_count": 0,
+            "skipped_count": 0,
+            "total_count": 0,
+        }
+    pending = filled = cancelled = skipped = 0
+    try:
+        for line in log_file.read_text().splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            rec = json.loads(line)
+            status = rec.get("execution_status", "")
+            if status == "manual_pending":
+                pending += 1
+            elif status == "manual_filled":
+                filled += 1
+            elif status == "manual_cancelled":
+                cancelled += 1
+            elif status == "skipped":
+                skipped += 1
+    except:
+        pass
+    return {
+        "manual_pending_count": pending,
+        "manual_filled_count": filled,
+        "manual_cancelled_count": cancelled,
+        "skipped_count": skipped,
+        "total_count": pending + filled + cancelled + skipped,
+    }
+
+
 def generate_replay_snapshot():
     today = datetime.now().strftime("%Y-%m-%d")
     now = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
@@ -65,6 +103,10 @@ def generate_replay_snapshot():
             "swing_high": d.get("swing_high", 0.0),
             "support_price": d.get("support_price", 0.0),
             "pressure_price": d.get("pressure_price", 0.0),
+            # Phase-2.7B: Execution Bridge 字段
+            "paper_order_intent": d.get("paper_order_intent", {}),
+            "execution_status": d.get("execution_status", "unknown"),
+            "execution_id": d.get("execution_id", ""),
         })
 
     # Phase-2.7A: Market Structure 统计
@@ -80,7 +122,7 @@ def generate_replay_snapshot():
     snapshot = {
         "snapshot_date": today,
         "generated_at": now,
-        "phase": "Phase-2.7A",
+        "phase": "Phase-2.7B",
         "soul_mode": "OBSERVE_ONLY",
         "account_mode": "PAPER_ONLY",
         "observation_freeze": True,
@@ -107,6 +149,8 @@ def generate_replay_snapshot():
         "paper_skip_count": paper_skip_count,
         "invalid_price_structure_count": invalid_count,
         "decisions": decisions_out,
+        # Phase-2.7B: Execution Summary（从 execution_bridge 读取）
+        "execution_summary": _load_execution_summary(),
         "runtime_cycle_id": today,
         "snapshot_uuid": str(uuid.uuid4())[:8],
     }

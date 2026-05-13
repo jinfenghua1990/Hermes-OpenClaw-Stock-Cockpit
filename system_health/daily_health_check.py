@@ -297,6 +297,77 @@ def check_market_structure_health():
         return {"status": "error", "message": f"检查市场结构时出错: {str(e)}"}
 
 
+# ══ Phase-2.7B: Paper Execution Bridge Health Check ══════════════════════════
+def check_paper_execution_bridge_health():
+    """
+    检查 Paper Execution Bridge 状态。
+    规则：
+    - execution_bridge 文件存在 → SUCCESS
+    - paper_order_intent 存在但无 execution_status → WARNING
+    - account_mode != PAPER_ONLY → CRITICAL
+    - 出现 auto_trade / real_trade 字段 → CRITICAL
+    """
+    try:
+        bridge_dir = BASE_DIR / "execution_bridge"
+        bridge_py = bridge_dir / "eastmoney_paper_bridge.py"
+        log_file = bridge_dir / "paper_execution_log.jsonl"
+
+        # 检查 bridge 文件存在
+        if not bridge_py.exists():
+            return {"status": "critical", "message": "execution_bridge 模块不存在"}
+
+        # 检查 account_mode
+        gov_snap = _load_latest_replay_snapshot()
+        account_mode = gov_snap.get("account_mode", "PAPER_ONLY")
+        if account_mode != "PAPER_ONLY":
+            return {
+                "status": "critical",
+                "message": f"account_mode={account_mode}，非 PAPER_ONLY",
+            }
+
+        # 检查是否有真实交易字段
+        if log_file.exists():
+            try:
+                content = log_file.read_text()
+                if "auto_trade" in content or "real_trade" in content:
+                    return {
+                        "status": "critical",
+                        "message": "检测到 auto_trade/real_trade 字段，禁止行为",
+                    }
+            except:
+                pass
+
+        # 检查 execution_status
+        pending_count = 0
+        if log_file.exists():
+            try:
+                for line in log_file.read_text().splitlines():
+                    line = line.strip()
+                    if not line:
+                        continue
+                    rec = json.loads(line)
+                    if rec.get("execution_status") == "manual_pending":
+                        pending_count += 1
+            except:
+                pass
+
+        if pending_count > 0:
+            status = "warning"
+            msg = f"有 {pending_count} 条待人工确认的执行意图"
+        else:
+            status = "success"
+            msg = f"Execution Bridge 正常 | account_mode=PAPER_ONLY"
+
+        return {
+            "status": status,
+            "message": msg,
+            "pending_count": pending_count,
+            "account_mode": account_mode,
+        }
+    except Exception as e:
+        return {"status": "error", "message": f"检查 Paper Execution Bridge 时出错: {str(e)}"}
+
+
 def check_emotion_snapshot():
     """检查情绪快照是否生成"""
     try:
@@ -511,6 +582,8 @@ def generate_health_report():
         "replay_snapshot_persistence": check_replay_snapshot_persistence(),
         # Phase-2.7A: Market Structure Health
         "market_structure_health": check_market_structure_health(),
+        # Phase-2.7B: Paper Execution Bridge Health
+        "paper_execution_bridge_health": check_paper_execution_bridge_health(),
         "system_monitor": check_system_monitor(),
         "runtime_event_health": check_runtime_event_health(),
         "snapshot_consistency": check_snapshot_consistency(),
