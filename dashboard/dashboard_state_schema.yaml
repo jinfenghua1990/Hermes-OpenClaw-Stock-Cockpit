@@ -1,0 +1,46 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Data schema for future Governance Dashboard and Cockpit UI.
+
+dashboard_sections:
+  - governance_overview
+  - operational_status
+  - health_summary
+  - coverage_summary
+  - consensus_summary
+  - risk_heatmap
+  - replay_summary
+  - integrity_alerts
+  - pipeline_status
+
+required_fields:
+  governance_overview:
+    - governance_state
+    - freeze_state
+    - integrity_status
+
+  operational_status:
+    - phase
+    - mode
+    - pipeline_health
+
+  consensus_summary:
+    - active_consensus
+    - final_score
+    - participating_robots
+
+  risk_heatmap:
+    - portfolio_risk
+    - governance_risk
+    - operational_risk
+
+constraints:
+  visualization_only: true
+  no_execution_controls: true
+  no_hidden_state_override: true
+
+storage:
+  path: dashboard/state/
+
+status: active
