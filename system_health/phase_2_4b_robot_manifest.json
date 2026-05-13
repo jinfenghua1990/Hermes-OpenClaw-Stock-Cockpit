@@ -1,0 +1,80 @@
+{
+  "manifest_version": "1.0",
+  "phase": "Phase-2.4B",
+  "mode": "OBSERVE_ONLY",
+  "purpose": "robot-readable execution and governance manifest for local MAIN",
+  "priority": [
+    "data_foundation",
+    "kline_coverage_repair",
+    "health_check",
+    "governance_audit"
+  ],
+  "allowed_actions": [
+    "update_kline_after_close",
+    "run_health_check",
+    "normalize_health_status",
+    "summarize_health_reports",
+    "push_reports_to_github"
+  ],
+  "prohibited_actions": [
+    "auto_learn",
+    "modify_baseline",
+    "adjust_strategy_weights",
+    "auto_trade",
+    "ai_autonomy",
+    "write_strategy_positions"
+  ],
+  "effective_success_statuses": [
+    "success",
+    "warning_accepted"
+  ],
+  "accepted_warnings": {
+    "kline_update": "accepted only before close or during known data-source delay",
+    "coverage_low": "accepted during Phase-2.4B data foundation repair"
+  },
+  "daily_runbook": [
+    {
+      "step": 1,
+      "name": "post_close_kline_update",
+      "time": "15:10 Asia/Shanghai",
+      "command": "python3 data/update_kline.py",
+      "required": true
+    },
+    {
+      "step": 2,
+      "name": "daily_health_check",
+      "command": "python3 system_health/daily_health_check.py",
+      "required": true
+    },
+    {
+      "step": 3,
+      "name": "normalize_health_status",
+      "command": "python3 system_health/normalize_health_status.py",
+      "required": true
+    },
+    {
+      "step": 4,
+      "name": "summarize_health_reports",
+      "command": "python3 system_health/summarize_health_reports.py",
+      "required": true
+    },
+    {
+      "step": 5,
+      "name": "git_push_reports",
+      "command": "git status && git add system_health data/update_logs phase_2_4b_status.json && git commit -m 'update Phase-2.4B daily health artifacts' || true && git push",
+      "required": false
+    }
+  ],
+  "health_thresholds": {
+    "factor_valid_count_min": 4000,
+    "allowed_errors_max": 0,
+    "mainboard_coverage_target_percent": 70
+  },
+  "coverage_priority": [
+    "sh_mainboard",
+    "sz_mainboard",
+    "gem",
+    "star"
+  ],
+  "robot_instruction": "Local MAIN should parse this manifest before running daily tasks. Do not execute prohibited actions. Keep Observation Freeze enabled."
+}
