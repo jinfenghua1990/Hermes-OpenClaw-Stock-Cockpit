@@ -17,6 +17,36 @@ SYSTEM_SNAP = BASE / "system_monitor/system_snapshot.json"
 HEALTH_FILE = BASE / "system_health/runtime_event_health_check.py"
 DECISION_LOG  = BASE / "reports/paper_decision_log.json"
 TRACE_LOG     = BASE / "reports/decision_trace_log.json"
+def render_risk_validation_summary(dec_data):
+    """Phase-2.6C-R1 渲染风险价格校验结果"""
+    vr_list = dec_data.get('validation_results', [])
+    if not vr_list:
+        return None
+
+    lines = []
+    pass_cnt  = sum(1 for r in vr_list if r['is_valid'])
+    fail_cnt  = len(vr_list) - pass_cnt
+    overall   = '✅ pass' if fail_cnt == 0 else '❌ error'
+
+    lines.append(f"**风险价格校验**: {overall} | {pass_cnt}✅ | {fail_cnt}❌")
+    for r in vr_list:
+        sym   = r['symbol']
+        name  = r['name']
+        valid = r['is_valid']
+        errs  = r.get('errors', [])
+        warns = r.get('warnings', [])
+        corr  = r.get('corrected_values', {})
+
+        if not valid:
+            lines.append(f"- **{name}** ({sym}): ❌ invalid_price_structure")
+            for e in errs:
+                lines.append(f"  - 错误: {e}")
+        elif warns:
+            lines.append(f"- **{name}** ({sym}): ⚠️ warning")
+            for w in warns:
+                lines.append(f"  - 警告: {w}")
+
+    return '\n'.join(lines) if lines else None
 OUTPUT_PATH = BASE / "reports/history/{date}.md"
 REPORTS_DIR = BASE / "reports/history"
 
@@ -318,6 +348,12 @@ def main():
         "## 📋 模拟账户状态",
         "",
         render_paper_trade(positions, trade_log),
+        "",
+        "---",
+        "",
+        "## 🛡️ Risk Validation 风险价格校验",
+        "",
+        render_risk_validation_summary(decision_data) or "**暂无校验数据。**",
         "",
         "---",
         "",

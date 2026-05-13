@@ -140,16 +140,18 @@ function SnapshotConsistency({ data }) {
 /* ────────────────────────────────────────────────────────────
    Top Picks
 ──────────────────────────────────────────────────────────── */
-function TopPicks({ data, decisions }) {
+function TopPicks({ data, decisions, riskValidation }) {
   if (!data) return <Card><div className="loading">加载中...</div></Card>;
   const picks = data.top_picks || [];
   // 构建决策映射
   const decMap = {};
-  if (decisions) {
-    for (const d of decisions) {
-      decMap[d.股票代码] = d;
-    }
-  }
+  if (decisions)
+    decisions.forEach(d => decMap[d.get ? d.get('股票代码') : d['股票代码']] = d);
+  // 构建风险校验映射
+  const riskMap = {};
+  if (riskValidation)
+    riskValidation.forEach(r => riskMap[r.symbol] = r);
+  const totalValid = riskValidation ? riskValidation.filter(r => r.is_valid).length : null;
   if (picks.length === 0) return (
     <Card>
       <div style={{ fontSize: 12, color: 'var(--text-dim)' }}>暂无精选个股</div>
@@ -190,6 +192,13 @@ function TopPicks({ data, decisions }) {
                 <span style={{ color: 'var(--blue-bright)' }}>{p.所属模式}</span>
                 <span style={{ marginLeft: 8 }}>AI {p.AI评分}</span>
                 <span style={{ marginLeft: 8, color: actionColor }}>{p.操作建议}</span>
+                {(() => {
+                  const rv = riskMap[p.股票代码];
+                  if (!rv) return null;
+                  if (!rv.is_valid) return <span style={{ marginLeft: 6, color: 'var(--red)', fontSize: 10 }}>❌风控失败</span>;
+                  if (rv.warnings?.length) return <span style={{ marginLeft: 6, color: 'var(--yellow)', fontSize: 10 }}>⚠️风控警告</span>;
+                  return <span style={{ marginLeft: 6, color: 'var(--green)', fontSize: 10 }}>✅风控通过</span>;
+                })()}
               </div>
               {decision && (
                 <div style={{ fontSize: 10, marginBottom: 2 }}>
@@ -433,6 +442,7 @@ export default function App() {
   const [topPicks, setTopPicks] = useState(null);
   const [emotionData, setEmotionData] = useState(null);
   const [paperDecisions, setPaperDecisions] = useState(null);
+  const [riskValidation, setRiskValidation] = useState(null);
 
   // Clock
   useEffect(() => {
@@ -475,6 +485,8 @@ export default function App() {
       setTopPicks(tpData);
       setEmotionData(emData);
       setPaperDecisions(pdData || {});
+      // Extract validation_results from decision_log for risk validation display
+      setRiskValidation(pdData?.validation_results || null);
       setLastUpdate(new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }));
     }
     load();
@@ -500,10 +512,10 @@ export default function App() {
       {/* Main */}
       <div className="main">
 
-      {/* A. Top Picks + Emotion (Phase-2.6A Research Intelligence) */}
-      <Section title="A. 🔝 Top Picks">
+      {/* A. Top Picks + Emotion (Phase-2.6C Decision Traceability + Risk Validation) */}
+      <Section title={<>🔝 Top Picks {riskValidation ? <span style={{color: riskValidation.filter(r=>!r.is_valid).length > 0 ? 'var(--red)' : 'var(--green)', fontSize:11}}>❌风控{riskValidation.filter(r=>!r.is_valid).length > 0 ? '失败' : '通过'}</span> : null}</>}>
         <div className="grid-2">
-          <TopPicks data={topPicks} decisions={paperDecisions?.decisions} />
+          <TopPicks data={topPicks} decisions={paperDecisions?.decisions} riskValidation={riskValidation} />
           <EmotionSnapshot data={emotionData} />
         </div>
       </Section>
