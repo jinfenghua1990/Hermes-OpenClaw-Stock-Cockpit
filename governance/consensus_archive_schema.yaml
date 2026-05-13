@@ -1,0 +1,33 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Historical archive structure for finalized consensus outputs.
+
+archive_fields:
+  required:
+    - archive_id
+    - symbol
+    - timestamp
+    - consensus_label
+    - final_score
+    - participating_robots
+    - risk_level
+    - governance_state
+    - outcome_reference
+
+tracking:
+  enabled: true
+  immutable_archive: true
+  replay_reference_required: true
+
+constraints:
+  no_auto_strategy_adjustment: true
+  no_auto_weight_adjustment: true
+  no_auto_learning: true
+  user_review_required: true
+
+storage:
+  path: governance/consensus_archive/
+  github_sync_required: true
+
+status: active
