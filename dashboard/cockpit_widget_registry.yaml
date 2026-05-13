@@ -1,0 +1,41 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Widget registry for Governance Cockpit UI.
+
+widgets:
+  governance_status_widget:
+    source:
+      - governance/governance_state_snapshot_schema.yaml
+
+  health_monitor_widget:
+    source:
+      - system_health/
+
+  consensus_summary_widget:
+    source:
+      - governance/consensus_archive_schema.yaml
+      - reports/final_decision_summary.json
+
+  risk_heatmap_widget:
+    source:
+      - governance/risk_heatmap_schema.yaml
+
+  replay_timeline_widget:
+    source:
+      - replay_engine/replay_execution_schema.yaml
+
+  attribution_widget:
+    source:
+      - governance/attribution_output_schema.yaml
+
+  integrity_alert_widget:
+    source:
+      - governance/integrity_check_rules.yaml
+
+constraints:
+  visualization_only: true
+  no_execution_capability: true
+  no_hidden_widget: true
+
+status: active
