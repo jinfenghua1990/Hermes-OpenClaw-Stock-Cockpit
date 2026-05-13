@@ -1,0 +1,23 @@
+{
+  "snapshot_date": "2026-05-13",
+  "generated_at": "2026-05-13T20:54:52",
+  "phase": "Phase-2.6E",
+  "soul_mode": "OBSERVE_ONLY",
+  "account_mode": "PAPER_ONLY",
+  "observation_freeze": true,
+  "risk_validation_enabled": true,
+  "governance_snapshot_path": "/Users/gino/project_ai_trading/governance/snapshots/2026-05-13.json",
+  "daily_report_path": "/Users/gino/project_ai_trading/reports/history/2026-05-13.md",
+  "health_check_status": "CRITICAL",
+  "risk_validation_summary": {
+    "total": 4,
+    "invalid_count": 4,
+    "pass_count": 0
+  },
+  "top_picks_count": 4,
+  "paper_decision_count": 4,
+  "paper_skip_count": 4,
+  "invalid_price_structure_count": 4,
+  "runtime_cycle_id": "2026-05-13",
+  "snapshot_uuid": "a4f632fc"
+}

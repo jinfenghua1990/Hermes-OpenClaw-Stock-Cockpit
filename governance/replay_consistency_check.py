@@ -29,22 +29,19 @@ def check_replay_cache():
 def check_replay_snapshot_date():
     """检查 replay snapshot 是否匹配当天 pipeline"""
     today = datetime.now().strftime("%Y-%m-%d")
-    snap_paths = [
-        BASE / "replay_engine" / "cache" / "latest_snapshot.json",
-        BASE / "replay_engine" / "snapshot.json",
-    ]
-    for p in snap_paths:
-        if p.exists():
-            try:
-                data = json.loads(p.read_text())
-                snap_date = data.get("date") or data.get("generated_at", "")[:10]
-                if snap_date == today:
-                    return "PASS", f"snapshot matches today ({today})"
-                else:
-                    return "WARNING", f"snapshot date={snap_date}, today={today}"
-            except:
-                return "WARNING", "snapshot exists but unreadable"
-    return "FAIL", "no replay snapshot found"
+    # Phase-2.6E: 统一路径为 replay_engine/snapshots/YYYY-MM-DD.json
+    snap_path = BASE / "replay_engine" / "snapshots" / f"{today}.json"
+    if snap_path.exists():
+        try:
+            data = json.loads(snap_path.read_text())
+            snap_date = data.get("snapshot_date", "") or data.get("generated_at", "")[:10]
+            if snap_date == today:
+                return "PASS", f"replay snapshot matches today ({today})"
+            else:
+                return "WARNING", f"snapshot date={snap_date}, today={today}"
+        except:
+            return "WARNING", "snapshot exists but unreadable"
+    return "FAIL", f"no replay snapshot found at {snap_path.name}"
 
 def check_report_snapshot():
     """检查 report snapshot 是否一致"""

@@ -195,6 +195,47 @@ def check_risk_price_validation():
         return {"status": "error", "message": f"检查风控时出错: {str(e)}"}
 
 
+# ══ Phase-2.6E: Replay Snapshot Persistence Check ══════════════════════════
+def check_replay_snapshot_persistence():
+    """
+    检查 Replay Snapshot 是否存在且日期匹配。
+    规则：
+    - 今日 snapshot 存在且日期匹配 → SUCCESS
+    - 今日 snapshot 不存在 → CRITICAL
+    - snapshot 日期不一致 → WARNING
+    """
+    try:
+        today = datetime.datetime.now().strftime("%Y-%m-%d")
+        snap_path = BASE_DIR / "replay_engine" / "snapshots" / f"{today}.json"
+        if snap_path.exists():
+            try:
+                data = json.loads(snap_path.read_text())
+                snap_date = data.get("snapshot_date", "")[:10]
+                if snap_date == today:
+                    return {
+                        "status": "success",
+                        "message": f"Replay snapshot 存在 ({today})",
+                        "snapshot_date": snap_date,
+                        "snapshot_uuid": data.get("snapshot_uuid", "?"),
+                    }
+                else:
+                    return {
+                        "status": "warning",
+                        "message": f"snapshot 日期不一致: {snap_date} vs 今天 {today}",
+                        "snapshot_date": snap_date,
+                    }
+            except:
+                return {"status": "warning", "message": "snapshot 存在但无法读取"}
+        else:
+            return {
+                "status": "critical",
+                "message": "Replay snapshot 不存在",
+                "snapshot_date": None,
+            }
+    except Exception as e:
+        return {"status": "error", "message": f"检查 replay snapshot 时出错: {str(e)}"}
+
+
 def check_emotion_snapshot():
     """检查情绪快照是否生成"""
     try:
@@ -405,6 +446,8 @@ def generate_health_report():
         "git_push": check_git_push(),
         # Phase-2.6D: Risk Price Validation
         "risk_price_validation": check_risk_price_validation(),
+        # Phase-2.6E: Replay Snapshot Persistence
+        "replay_snapshot_persistence": check_replay_snapshot_persistence(),
         "system_monitor": check_system_monitor(),
         "runtime_event_health": check_runtime_event_health(),
         "snapshot_consistency": check_snapshot_consistency(),

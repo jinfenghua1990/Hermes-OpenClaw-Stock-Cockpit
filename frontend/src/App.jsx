@@ -253,7 +253,7 @@ function EmotionSnapshot({ data }) {
 ──────────────────────────────────────────────────────────── */
 function RuntimeMetrics({ data }) {
   if (!data) return <Card><div className="loading">加载中...</div></Card>;
-  const { governance_status, health_check_summary, risk_interception_count, pipeline_today, observation_freeze, health_check_critical, health_check_warning, health_check_success } = data;
+  const { governance_status, health_check_summary, risk_interception_count, pipeline_today, observation_freeze, health_check_critical, health_check_warning, health_check_success, replay_snapshot_status, replay_snapshot_date, replay_snapshot_uuid } = data;
   const metricColor = (v) => v === 'PASS' ? 'var(--green)' : v === 'CRITICAL' ? 'var(--red)' : v === 'WARNING' ? 'var(--yellow)' : 'var(--text-dim)';
   return (
     <Card>
@@ -280,6 +280,22 @@ function RuntimeMetrics({ data }) {
         <div style={{ color: observation_freeze ? 'var(--green)' : 'var(--red)' }}>{observation_freeze ? '🔒 ON' : '❌ OFF'}</div>
         <div>Risk Validation</div>
         <div style={{ color: 'var(--green)' }}>✅ ON</div>
+        <div>Replay Snapshot</div>
+        <div style={{ color: replay_snapshot_status === 'success' ? 'var(--green)' : replay_snapshot_status === 'warning' ? 'var(--yellow)' : 'var(--red)' }}>
+          {replay_snapshot_status === 'success' ? '✅ PASS' : replay_snapshot_status === 'warning' ? '⚠️ WARN' : '❌ FAIL'}
+        </div>
+        {replay_snapshot_date && (
+          <>
+            <div>snapshot 日期</div>
+            <div style={{ fontSize: 10 }}>{replay_snapshot_date}</div>
+          </>
+        )}
+        {replay_snapshot_uuid && (
+          <>
+            <div>snapshot UUID</div>
+            <div style={{ fontSize: 10 }}>{replay_snapshot_uuid}</div>
+          </>
+        )}
       </div>
     </Card>
   );
@@ -457,7 +473,7 @@ function DailyReport({ reportPath }) {
 function Footer({ lastUpdate }) {
   return (
     <div className="footer">
-      Hermes AI Trading Cockpit — Phase-2.6D Risk Price Validation | 最后更新: {lastUpdate || '—'}
+      Hermes AI Trading Cockpit — Phase-2.6E Replay Snapshot Persistence | 最后更新: {lastUpdate || '—'}
     </div>
   );
 }
@@ -527,12 +543,12 @@ export default function App() {
       setPaperDecisions(pdData || {});
       // Extract validation_results from decision_log for risk validation display
       setRiskValidation(pdData?.validation_results || null);
-      // Build runtimeMetrics from governance snapshot + health check history
+// Build runtimeMetrics from governance snapshot + health check history
       const govSnap = res[10];
       const hcHist = res[11];
       const riskInterceptions = (pdData?.validation_results || []).filter(r => !r.is_valid).length;
       setRuntimeMetrics({
-        phase: 'Phase-2.6D',
+        phase: 'Phase-2.6E',
         governance_status: govSnap?.status || 'UNKNOWN',
         health_check_summary: hcHist?.overall_status || 'UNKNOWN',
         risk_interception_count: riskInterceptions,
@@ -542,6 +558,10 @@ export default function App() {
         health_check_critical: hcHist?.critical_count || 0,
         health_check_warning: hcHist?.warning_count || 0,
         health_check_success: hcHist?.success_count || 0,
+        // Phase-2.6E: Replay Snapshot persistence
+        replay_snapshot_status: hcHist?.checks?.replay_snapshot_persistence?.status || 'UNKNOWN',
+        replay_snapshot_date: hcHist?.checks?.replay_snapshot_persistence?.snapshot_date || null,
+        replay_snapshot_uuid: hcHist?.checks?.replay_snapshot_persistence?.snapshot_uuid || '?',
       });
       setLastUpdate(new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }));
     }
