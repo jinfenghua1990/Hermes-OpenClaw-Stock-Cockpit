@@ -1,0 +1,36 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Daily governance state snapshot structure.
+
+snapshot_sections:
+  - freeze_state
+  - team_registry
+  - integrity_status
+  - health_status
+  - pipeline_status
+  - consensus_status
+  - risk_status
+  - github_sync_status
+
+snapshot_schema:
+  required_fields:
+    - snapshot_id
+    - timestamp
+    - phase
+    - governance_state
+    - integrity_state
+    - freeze_state
+    - active_team
+    - operational_status
+
+constraints:
+  immutable_snapshot_required: true
+  github_sync_required: true
+  no_hidden_state_modification: true
+
+storage:
+  path: governance/snapshots/
+  retention_days: 365
+
+status: active
