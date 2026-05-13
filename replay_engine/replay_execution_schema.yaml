@@ -1,0 +1,43 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Replay execution structure for post-analysis review.
+
+replay_input_sources:
+  - governance/consensus_history_ledger.yaml
+  - governance/consensus_archive_schema.yaml
+  - reports/final_decision_summary.json
+  - reports/daily_report_schema.yaml
+  - governance/risk_heatmap_schema.yaml
+
+replay_task_types:
+  - consensus_outcome_review
+  - risk_signal_review
+  - robot_output_comparison
+  - governance_event_review
+  - pipeline_health_review
+
+replay_output_schema:
+  required_fields:
+    - replay_id
+    - symbol
+    - timestamp
+    - original_consensus_label
+    - original_final_score
+    - observed_outcome
+    - risk_signal_accuracy
+    - robot_alignment
+    - governance_notes
+    - user_review_required
+
+constraints:
+  no_auto_learning: true
+  no_auto_weight_adjustment: true
+  no_auto_strategy_change: true
+  no_trade_execution: true
+
+storage:
+  path: replay_engine/history/
+  github_sync_required: true
+
+status: active
