@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "phase": "Phase-2.4B",
+  "mode": "OBSERVE_ONLY",
+  "execution_layer": {
+    "OpenClaw": {
+      "runtime": "active",
+      "calls": 0,
+      "errors": 0,
+      "last_execution": ""
+    },
+    "kline_update": {
+      "runtime": "active",
+      "calls": 0,
+      "errors": 0,
+      "last_execution": ""
+    }
+  },
+  "research_layer": {
+    "robot_2": {
+      "calls": 0
+    },
+    "robot_3": {
+      "calls": 0
+    },
+    "robot_4": {
+      "calls": 0
+    }
+  },
+  "governance_layer": {
+    "robot_5": {
+      "calls": 0
+    },
+    "consensus_engine": {
+      "calls": 0
+    },
+    "replay_engine": {
+      "calls": 0
+    },
+    "integrity_check": {
+      "calls": 0
+    }
+  },
+  "cockpit_layer": {
+    "dashboard_snapshot": {
+      "calls": 0
+    },
+    "widget_runtime": {
+      "calls": 0
+    }
+  },
+  "unused_module_alerts": [],
+  "user_decision_only": true
+}
