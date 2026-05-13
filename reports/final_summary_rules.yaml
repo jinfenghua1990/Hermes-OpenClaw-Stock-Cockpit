@@ -1,0 +1,50 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Rule layer for MAIN final summary generation.
+
+inputs:
+  - governance/consensus_rules.yaml
+  - governance/score_weights.yaml
+  - governance/risk_heatmap_schema.yaml
+  - governance/integrity_check_rules.yaml
+  - reports/daily_report_schema.yaml
+
+summary_fields:
+  required:
+    - symbol
+    - timestamp
+    - phase
+    - mode
+    - final_score
+    - consensus_label
+    - risk_level
+    - governance_status
+    - health_status
+    - user_decision_only
+
+final_bias_labels:
+  - strong_but_review_required
+  - positive_with_risk
+  - neutral
+  - cautious
+  - high_risk
+
+risk_override_rules:
+  exposure_over_limit:
+    enabled: true
+    note_required: true
+  governance_warning:
+    enabled: true
+    note_required: true
+  integrity_critical:
+    enabled: true
+    final_bias: high_risk
+
+constraints:
+  no_execution_instruction: true
+  no_position_change_instruction: true
+  no_baseline_change: true
+  user_decision_only: true
+
+status: active
