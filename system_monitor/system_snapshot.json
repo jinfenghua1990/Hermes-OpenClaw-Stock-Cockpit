@@ -1,6 +1,6 @@
 {
   "report_type": "rolling_snapshot",
-  "timestamp": "2026-05-13 14:44:41",
+  "timestamp": "2026-05-13 17:01:19",
   "phase": "Phase-1.6 OBSERVE_ONLY",
   "data_quality": {
     "openclaw_raw_freshness_min": null,
@@ -19,8 +19,8 @@
   "strategy_match": {
     "matched": 5,
     "details": [],
-    "latest_report": "pre_market_report.json",
-    "latest_report_time": "2026-05-12 08:30:37",
+    "latest_report": "daily_review.json",
+    "latest_report_time": "2026-05-13 15:30:11",
     "top_candidates": [
       {
         "code": "301282",
@@ -57,15 +57,15 @@
     ]
   },
   "runtime_events": {
-    "total_modules": 17,
+    "total_modules": 21,
     "active_modules": 0,
     "layers": {
       "execution_layer": {
-        "total": 7,
+        "total": 9,
         "active": 0
       },
       "governance_layer": {
-        "total": 7,
+        "total": 9,
         "active": 0
       },
       "cockpit_layer": {
@@ -76,12 +76,33 @@
     "latest_events": []
   },
   "runtime_event_health": {
-    "total_modules": 0,
-    "active_today": 0,
-    "missing_today": [],
-    "warning_modules": [],
+    "total_modules": 21,
+    "active_today": 3,
+    "missing_today": [
+      "openclaw_fetch_sh",
+      "feature_engine_sh",
+      "coverage_monitor",
+      "report_pipeline",
+      "paper_trade_executor",
+      "notification_router",
+      "position_manager",
+      "pnl_tracker",
+      "risk_controller",
+      "scheduler_sh",
+      "replay_market_day",
+      "event_engine",
+      "position_adapter",
+      "robot5_risk_sh",
+      "main_aggregate_sh",
+      "heartbeat_monitor",
+      "robot4_match_sh",
+      "cockpit_frontend"
+    ],
+    "warning_modules": [
+      "daily_health_check"
+    ],
     "error_modules": [],
-    "status": "pending"
+    "status": "warning"
   },
   "prohibited": [
     "自动交易",
@@ -90,5 +111,48 @@
     "baseline修改",
     "自动学习",
     "将snapshot作为交易依据"
-  ]
+  ],
+  "paper_trading": {
+    "mode": "PAPER_ONLY",
+    "account_mode": "OBSERVE_ONLY",
+    "kill_switch": false,
+    "total_assets": 0,
+    "available_balance": 0,
+    "total_pnl": 0,
+    "positions_count": 0,
+    "last_updated": "2026-05-13 17:01:19"
+  },
+  "report_delivery": {
+    "schema_version": "1.0",
+    "description": "Track daily report delivery status to Feishu",
+    "last_updated": "",
+    "reports": {
+      "pre_market": {
+        "enabled": true,
+        "scheduled_time": "08:30",
+        "last_sent": "",
+        "last_status": "pending",
+        "last_error": "",
+        "delivery_count": 0
+      },
+      "daily_review": {
+        "enabled": true,
+        "scheduled_time": "15:30",
+        "last_sent": "",
+        "last_status": "pending",
+        "last_error": "",
+        "delivery_count": 0
+      }
+    },
+    "feishu_target": {
+      "group_id": "oc_174834d2967c4dfbdd692464f85398e0",
+      "notification_type": "daily_report"
+    },
+    "delivery_history": []
+  },
+  "cockpit_frontend": {
+    "enabled": true,
+    "build_status": "success",
+    "last_build": ""
+  }
 }

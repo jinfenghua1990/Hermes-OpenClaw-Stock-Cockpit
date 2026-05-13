@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-05-13T06:45:08.565133Z",
+  "generated_at": "2026-05-13T09:01:19.768589Z",
   "source": "module_runtime_schema.yaml",
-  "total_modules": 17,
+  "total_modules": 21,
   "layers": {
     "execution_layer": {
-      "module_count": 7,
+      "module_count": 9,
       "modules": [
         "openclaw_fetch_sh",
         "feature_engine_sh",
@@ -12,12 +12,15 @@
         "report_pipeline",
         "daily_pipeline",
         "paper_trade_executor",
-        "notification_router"
+        "notification_router",
+        "position_manager",
+        "pnl_tracker"
       ]
     },
     "governance_layer": {
-      "module_count": 7,
+      "module_count": 8,
       "modules": [
+        "risk_controller",
         "scheduler_sh",
         "replay_market_day",
         "event_engine",
@@ -28,11 +31,12 @@
       ]
     },
     "cockpit_layer": {
-      "module_count": 3,
+      "module_count": 4,
       "modules": [
         "rolling_snapshot",
         "heartbeat_monitor",
-        "robot4_match_sh"
+        "robot4_match_sh",
+        "cockpit_frontend"
       ]
     }
   },
@@ -82,6 +86,27 @@
     {
       "name": "notification_router",
       "layer": "execution_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "position_manager",
+      "layer": "execution_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "pnl_tracker",
+      "layer": "execution_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "risk_controller",
+      "layer": "governance_layer",
       "enabled": true,
       "runtime_detected": false,
       "last_runtime": null
@@ -151,6 +176,13 @@
     },
     {
       "name": "robot4_match_sh",
+      "layer": "cockpit_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "cockpit_frontend",
       "layer": "cockpit_layer",
       "enabled": true,
       "runtime_detected": false,

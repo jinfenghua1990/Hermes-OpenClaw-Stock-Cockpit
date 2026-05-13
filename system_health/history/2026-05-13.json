@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-05-13T14:45:08.681532",
+  "timestamp": "2026-05-13T17:01:19.846519",
   "date": "2026-05-13",
   "phase": "Phase-2.4B-Stable",
   "overall_status": "warning",
   "status_counts": {
-    "success": 11,
-    "warning": 1,
+    "success": 10,
+    "warning": 2,
     "error": 0
   },
   "critical_metrics": {
@@ -34,8 +34,8 @@
     },
     "daily_report": {
       "status": "success",
-      "message": "日报已生成 (3016字节)",
-      "file_size": 3016
+      "message": "日报已生成 (4359字节)",
+      "file_size": 4359
     },
     "emotion_snapshot": {
       "status": "success",
@@ -51,24 +51,24 @@
       "status": "success",
       "message": "Replay缓存正常 (最新: 2026-05-12 23:09)",
       "latest_file": "latest_replay.json",
-      "age_hours": 15.592455692777778
+      "age_hours": 17.862225370555556
     },
     "git_push": {
       "status": "success",
-      "message": "最新提交已推送: eb0b839 add runtime event health gate",
-      "last_commit": "eb0b839 add runtime event health gate"
+      "message": "最新提交已推送: 3546fd1 complete phase-2.5 integrated cockpit and paper trade delivery",
+      "last_commit": "3546fd1 complete phase-2.5 integrated cockpit and paper trade delivery"
     },
     "system_monitor": {
       "status": "success",
       "message": "系统监控文件存在"
     },
     "runtime_event_health": {
-      "status": "success",
-      "message": "Runtime Event 健康: 17/17 模块今日活跃"
+      "status": "warning",
+      "message": "Runtime Event 不完整: 18 模块今日无事件 (openclaw_fetch_sh, feature_engine_sh, coverage_monitor, report_pipeline, paper_trade_executor)"
     },
     "snapshot_consistency": {
       "status": "success",
-      "message": "模块数一致: 17"
+      "message": "模块数一致: 21"
     },
     "freeze_integrity": {
       "status": "success",
