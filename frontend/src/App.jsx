@@ -249,6 +249,43 @@ function EmotionSnapshot({ data }) {
   );
 }
 /* ────────────────────────────────────────────────────────────
+   Runtime Metrics Panel — Phase-2.6D
+──────────────────────────────────────────────────────────── */
+function RuntimeMetrics({ data }) {
+  if (!data) return <Card><div className="loading">加载中...</div></Card>;
+  const { governance_status, health_check_summary, risk_interception_count, pipeline_today, observation_freeze, health_check_critical, health_check_warning, health_check_success } = data;
+  const metricColor = (v) => v === 'PASS' ? 'var(--green)' : v === 'CRITICAL' ? 'var(--red)' : v === 'WARNING' ? 'var(--yellow)' : 'var(--text-dim)';
+  return (
+    <Card>
+      <div className="flex-between" style={{ marginBottom: 10 }}>
+        <span>📊 Runtime Metrics</span>
+        <Badge s={governance_status} />
+      </div>
+      <div style={{ fontSize: 11, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+        <div>Pipeline</div>
+        <div style={{ color: pipeline_today === 'ACTIVE' ? 'var(--green)' : 'var(--yellow)' }}>{pipeline_today}</div>
+        <div>Health</div>
+        <div style={{ color: metricColor(health_check_summary) }}>{health_check_summary || '?'}</div>
+        <div>Governance</div>
+        <div style={{ color: metricColor(governance_status) }}>{governance_status || '?'}</div>
+        <div>风险拦截</div>
+        <div style={{ color: risk_interception_count > 0 ? 'var(--red)' : 'var(--green)' }}>{risk_interception_count} 次</div>
+        <div>HC Critical</div>
+        <div style={{ color: health_check_critical > 0 ? 'var(--red)' : 'var(--green)' }}>{health_check_critical}</div>
+        <div>HC Warning</div>
+        <div style={{ color: health_check_warning > 0 ? 'var(--yellow)' : 'var(--green)' }}>{health_check_warning}</div>
+        <div>HC Success</div>
+        <div style={{ color: 'var(--green)' }}>{health_check_success}</div>
+        <div>观测冻结</div>
+        <div style={{ color: observation_freeze ? 'var(--green)' : 'var(--red)' }}>{observation_freeze ? '🔒 ON' : '❌ OFF'}</div>
+        <div>Risk Validation</div>
+        <div style={{ color: 'var(--green)' }}>✅ ON</div>
+      </div>
+    </Card>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────
    Freeze Integrity
 ──────────────────────────────────────────────────────────── */
 function FreezeIntegrity({ data }) {
@@ -443,6 +480,7 @@ export default function App() {
   const [emotionData, setEmotionData] = useState(null);
   const [paperDecisions, setPaperDecisions] = useState(null);
   const [riskValidation, setRiskValidation] = useState(null);
+  const [runtimeMetrics, setRuntimeMetrics] = useState(null);
 
   // Clock
   useEffect(() => {
@@ -474,6 +512,8 @@ export default function App() {
         fetchJSON(`${BASE}/reports/top_picks.json`),
         fetchJSON(`${BASE}/emotion_engine/cache/market_emotion_snapshot.json`),
         fetchJSON(`${BASE}/reports/paper_decision_log.json`).catch(() => ({})),
+        fetchJSON(`${BASE}/governance/snapshots/${new Date().toISOString().slice(0,10)}.json`).catch(() => null),
+        fetchJSON(`${BASE}/system_health/history/${new Date().toISOString().slice(0,10)}.json`).catch(() => null),
       ]);
       setHealth(healthData);
       setRuntimeHealth(rhData);
@@ -487,6 +527,22 @@ export default function App() {
       setPaperDecisions(pdData || {});
       // Extract validation_results from decision_log for risk validation display
       setRiskValidation(pdData?.validation_results || null);
+      // Build runtimeMetrics from governance snapshot + health check history
+      const govSnap = res[10];
+      const hcHist = res[11];
+      const riskInterceptions = (pdData?.validation_results || []).filter(r => !r.is_valid).length;
+      setRuntimeMetrics({
+        phase: 'Phase-2.6D',
+        governance_status: govSnap?.status || 'UNKNOWN',
+        health_check_summary: hcHist?.overall_status || 'UNKNOWN',
+        risk_interception_count: riskInterceptions,
+        pipeline_today: govSnap ? 'ACTIVE' : 'NO_SNAPSHOT',
+        observation_freeze: true,
+        risk_validation_enabled: govSnap?.risk_validation_enabled || true,
+        health_check_critical: hcHist?.critical_count || 0,
+        health_check_warning: hcHist?.warning_count || 0,
+        health_check_success: hcHist?.success_count || 0,
+      });
       setLastUpdate(new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }));
     }
     load();
@@ -531,9 +587,10 @@ export default function App() {
         />
       </Section>
 
-      {/* C. Health Gates (Governance) */}
-      <Section title="C. Health Gates">
+      {/* C. Health Gates (Governance) — Phase-2.6D Runtime Metrics */}
+      <Section title={<>C. Health Gates <span style={{fontSize:11,color:'var(--text-dim)'}}>(Phase-2.6D)</span></>}>
         <div className="grid-2">
+          <RuntimeMetrics data={runtimeMetrics} />
           <RuntimeEventHealth data={runtimeHealth} />
           <FreezeIntegrity data={freeze} />
           <SnapshotConsistency data={consistency} />

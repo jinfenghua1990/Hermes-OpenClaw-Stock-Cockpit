@@ -1,0 +1,38 @@
+{
+  "phase": "Phase-2.6D",
+  "generated_at": "2026-05-13T20:35:37",
+  "date": "2026-05-13",
+  "paper_mode": true,
+  "observation_freeze": true,
+  "risk_validation_enabled": true,
+  "risk_controller_enabled": true,
+  "paper_decision_engine_v2_6D": true,
+  "daily_report_v2": true,
+  "cockpit_connected": true,
+  "health_check_status": "CRITICAL",
+  "health_check_details": {
+    "total": 0,
+    "success": 0,
+    "warning": 0,
+    "error": 0,
+    "critical": 0
+  },
+  "files_present": {
+    "governance_risk_price_validation": true,
+    "paper_risk_controller": true,
+    "paper_decision_engine": true,
+    "daily_report_v2": true,
+    "daily_health_check": true,
+    "app_jsx": true,
+    "soul_config": true,
+    "risk_price_validation_py": true
+  },
+  "observation_freeze_rules": {
+    "auto_learn": false,
+    "auto_strategy_evolution": false,
+    "auto_parameter_tuning": false,
+    "auto_trade": false,
+    "real_trade": false
+  },
+  "status": "WARNING"
+}
