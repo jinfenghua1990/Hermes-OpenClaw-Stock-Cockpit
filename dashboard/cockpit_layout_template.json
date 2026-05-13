@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "phase": "Phase-2.4B",
+  "mode": "OBSERVE_ONLY",
+  "layout": {
+    "top_bar": {
+      "items": [
+        "phase",
+        "governance_state",
+        "freeze_state",
+        "integrity_status"
+      ]
+    },
+    "left_panel": {
+      "sections": [
+        "system_health",
+        "pipeline_monitor",
+        "integrity_alerts"
+      ]
+    },
+    "center_panel": {
+      "sections": [
+        "consensus_center",
+        "risk_heatmap",
+        "replay_center"
+      ]
+    },
+    "right_panel": {
+      "sections": [
+        "governance_overview",
+        "attribution_center",
+        "audit_trail"
+      ]
+    }
+  },
+  "constraints": {
+    "visualization_only": true,
+    "no_trade_controls": true,
+    "no_execution_controls": true
+  }
+}
