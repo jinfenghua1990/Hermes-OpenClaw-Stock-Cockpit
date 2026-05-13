@@ -3,36 +3,54 @@ phase: Phase-2.4B
 mode: OBSERVE_ONLY
 purpose: Runtime monitoring structure for all governance, research, execution, and cockpit modules.
 
-runtime_layers:
+# ==================================================
+# 所有模块定义（source of truth）
+# runtime_usage_summary.json 由此自动生成
+# ==================================================
+layers:
   execution_layer:
-    modules:
-      - OpenClaw
-      - kline_update
-      - symbol_normalizer
-      - coverage_monitor
-      - report_pipeline
+    - name: OpenClaw
+      enabled: true
+    - name: kline_update
+      enabled: true
+    - name: symbol_normalizer
+      enabled: true
+    - name: coverage_monitor
+      enabled: true
+    - name: report_pipeline
+      enabled: true
 
   research_layer:
-    modules:
-      - robot_2
-      - robot_3
-      - robot_4
+    - name: robot_2
+      enabled: true
+    - name: robot_3
+      enabled: true
+    - name: robot_4
+      enabled: true
 
   governance_layer:
-    modules:
-      - robot_5
-      - consensus_engine
-      - replay_engine
-      - integrity_check
-      - audit_engine
-      - governance_controller
-      - snapshot_generator
+    - name: robot_5
+      enabled: true
+    - name: consensus_engine
+      enabled: true
+    - name: replay_engine
+      enabled: true
+    - name: integrity_check
+      enabled: true
+    - name: audit_engine
+      enabled: true
+    - name: governance_controller
+      enabled: true
+    - name: snapshot_generator
+      enabled: true
 
   cockpit_layer:
-    modules:
-      - dashboard_snapshot
-      - widget_runtime
-      - cockpit_sync
+    - name: dashboard_snapshot
+      enabled: true
+    - name: widget_runtime
+      enabled: true
+    - name: cockpit_sync
+      enabled: true
 
 runtime_schema:
   required_fields:

@@ -1,54 +1,173 @@
 {
-  "schema_version": "1.0",
-  "phase": "Phase-2.4B",
-  "mode": "OBSERVE_ONLY",
-  "execution_layer": {
-    "OpenClaw": {
-      "runtime": "active",
-      "calls": 0,
-      "errors": 0,
-      "last_execution": ""
+  "generated_at": "2026-05-13T05:47:39.623073Z",
+  "source": "module_runtime_schema.yaml",
+  "total_modules": 18,
+  "layers": {
+    "execution_layer": {
+      "module_count": 5,
+      "modules": [
+        "OpenClaw",
+        "kline_update",
+        "symbol_normalizer",
+        "coverage_monitor",
+        "report_pipeline"
+      ]
     },
-    "kline_update": {
-      "runtime": "active",
-      "calls": 0,
-      "errors": 0,
-      "last_execution": ""
+    "research_layer": {
+      "module_count": 3,
+      "modules": [
+        "robot_2",
+        "robot_3",
+        "robot_4"
+      ]
+    },
+    "governance_layer": {
+      "module_count": 7,
+      "modules": [
+        "robot_5",
+        "consensus_engine",
+        "replay_engine",
+        "integrity_check",
+        "audit_engine",
+        "governance_controller",
+        "snapshot_generator"
+      ]
+    },
+    "cockpit_layer": {
+      "module_count": 3,
+      "modules": [
+        "dashboard_snapshot",
+        "widget_runtime",
+        "cockpit_sync"
+      ]
     }
   },
-  "research_layer": {
-    "robot_2": {
-      "calls": 0
+  "modules": [
+    {
+      "name": "OpenClaw",
+      "layer": "execution_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
     },
-    "robot_3": {
-      "calls": 0
+    {
+      "name": "kline_update",
+      "layer": "execution_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
     },
-    "robot_4": {
-      "calls": 0
+    {
+      "name": "symbol_normalizer",
+      "layer": "execution_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "coverage_monitor",
+      "layer": "execution_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "report_pipeline",
+      "layer": "execution_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "robot_2",
+      "layer": "research_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "robot_3",
+      "layer": "research_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "robot_4",
+      "layer": "research_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "robot_5",
+      "layer": "governance_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "consensus_engine",
+      "layer": "governance_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "replay_engine",
+      "layer": "governance_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "integrity_check",
+      "layer": "governance_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "audit_engine",
+      "layer": "governance_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "governance_controller",
+      "layer": "governance_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "snapshot_generator",
+      "layer": "governance_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "dashboard_snapshot",
+      "layer": "cockpit_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "widget_runtime",
+      "layer": "cockpit_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "cockpit_sync",
+      "layer": "cockpit_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
     }
-  },
-  "governance_layer": {
-    "robot_5": {
-      "calls": 0
-    },
-    "consensus_engine": {
-      "calls": 0
-    },
-    "replay_engine": {
-      "calls": 0
-    },
-    "integrity_check": {
-      "calls": 0
-    }
-  },
-  "cockpit_layer": {
-    "dashboard_snapshot": {
-      "calls": 0
-    },
-    "widget_runtime": {
-      "calls": 0
-    }
-  },
-  "unused_module_alerts": [],
-  "user_decision_only": true
+  ]
 }

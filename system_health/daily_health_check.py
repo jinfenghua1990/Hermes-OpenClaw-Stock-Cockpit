@@ -7,6 +7,7 @@ import os
 import json
 import datetime
 import subprocess
+import sys
 from pathlib import Path
 
 BASE_DIR = Path(__file__).parent.parent
@@ -350,6 +351,29 @@ def save_health_report(report):
 def main():
     print(f"正在执行 Phase-2.4B-Stable 每日健康检查 ({CURRENT_DATE})")
     print("=" * 60)
+    
+    # ==================================================
+    # 自动刷新 runtime_usage_summary.json
+    # ==================================================
+    builder_path = BASE_DIR / "governance" / "runtime_usage_builder.py"
+    if builder_path.exists():
+        try:
+            result = subprocess.run(
+                [sys.executable, str(builder_path)],
+                cwd=BASE_DIR,
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+            if result.returncode == 0:
+                print("[Runtime Builder] " + result.stdout.strip())
+            else:
+                print(f"[Runtime Builder] ⚠️ 警告: {result.stderr.strip()}")
+        except Exception as e:
+            print(f"[Runtime Builder] ⚠️ 异常: {e}")
+    else:
+        print("[Runtime Builder] ⚠️ 文件不存在，跳过")
+    print()
     
     # 生成健康报告
     report = generate_health_report()
