@@ -61,9 +61,57 @@ class RiskController:
         
         self.kill_switch = self.config.get("kill_switch", False)
         self._warnings: List[str] = []
-    
+
+    # ══ Phase-2.6D: 硬拦截 invalid_price_structure ══════════════════════
+    HARDBLOCK_REASONS = {
+        "invalid_price_structure",   # 价格结构错误（止损>现价等）
+        "cross_timestamp_conflict",  # data_as_of 时间戳不一致
+        "stale_price_snapshot",     # 价格数据过时
+    }
+
+    def _check_hardblock(self, symbol: str, risk_validation_result: dict) -> dict:
+        """Phase-2.6D: 硬拦截价格结构校验失败的订单"""
+        if not risk_validation_result.get("validation_passed", True):
+            reason = risk_validation_result.get("reason", "invalid_price_structure")
+            errors  = risk_validation_result.get("errors", [])
+            if reason in self.HARDBLOCK_REASONS:
+                msg = f"[HARDBLOCK] {symbol}: {reason}: {'; '.join(errors)}"
+                _log_event("risk_controller", "governance_layer", "error", msg)
+                return self._build_result(False, msg, "blocked")
+        return self._build_result(True, "价格结构校验通过", "executed")
+
+    def check_risk_price_structure(self, risk_validation_result: Optional[dict]) -> dict:
+        """
+        Phase-2.6D: 硬拦截价格结构校验失败的订单。
+
+        Args:
+            risk_validation_result: {
+                "validation_passed": bool,
+                "reason": str,
+                "errors": [str, ...],
+            }
+
+        Returns:
+            {"approved": bool, "reason": str, "action": "blocked"}
+        """
+        if not risk_validation_result:
+            # 无校验结果 → 询问是否要放行（这里保守处理：放行，继续用其他规则）
+            return self._build_result(True, "无风险价格校验记录，跳过", "executed")
+
+        if not risk_validation_result.get("validation_passed", True):
+            reason = risk_validation_result.get("reason", "invalid_price_structure")
+            errors = risk_validation_result.get("errors", [])
+            if reason in self.HARDBLOCK_REASONS:
+                msg = f"[HARDBLOCK] {reason}: {'; '.join(errors)}"
+                _log_event("risk_controller", "governance_layer", "error",
+                           f"buy blocked: invalid price structure for {symbol}")
+                return self._build_result(False, msg, "blocked")
+
+        return self._build_result(True, "价格结构校验通过", "executed")
+
     def check_buy(self, symbol: str, quantity: int, price: float,
-                  current_positions: List[dict], total_cash: float) -> dict:
+                  current_positions: List[dict], total_cash: float,
+                  risk_validation_result: Optional[dict] = None) -> dict:
         """
         检查买入信号是否通过风险控制
         
@@ -84,7 +132,13 @@ class RiskController:
         """
         self._warnings = []
         start = datetime.now(timezone.utc)
-        
+
+        # ══ Phase-2.6D: 硬拦截 invalid_price_structure ══════════════════
+        if risk_validation_result:
+            block_result = self._check_hardblock(symbol, risk_validation_result)
+            if not block_result['approved']:
+                return block_result
+
         trade_value = quantity * price
         current_total = sum(p.get("quantity", 0) * p.get("current_price", p.get("avg_price", 0))
                            for p in current_positions)

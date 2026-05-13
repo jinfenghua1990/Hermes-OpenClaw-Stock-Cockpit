@@ -1,7 +1,7 @@
 {
   "date": "2026-05-13",
-  "total_modules": 21,
-  "active_today": 3,
+  "total_modules": 23,
+  "active_today": 4,
   "missing_today": [
     "openclaw_fetch_sh",
     "feature_engine_sh",
@@ -11,6 +11,7 @@
     "notification_router",
     "position_manager",
     "pnl_tracker",
+    "action_engine",
     "risk_controller",
     "scheduler_sh",
     "replay_market_day",

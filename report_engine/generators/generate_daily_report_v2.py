@@ -183,6 +183,13 @@ def render_trace_picks(picks, decisions):
         qty = dec.get('quantity', 0)
         pos_pct = dec.get('position_size_pct', 0)
         skip_r = dec.get('skip_reason', '?')
+        # Phase-2.6D: Risk Validation 字段
+        rv_passed = dec.get('risk_validation_passed')
+        rv_reason = dec.get('validation_reason')
+        rv_errors = dec.get('validation_errors', [])
+        rv_warnings = dec.get('validation_warnings', [])
+        rv_ts = dec.get('risk_data_as_of', '?')
+        corrected = dec.get('corrected_values', {})
 
         # 决策标签
         dec_map_emoji = {
@@ -204,17 +211,34 @@ def render_trace_picks(picks, decisions):
         lines.append(f"   - 数据时间：{dec.get('generated_at', '?')}")
         lines.append(f"   - 现价：{price} | 涨跌幅：{chg_str} | RSI：{rsi}")
         lines.append(f"   - MA20：{p.get('MA20', p.get('ma20', '?'))} | 支撑/压力：{support}/{pressure}")
-        lines.append(f"   - 建议：{action}（{mode} | AI评分 {score}）")
-        if decision in ('paper_buy',):
-            lines.append(f"   - 买入时机：{buy_timing}")
-            lines.append(f"   - 买入区间：{zone_str}")
-            lines.append(f"   - 不追高价：>{max_chase} 放弃")
-            lines.append(f"   - 止损位：{stop_loss} | 止盈观察：{tp_watch}")
-            lines.append(f"   - 建议仓位：{pos_pct:.1f}% | 建议数量：{qty_str}")
-        elif decision in ('await_capital_confirm', 'await_price_confirm'):
-            lines.append(f"   - 买入区间：{zone_str}")
-            lines.append(f"   - 原因：{skip_r}")
+        # Phase-2.6D: Risk Validation 状态
+        if rv_passed is False:
+            lines.append(f"   - 风险校验：❌ FAIL | reason: {rv_reason or 'invalid_price_structure'}")
+            for e in rv_errors:
+                lines.append(f"     ❌ {e}")
+            for w in rv_warnings:
+                lines.append(f"     ⚠️  {w}")
+            if corrected:
+                lines.append(f"     🔧 建议修正: {corrected}")
+            lines.append(f"   - 决策：🚫 PAPER_SKIP | reason: {rv_reason or 'invalid_price_structure'}")
+            lines.append(f"   - 禁止展示买入建议 | 禁止进入 paper_trade_executor")
+        elif rv_passed is True:
+            lines.append(f"   - 风险校验：✅ PASS | risk_data_as_of: {rv_ts}")
+            lines.append(f"   - 建议：{action}（{mode} | AI评分 {score}）")
+            if decision in ('paper_buy',):
+                lines.append(f"   - 买入时机：{buy_timing}")
+                lines.append(f"   - 买入区间：{zone_str}")
+                lines.append(f"   - 不追高价：>{max_chase} 放弃")
+                lines.append(f"   - 止损位：{stop_loss} | 止盈观察：{tp_watch}")
+                lines.append(f"   - 建议仓位：{pos_pct:.1f}% | 建议数量：{qty_str}")
+            elif decision in ('await_capital_confirm', 'await_price_confirm'):
+                lines.append(f"   - 买入区间：{zone_str}")
+                lines.append(f"   - 原因：{skip_r}")
+            else:
+                lines.append(f"   - 跳过原因：{skip_r}")
         else:
+            lines.append(f"   - 风险校验：⚠️ 无校验数据")
+            lines.append(f"   - 建议：{action}（{mode} | AI评分 {score}）")
             lines.append(f"   - 跳过原因：{skip_r}")
         # 数据来源简表
         lines.append(f"   - 数据链路：OpenClaw → robot_3(因子) → robot_4(模式) → action_engine → paper_decision_engine → paper_risk_controller")

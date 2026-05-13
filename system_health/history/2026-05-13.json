@@ -1,12 +1,13 @@
 {
-  "timestamp": "2026-05-13T17:01:19.846519",
+  "timestamp": "2026-05-13T19:37:50.966979",
   "date": "2026-05-13",
   "phase": "Phase-2.4B-Stable",
-  "overall_status": "warning",
+  "overall_status": "critical",
   "status_counts": {
-    "success": 10,
-    "warning": 2,
-    "error": 0
+    "success": 9,
+    "warning": 3,
+    "error": 0,
+    "critical": 1
   },
   "critical_metrics": {
     "daily_pipeline_success": false,
@@ -34,8 +35,8 @@
     },
     "daily_report": {
       "status": "success",
-      "message": "日报已生成 (4359字节)",
-      "file_size": 4359
+      "message": "日报已生成 (4108字节)",
+      "file_size": 4108
     },
     "emotion_snapshot": {
       "status": "success",
@@ -51,12 +52,25 @@
       "status": "success",
       "message": "Replay缓存正常 (最新: 2026-05-12 23:09)",
       "latest_file": "latest_replay.json",
-      "age_hours": 17.862225370555556
+      "age_hours": 20.470871263055557
     },
     "git_push": {
       "status": "success",
-      "message": "最新提交已推送: 3546fd1 complete phase-2.5 integrated cockpit and paper trade delivery",
-      "last_commit": "3546fd1 complete phase-2.5 integrated cockpit and paper trade delivery"
+      "message": "最新提交已推送: b5a8186 full sync: all local changes including risk validation layer updates",
+      "last_commit": "b5a8186 full sync: all local changes including risk validation layer updates"
+    },
+    "risk_price_validation": {
+      "status": "critical",
+      "message": "CRITICAL: 1 只 stop_loss >= current_price",
+      "details": {
+        "valid_structure_rate": 0.0,
+        "invalid_price_structure_count": 4,
+        "invalid_stop_loss_count": 1,
+        "invalid_pressure_count": 3,
+        "cross_timestamp_conflict_count": 0,
+        "stale_price_snapshot_count": 0,
+        "total_checked": 4
+      }
     },
     "system_monitor": {
       "status": "success",
@@ -64,11 +78,11 @@
     },
     "runtime_event_health": {
       "status": "warning",
-      "message": "Runtime Event 不完整: 18 模块今日无事件 (openclaw_fetch_sh, feature_engine_sh, coverage_monitor, report_pipeline, paper_trade_executor)"
+      "message": "Runtime Event 不完整: 19 模块今日无事件 (openclaw_fetch_sh, feature_engine_sh, coverage_monitor, report_pipeline, paper_trade_executor)"
     },
     "snapshot_consistency": {
-      "status": "success",
-      "message": "模块数一致: 21"
+      "status": "warning",
+      "message": "模块数不一致: usage=23 event=23 dash=21"
     },
     "freeze_integrity": {
       "status": "success",

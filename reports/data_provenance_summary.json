@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "phase": "Phase-2.6C Data Provenance",
-  "generated_at": "2026-05-13T18:34:14",
+  "generated_at": "2026-05-13T19:37:20",
   "date": "2026-05-13",
   "total_picks": 4,
   "decision_summary": {
@@ -16,22 +16,22 @@
     {
       "symbol": "301282",
       "name": "金禄电子",
-      "skip_reason": "资金数据缺失（total_assets=0），需次日前置确认，建议仓位0股参考"
+      "skip_reason": "invalid_price_structure: support_price(36.53) > current_price(30.75)，支撑已破; stop_loss(35.43) >= current_price(30.75)，止损方向错误; support(36.53) > current_price(30.75)，已跌破支撑"
     },
     {
       "symbol": "002130",
       "name": "沃尔核材",
-      "skip_reason": "操作建议=观察，非明确买入信号"
+      "skip_reason": "invalid_price_structure: pressure_price(19.08) <= current_price(23.5)，已突破压力位; current_price(23.5) > pressure(19.08)，已突破压力; take_profit_watch(19.08) <= current_price(23.5)，止盈位错误"
     },
     {
       "symbol": "002463",
       "name": "沪电股份",
-      "skip_reason": "操作建议=观察 ⚠️，非明确买入信号"
+      "skip_reason": "invalid_price_structure: pressure_price(104.83) <= current_price(108.68)，已突破压力位; current_price(108.68) > pressure(104.83)，已突破压力; take_profit_watch(104.83) <= current_price(108.68)，止盈位错误"
     },
     {
       "symbol": "603629",
       "name": "利通电子",
-      "skip_reason": "操作建议=观察 ⚠️，非明确买入信号"
+      "skip_reason": "invalid_price_structure: pressure_price(119.8) <= current_price(162.82)，已突破压力位; current_price(162.82) > pressure(119.8)，已突破压力; take_profit_watch(119.8) <= current_price(162.82)，止盈位错误"
     }
   ],
   "data_sources_summary": {

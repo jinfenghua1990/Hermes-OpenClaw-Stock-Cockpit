@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-05-13T09:01:19.768589Z",
+  "generated_at": "2026-05-13T11:37:50.889929Z",
   "source": "module_runtime_schema.yaml",
-  "total_modules": 21,
+  "total_modules": 23,
   "layers": {
     "execution_layer": {
-      "module_count": 9,
+      "module_count": 11,
       "modules": [
         "openclaw_fetch_sh",
         "feature_engine_sh",
@@ -14,7 +14,9 @@
         "paper_trade_executor",
         "notification_router",
         "position_manager",
-        "pnl_tracker"
+        "pnl_tracker",
+        "action_engine",
+        "paper_decision_engine"
       ]
     },
     "governance_layer": {
@@ -99,6 +101,20 @@
     },
     {
       "name": "pnl_tracker",
+      "layer": "execution_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "action_engine",
+      "layer": "execution_layer",
+      "enabled": true,
+      "runtime_detected": false,
+      "last_runtime": null
+    },
+    {
+      "name": "paper_decision_engine",
       "layer": "execution_layer",
       "enabled": true,
       "runtime_detected": false,

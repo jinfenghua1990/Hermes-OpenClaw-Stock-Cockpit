@@ -420,7 +420,7 @@ function DailyReport({ reportPath }) {
 function Footer({ lastUpdate }) {
   return (
     <div className="footer">
-      Hermes AI Trading Cockpit — Phase-2.6C Decision Traceability | 最后更新: {lastUpdate || '—'}
+      Hermes AI Trading Cockpit — Phase-2.6D Risk Price Validation | 最后更新: {lastUpdate || '—'}
     </div>
   );
 }
@@ -504,7 +504,7 @@ export default function App() {
         <div className="header-title">🤖 HERMES COCKPIT</div>
         <div className="header-right">
           <span className="header-clock">{clock}</span>
-          <span className="badge badge-pass">Phase-2.6C</span>
+          <span className="badge badge-pass">Phase-2.6D</span>
           <span className="badge badge-info">{mode}</span>
         </div>
       </div>
@@ -512,8 +512,8 @@ export default function App() {
       {/* Main */}
       <div className="main">
 
-      {/* A. Top Picks + Emotion (Phase-2.6C Decision Traceability + Risk Validation) */}
-      <Section title={<>🔝 Top Picks {riskValidation ? <span style={{color: riskValidation.filter(r=>!r.is_valid).length > 0 ? 'var(--red)' : 'var(--green)', fontSize:11}}>❌风控{riskValidation.filter(r=>!r.is_valid).length > 0 ? '失败' : '通过'}</span> : null}</>}>
+      {/* A. Top Picks + Emotion (Phase-2.6D Risk Price Validation) */}
+      <Section title={<>🔝 Top Picks <span style={{color:'var(--red)',fontSize:11}}>(风险价格校验)</span></>}>
         <div className="grid-2">
           <TopPicks data={topPicks} decisions={paperDecisions?.decisions} riskValidation={riskValidation} />
           <EmotionSnapshot data={emotionData} />

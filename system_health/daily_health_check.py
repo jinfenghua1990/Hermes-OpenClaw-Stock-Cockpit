@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 Phase-2.4B-Stable 每日健康检查脚本
+Phase-2.6D 新增: check_risk_price_validation
 """
 
 import os
@@ -127,6 +128,72 @@ def check_daily_report():
             return {"status": "warning", "message": "今日日报未生成"}
     except Exception as e:
         return {"status": "error", "message": f"检查日报时出错: {str(e)}"}
+
+
+# ══ Phase-2.6D: Risk Price Validation Health Check ══════════════════════════
+def check_risk_price_validation():
+    """
+    检查 Risk Price Validation 状态。
+
+    规则：
+    - invalid_price_structure_count > 0 → WARNING
+    - stop_loss >= current_price → CRITICAL
+    - data_as_of 不一致 → CRITICAL
+    """
+    try:
+        dec_log = BASE_DIR / "reports" / "paper_decision_log.json"
+        if not dec_log.exists():
+            return {"status": "warning", "message": "paper_decision_log.json 不存在"}
+
+        with open(dec_log) as f:
+            dec_data = json.load(f)
+
+        vr_list = dec_data.get("validation_results", [])
+        if not vr_list:
+            return {"status": "warning", "message": "无 validation_results，无法评估"}
+
+        # 统计各类问题
+        invalid_count  = sum(1 for r in vr_list if not r["is_valid"])
+        stop_loss_err  = sum(1 for r in vr_list
+                             if any("stop_loss" in e.lower() for e in r.get("errors", [])))
+        timestamp_err  = sum(1 for r in vr_list
+                             if any("data_as_of" in e.lower() or "timestamp" in e.lower()
+                                    for e in r.get("errors", [])))
+        pressure_err   = sum(1 for r in vr_list
+                             if any("pressure" in e.lower() for e in r.get("errors", [])))
+        valid_count    = len(vr_list) - invalid_count
+        valid_rate     = valid_count / len(vr_list) * 100 if vr_list else 0
+
+        # 决定状态
+        if timestamp_err > 0:
+            status = "critical"
+            msg = f"CRITICAL: {timestamp_err} 只 data_as_of 时间戳不一致"
+        elif stop_loss_err > 0:
+            status = "critical"
+            msg = f"CRITICAL: {stop_loss_err} 只 stop_loss >= current_price"
+        elif invalid_count > 0:
+            status = "warning"
+            msg = f"WARNING: {invalid_count}/{len(vr_list)} 只价格结构无效"
+        else:
+            status = "success"
+            msg = f"全部 {len(vr_list)} 只通过价格结构校验"
+
+        return {
+            "status": status,
+            "message": msg,
+            "details": {
+                "valid_structure_rate": round(valid_rate, 1),
+                "invalid_price_structure_count": invalid_count,
+                "invalid_stop_loss_count": stop_loss_err,
+                "invalid_pressure_count": pressure_err,
+                "cross_timestamp_conflict_count": timestamp_err,
+                "stale_price_snapshot_count": 0,
+                "total_checked": len(vr_list),
+            }
+        }
+    except Exception as e:
+        return {"status": "error", "message": f"检查风控时出错: {str(e)}"}
+
 
 def check_emotion_snapshot():
     """检查情绪快照是否生成"""
@@ -336,6 +403,8 @@ def generate_health_report():
         "emotion_history": check_emotion_history(),
         "replay_cache": check_replay_cache(),
         "git_push": check_git_push(),
+        # Phase-2.6D: Risk Price Validation
+        "risk_price_validation": check_risk_price_validation(),
         "system_monitor": check_system_monitor(),
         "runtime_event_health": check_runtime_event_health(),
         "snapshot_consistency": check_snapshot_consistency(),
@@ -343,12 +412,15 @@ def generate_health_report():
     }
     
     # 计算总体状态
-    status_counts = {"success": 0, "warning": 0, "error": 0}
+    status_counts = {"success": 0, "warning": 0, "error": 0, "critical": 0}
     for check in checks.values():
-        status_counts[check["status"]] += 1
-    
+        s = check.get("status", "unknown")
+        status_counts[s] = status_counts.get(s, 0) + 1
+
     overall_status = "success"
-    if status_counts["error"] > 0:
+    if status_counts["critical"] > 0:
+        overall_status = "critical"
+    elif status_counts["error"] > 0:
         overall_status = "error"
     elif status_counts["warning"] > 0:
         overall_status = "warning"

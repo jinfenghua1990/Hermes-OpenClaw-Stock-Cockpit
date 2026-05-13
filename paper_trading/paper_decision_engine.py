@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Phase-2.6C Paper Decision Engine — Full Decision Traceability
-每个结论都能追溯：谁处理的、几点、用什么数据、值多少、为什么买/跳过。
+Phase-2.6D: 新增 Risk Price Validation Gate（统一调用 governance/risk_price_validation.py）
 """
 import json, os, sys, yaml
 from datetime import datetime
@@ -17,6 +17,11 @@ POSITIONS   = BASE / 'portfolio/unified_positions.json'
 TRADE_LOG   = BASE / 'portfolio/trade_log.json'
 RISK_REPORT = BASE / 'paper_trading/reports/risk_status_report.json'
 SCHEMA_YAML = BASE / 'governance/decision_trace_schema.yaml'
+FACTORS     = BASE / 'features/cache/daily_technical_factors.json'
+
+# ── Phase-2.6D: 加载 Risk Price Validation Gate ─────────────────────
+sys.path.insert(0, str(BASE / 'governance'))
+from risk_price_validation import validate_risk_price_structure
 
 TODAY = datetime.now().strftime('%Y-%m-%d')
 NOW   = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
@@ -271,6 +276,33 @@ def process():
         else:
             skip_reason = f'不满足买入条件（评分={score}, RSI={rsi}, action={action}）'
 
+        # ══ Phase-2.6D: Risk Price Validation Gate ══════════════════════
+        # 在进入 paper_trade_executor 前，必须通过价格结构校验
+        # 读取因子数据时间戳作为 data_as_of（统一时间基准）
+        factor_ts = load_json(FACTORS, {}).get('timestamp', f"{TODAY} 15:00")
+        risk_payload = {
+            'symbol': sym,
+            'name': name,
+            'current_price': price,
+            'support_price': support,
+            'pressure_price': pressure,
+            'stop_loss': stop_loss,
+            'take_profit_watch': take_profit_watch,
+            'entry_zone_min': zone_min,
+            'entry_zone_max': zone_max,
+            'data_as_of': factor_ts,
+            'support_data_as_of': factor_ts,
+            'pressure_data_as_of': factor_ts,
+            'risk_data_as_of': factor_ts,
+        }
+        rv = validate_risk_price_structure(risk_payload)
+        # 如果校验失败 → 强制 paper_skip，禁止进入 paper_trade_executor
+        if not rv['validation_passed']:
+            decision = 'paper_skip'
+            actual_action = 'skip'
+            skip_reason = f"invalid_price_structure: {'; '.join(rv['errors'])}"
+            print(f"  🛡️ {name}: 风险价格校验失败 → paper_skip | {skip_reason}")
+
         # ── 构建溯源数据 ────────────────────────────────────────────
         pick_trace = {
             'symbol': sym,
@@ -304,6 +336,13 @@ def process():
                 'quantity': qty,
                 'reason': reasons if decision == 'paper_buy' else '',
                 'skip_reason': skip_reason,
+                # Phase-2.6D: Risk Validation 结果
+                'risk_validation_passed': rv['validation_passed'],
+                'validation_reason': rv['reason'],
+                'validation_errors': rv['errors'],
+                'validation_warnings': rv['warnings'],
+                'risk_data_as_of': rv['risk_data_as_of'],
+                'corrected_values': rv['corrected_values'],
             },
             'data_sources': {
                 'kline_source': {
@@ -342,7 +381,7 @@ def process():
                     'timestamp': NOW,
                 },
             },
-            'agent_trace': get_agent_trace(NOW, top_picks_ts),
+            'agent_trace': get_agent_trace(NOW, top_picks_ts) + ['risk_price_validation'],
         }
 
         trace_picks.append(pick_trace)
@@ -368,6 +407,13 @@ def process():
             'RSI': rsi,
             '操作建议': action,
             '所属模式': mode,
+            # Phase-2.6D: risk_validation fields
+            'risk_validation_passed': rv.get('validation_passed'),
+            'validation_reason': rv.get('reason'),
+            'validation_errors': rv.get('errors'),
+            'validation_warnings': rv.get('warnings'),
+            'risk_data_as_of': rv.get('risk_data_as_of', '?'),
+            'corrected_values': rv.get('corrected_values', {}),
             'generated_at': NOW_S,
         })
 
@@ -436,6 +482,18 @@ def process():
         'real_trade_prohibited': True,
         'killswitch_check': True,
         'decisions': decisions,
+        # Phase-2.6D: top-level validation_results for health check
+        'validation_results': [
+            {
+                'symbol': d['股票代码'],
+                'name': d['股票名称'],
+                'current_price': d.get('current_price') or d.get('last_price') or d.get('价格'),
+                'is_valid': d.get('risk_validation_passed', d.get('validation_passed')),
+                'errors': d.get('validation_errors', []),
+                'warnings': d.get('validation_warnings', []),
+            }
+            for d in decisions
+        ],
         'summary': {
             'total_picks': len(decisions),
             'paper_buy': len(buys),

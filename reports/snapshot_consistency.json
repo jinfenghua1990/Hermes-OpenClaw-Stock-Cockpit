@@ -1,8 +1,8 @@
 {
-  "runtime_usage_modules": 21,
-  "runtime_event_modules": 21,
+  "runtime_usage_modules": 23,
+  "runtime_event_modules": 23,
   "dashboard_modules": 21,
   "daily_report_modules": 21,
-  "consistent": true,
-  "status": "pass"
+  "consistent": false,
+  "status": "warning"
 }
