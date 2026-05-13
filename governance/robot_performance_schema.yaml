@@ -1,0 +1,41 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: >
+  Define performance tracking structure for official robots without enabling
+  automatic weight adjustment or self-learning.
+
+tracked_robots:
+  - robot_2
+  - robot_3
+  - robot_4
+  - robot_5
+
+metrics:
+  research_accuracy:
+    description: quality of research direction over time
+  consensus_alignment:
+    description: alignment with final consensus output
+  risk_accuracy:
+    description: ability to identify meaningful portfolio or governance risk
+  false_positive_rate:
+    description: unnecessary high-risk or bullish signals
+  report_quality:
+    description: readability and governance compliance
+
+scoring:
+  range:
+    min: 0
+    max: 100
+
+constraints:
+  no_auto_weight_adjustment: true
+  no_auto_learning: true
+  user_review_required: true
+  governance_approval_required: true
+
+storage:
+  path: governance/performance/
+  github_sync_required: true
+
+status: active
