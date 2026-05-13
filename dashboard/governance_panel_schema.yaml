@@ -1,0 +1,27 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+
+panel_name:
+  en: governance_overview_panel
+  zh: 治理总览面板
+
+display_fields:
+  - governance_state
+  - freeze_state
+  - integrity_status
+  - operational_state
+  - active_team
+
+zh_labels:
+  governance_state: 治理状态
+  freeze_state: 冻结状态
+  integrity_status: 完整性状态
+  operational_state: 运行状态
+  active_team: 当前团队
+
+constraints:
+  read_only: true
+  no_hidden_override: true
+
+status: active
