@@ -140,9 +140,16 @@ function SnapshotConsistency({ data }) {
 /* ────────────────────────────────────────────────────────────
    Top Picks
 ──────────────────────────────────────────────────────────── */
-function TopPicks({ data }) {
+function TopPicks({ data, decisions }) {
   if (!data) return <Card><div className="loading">加载中...</div></Card>;
   const picks = data.top_picks || [];
+  // 构建决策映射
+  const decMap = {};
+  if (decisions) {
+    for (const d of decisions) {
+      decMap[d.股票代码] = d;
+    }
+  }
   if (picks.length === 0) return (
     <Card>
       <div style={{ fontSize: 12, color: 'var(--text-dim)' }}>暂无精选个股</div>
@@ -150,21 +157,25 @@ function TopPicks({ data }) {
   );
   return (
     <Card>
-      <div className="flex-between" style={{ marginBottom: 10 }}>
-        <span style={{ fontSize: 13, fontWeight: 600 }}>🔝 Top Picks</span>
-        <span style={{ fontSize: 11, color: 'var(--text-dim)' }}>{picks.length} 只</span>
+      <div style={{ fontSize: 11, color: 'var(--text-dim)', marginBottom: 6 }}>
+        🔝 Top Picks <span style={{ marginLeft: 4 }}>| {picks.length}只</span>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {picks.map((p, i) => {
           const pct = p.涨跌幅 || 0;
           const pctColor = pct >= 0 ? 'var(--green)' : 'var(--red)';
           const actionColor = p.操作建议?.includes('🔔') ? 'var(--blue-bright)' : p.操作建议?.includes('⚠️') ? 'var(--yellow)' : 'var(--text-dim)';
+          const dec = decMap[p.股票代码] || {};
+          const decision = dec.decision || '';
+          const decBg = {'paper_buy': '#0d2b1a', 'paper_skip': '#1a0d0d', 'paper_sell': '#1a0d1a'}[decision] || '#0a0a15';
+          const decBadge = {'paper_buy': '📗买入', 'paper_skip': '🚫跳过', 'paper_hold': '📋持有', 'paper_sell': '📕卖出'}[decision] || '';
+          const decReason = dec.reason || '';
           return (
             <div key={i} style={{
               border: '1px solid var(--border)',
               borderRadius: 6,
               padding: '8px 10px',
-              background: '#0a0a15'
+              background: decBg,
             }}>
               <div className="flex-between" style={{ marginBottom: 4 }}>
                 <div>
@@ -180,6 +191,12 @@ function TopPicks({ data }) {
                 <span style={{ marginLeft: 8 }}>AI {p.AI评分}</span>
                 <span style={{ marginLeft: 8, color: actionColor }}>{p.操作建议}</span>
               </div>
+              {decision && (
+                <div style={{ fontSize: 10, marginBottom: 2 }}>
+                  <span style={{ fontWeight: 600, color: decision === 'paper_buy' ? 'var(--green)' : 'var(--red)' }}>{decBadge}</span>
+                  <span style={{ color: 'var(--text-dim)', marginLeft: 6 }}>{decReason}</span>
+                </div>
+              )}
               <div style={{ fontSize: 10, color: 'var(--text-dim)' }}>
                 {p.入选原因}
               </div>
@@ -415,6 +432,7 @@ export default function App() {
   const [paperPositions, setPaperPositions] = useState(null);
   const [topPicks, setTopPicks] = useState(null);
   const [emotionData, setEmotionData] = useState(null);
+  const [paperDecisions, setPaperDecisions] = useState(null);
 
   // Clock
   useEffect(() => {
@@ -445,6 +463,7 @@ export default function App() {
         fetchJSON(`${BASE}/paper_trading/reports/positions_snapshot_report.json`),
         fetchJSON(`${BASE}/reports/top_picks.json`),
         fetchJSON(`${BASE}/emotion_engine/cache/market_emotion_snapshot.json`),
+        fetchJSON(`${BASE}/reports/paper_decision_log.json`).catch(() => ({})),
       ]);
       setHealth(healthData);
       setRuntimeHealth(rhData);
@@ -455,6 +474,7 @@ export default function App() {
       setPaperPositions(ppData);
       setTopPicks(tpData);
       setEmotionData(emData);
+      setPaperDecisions(pdData || {});
       setLastUpdate(new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }));
     }
     load();
@@ -483,7 +503,7 @@ export default function App() {
       {/* A. Top Picks + Emotion (Phase-2.6A Research Intelligence) */}
       <Section title="A. 🔝 Top Picks">
         <div className="grid-2">
-          <TopPicks data={topPicks} />
+          <TopPicks data={topPicks} decisions={paperDecisions?.decisions} />
           <EmotionSnapshot data={emotionData} />
         </div>
       </Section>

@@ -1,0 +1,83 @@
+{
+  "schema_version": "2.6B",
+  "phase": "Phase-2.6B Paper Auto Decision",
+  "generated_at": "2026-05-13T18:20:01.083279",
+  "date": "2026-05-13",
+  "paper_only": true,
+  "real_trade_prohibited": true,
+  "killswitch_check": true,
+  "decisions": [
+    {
+      "date": "2026-05-13",
+      "股票代码": "301282",
+      "股票名称": "金禄电子",
+      "decision": "paper_buy",
+      "action": "buy",
+      "reason": "AI评分97.09≥75 RSI=21.1<75 风险通过 建议仓位0% 0股",
+      "AI评分": 97.09,
+      "RSI": 21.12,
+      "操作建议": "低吸机会 🔔",
+      "所属模式": "回踩止跌型",
+      "建议股数": 0,
+      "generated_at": "2026-05-13 18:20:01"
+    },
+    {
+      "date": "2026-05-13",
+      "股票代码": "002130",
+      "股票名称": "沃尔核材",
+      "decision": "paper_skip",
+      "action": "skip",
+      "reason": "操作建议=观察，非买入信号",
+      "AI评分": 81.0,
+      "RSI": 35.44,
+      "操作建议": "观察",
+      "所属模式": "回踩止跌型",
+      "建议股数": 0,
+      "generated_at": "2026-05-13 18:20:01"
+    },
+    {
+      "date": "2026-05-13",
+      "股票代码": "002463",
+      "股票名称": "沪电股份",
+      "decision": "paper_skip",
+      "action": "skip",
+      "reason": "操作建议=观察 ⚠️，非买入信号",
+      "AI评分": 52.78,
+      "RSI": 76.22,
+      "操作建议": "观察 ⚠️",
+      "所属模式": "综合候选",
+      "建议股数": 0,
+      "generated_at": "2026-05-13 18:20:01"
+    },
+    {
+      "date": "2026-05-13",
+      "股票代码": "603629",
+      "股票名称": "利通电子",
+      "decision": "paper_skip",
+      "action": "skip",
+      "reason": "操作建议=观察 ⚠️，非买入信号",
+      "AI评分": 28.35,
+      "RSI": 81.9,
+      "操作建议": "观察 ⚠️",
+      "所属模式": "综合候选",
+      "建议股数": 0,
+      "generated_at": "2026-05-13 18:20:01"
+    }
+  ],
+  "summary": {
+    "total_picks": 4,
+    "paper_buy": 1,
+    "paper_skip": 3,
+    "paper_hold": 0,
+    "paper_sell": 0,
+    "buy_symbols": [
+      "301282"
+    ],
+    "sell_symbols": [],
+    "skip_symbols": [
+      "002130",
+      "002463",
+      "603629"
+    ]
+  }
+}

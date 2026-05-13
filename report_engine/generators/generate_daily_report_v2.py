@@ -15,6 +15,7 @@ EMOTION_FILE = BASE / "emotion_engine/cache/market_emotion_snapshot.json"
 PAPER_POSITIONS = BASE / "portfolio/unified_positions.json"
 SYSTEM_SNAP = BASE / "system_monitor/system_snapshot.json"
 HEALTH_FILE = BASE / "system_health/runtime_event_health_check.py"
+DECISION_LOG  = BASE / "reports/paper_decision_log.json"
 OUTPUT_PATH = BASE / "reports/history/{date}.md"
 REPORTS_DIR = BASE / "reports/history"
 
@@ -38,9 +39,18 @@ def load_text(path):
         return ""
 
 
-def render_top_picks(picks):
+def render_top_picks(picks, decisions=None):
+    """渲染 Top Picks，含 Paper Decision"""
     if not picks:
         return "**暂无精选个股，建议观望。**"
+
+    # 构建决策字典 {代码: decision}
+    dec_map = {}
+    if decisions:
+        for d in decisions:
+            sym = d.get("股票代码", "")
+            dec_map[sym] = d
+
     lines = []
     for i, p in enumerate(picks, 1):
         pct = p.get('涨跌幅', 0)
@@ -49,15 +59,52 @@ def render_top_picks(picks):
         risks_str = " / ".join(risks) if risks else "无"
         obs = p.get('建议观察位', {})
         action = p.get('操作建议', '观察')
+        score = p.get('AI评分', 0)
+
+        sym = p.get('股票代码', '')
+        dec = dec_map.get(sym, {})
+        decision = dec.get('decision', 'no_action')
+        reason   = dec.get('reason', '')
+
+        # 决策标签
+        emoji = {'paper_buy': '📗', 'paper_skip': '🚫', 'paper_hold': '📋', 'paper_sell': '📕'}.get(decision, '⚪')
+        decision_label = {'paper_buy': '✅买入', 'paper_skip': '🚫跳过', 'paper_hold': '📋持有', 'paper_sell': '📕卖出'}.get(decision, '—')
+
         lines.append(
             f"{i}. **{p['股票名称']}** ({p['股票代码']})  {pct_str}\n"
-            f"   - 模式：{p['所属模式']}\n"
-            f"   - AI评分：{p['AI评分']}｜{action}\n"
-            f"   - 入选原因：{p['入选原因']}\n"
+            f"   - 模式：{p['所属模式']}｜AI评分：{score}｜{action}\n"
+            f"   - 入选原因：{p.get('入选原因', '—')}\n"
             f"   - 风险点：{risks_str}\n"
-            f"   - 观察位：支撑 {obs.get('支撑位', '-')} / 压力 {obs.get('压力位', '-')}"
+            f"   - 观察位：支撑 {obs.get('支撑位', '-')} / 压力 {obs.get('压力位', '-')}\n"
+            f"   - 🔔 **系统决策：{decision_label}** {emoji}\n"
+            f"     原因：{reason}"
         )
     return "\n\n".join(lines)
+
+
+def render_paper_decisions_summary(decisions):
+    """渲染 Paper Decision 汇总"""
+    if not decisions:
+        return "**暂无系统决策。**"
+
+    buys  = [d for d in decisions if d.get('decision') == 'paper_buy']
+    sells = [d for d in decisions if d.get('decision') == 'paper_sell']
+    skips = [d for d in decisions if d.get('decision') == 'paper_skip']
+
+    lines = []
+    if buys:
+        names = [f"**{d['股票名称']}**({d['股票代码']})" for d in buys]
+        lines.append(f"📗 **买入**：{', '.join(names)}")
+        for d in buys:
+            lines.append(f"   {d['股票名称']}：{d['reason']}")
+    if sells:
+        names = [f"**{d['股票名称']}**({d['股票代码']})" for d in sells]
+        lines.append(f"📕 **卖出**：{', '.join(names)}")
+    if skips:
+        lines.append(f"🚫 **跳过**（{len(skips)}只）：{', '.join(d['股票名称'] for d in skips)}")
+    if not lines:
+        return "**暂无交易决策。**"
+    return "\n".join(lines)
 
 
 def render_paper_trade(positions, trade_log):
@@ -133,6 +180,8 @@ def main():
     emotion = load_json(EMOTION_FILE)
     positions = load_json(PAPER_POSITIONS)
     trade_log = load_json(BASE / "portfolio/trade_log.json")
+    decision_data = load_json(DECISION_LOG)
+    decisions = decision_data.get("decisions", [])
     
     picks = top_picks_data.get('top_picks', [])
     emotion_data = emotion.get('emotion_analysis', {})
@@ -161,9 +210,15 @@ def main():
         "",
         "---",
         "",
-        "## 🔝 Top Picks 精选",
+        "## 🔝 Top Picks 精选（含系统决策）",
         "",
-        render_top_picks(picks),
+        render_top_picks(picks, decisions),
+        "",
+        "---",
+        "",
+        "## 🤖 Paper Decision 决策层",
+        "",
+        render_paper_decisions_summary(decisions),
         "",
         "---",
         "",
@@ -185,7 +240,7 @@ def main():
         "",
         "---",
         "",
-        "*来源：Cockpit AI 量化系统 | Phase-2.6A Research Intelligence | Hermes-股票*",
+        "*来源：Cockpit AI 量化系统 | Phase-2.6B Paper Auto Decision | Hermes-股票*",
     ]
     
     report_content = "\n".join(report_lines)

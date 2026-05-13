@@ -1,5 +1,5 @@
-version: 2.1
-phase: Phase-2.5
+version: 2.2
+phase: Phase-2.6B
 mode: OBSERVE_ONLY
 purpose: Runtime monitoring structure — aligned with actual runtime_event integration (21 modules).
 
@@ -54,6 +54,16 @@ layers:
       enabled: true
       script: paper_trading/pnl_tracker.py
       note: 盈亏追踪器（Phase-2.5）
+
+    - name: action_engine
+      enabled: true
+      script: research/ranking_engine.py
+      note: AI动作引擎，生成 Top Picks（Phase-2.6B）
+
+    - name: paper_decision_engine
+      enabled: true
+      script: paper_trading/paper_decision_engine.py
+      note: Paper 自动决策层，基于 Top Picks 生成交易决策（Phase-2.6B）
 
   governance_layer:
     - name: risk_controller
