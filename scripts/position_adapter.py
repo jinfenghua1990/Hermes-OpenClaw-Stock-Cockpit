@@ -399,6 +399,20 @@ def main():
     if notify_type in ("pre_market", "daily_review"):
         notify_feishu(notify_type, positions, capital, anomalies)
 
+    # Runtime Event
+    try:
+        sys.path.insert(0, str(BASE_DIR))
+        from runtime_events.runtime_event_logger import log_event
+        has_anomaly = len(anomalies) > 0
+        log_event(
+            module="position_adapter",
+            layer="execution_layer",
+            status="warning" if has_anomaly else "success",
+            message=f"positions={len(positions)} source={source}" + (f" anomalies={len(anomalies)}" if has_anomaly else ""),
+        )
+    except ImportError:
+        pass
+
     return unified
 
 if __name__ == "__main__":

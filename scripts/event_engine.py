@@ -439,6 +439,23 @@ def main():
     # 6. 飞书推送（去重）
     feishu_notify(all_events)
 
+    # Runtime Event
+    try:
+        sys.path.insert(0, str(CRON_BASE))
+        from runtime_events.runtime_event_logger import log_event
+        ec = output["event_counts"]
+        status = "success"
+        if ec["red_alert"] > 0:
+            status = "warning"
+        log_event(
+            module="event_engine",
+            layer="governance_layer",
+            status=status,
+            message=f"{ec['total']} events: {ec['red_alert']} red_alert, {ec['important_event']} important",
+        )
+    except ImportError:
+        pass
+
     return output
 
 if __name__ == "__main__":

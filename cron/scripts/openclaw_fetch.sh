@@ -81,3 +81,7 @@ if [ $fail -eq ${#STOCKS[@]} ]; then
 fi
 
 log_info "✅ ${STAGE} 成功，下一步: feature_engine.sh"
+
+# Runtime Event
+source "${CRON_BASE}/runtime_events/log_event.sh"
+log_event "openclaw_fetch" "execution_layer" "success" "fetch: ${success}/${#STOCKS[@]} stocks ok, fail: ${fail}"

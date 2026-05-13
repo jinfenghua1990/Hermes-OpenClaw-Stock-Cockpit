@@ -1,56 +1,101 @@
-version: 1.0
+version: 2.0
 phase: Phase-2.4B
 mode: OBSERVE_ONLY
-purpose: Runtime monitoring structure for all governance, research, execution, and cockpit modules.
+purpose: Runtime monitoring structure — aligned with actual runtime_event integration (17 modules).
 
 # ==================================================
 # 所有模块定义（source of truth）
 # runtime_usage_summary.json 由此自动生成
+# 更新于 2026-05-13: 对齐实际 Runtime Event 接入
 # ==================================================
 layers:
   execution_layer:
-    - name: OpenClaw
+    - name: openclaw_fetch_sh
       enabled: true
-    - name: kline_update
+      script: cron/scripts/openclaw_fetch.sh
+      note: OpenClaw 数据采集
+
+    - name: feature_engine_sh
       enabled: true
-    - name: symbol_normalizer
-      enabled: true
+      script: cron/scripts/feature_engine.sh
+      note: 技术因子计算
+
     - name: coverage_monitor
       enabled: true
+      script: data_quality/coverage_monitor.py
+      note: 数据覆盖率监控
+
     - name: report_pipeline
       enabled: true
+      script: cron/scripts/main_aggregate.sh
+      note: 日报流水线（pre_market / daily_review）
 
-  research_layer:
-    - name: robot_2
+    - name: daily_pipeline
       enabled: true
-    - name: robot_3
+      script: scripts/daily_pipeline.sh
+      note: 全日流水线（8步）
+
+    - name: paper_trade_executor
       enabled: true
-    - name: robot_4
+      script: scripts/paper_trade_executor.py
+      note: 模拟盘交易执行
+
+    - name: notification_router
       enabled: true
+      script: cron/scripts/notification_router.py
+      note: 飞书通知路由
 
   governance_layer:
-    - name: robot_5
+    - name: scheduler_sh
       enabled: true
-    - name: consensus_engine
+      script: cron/scripts/scheduler.sh
+      note: 定时调度中枢
+
+    - name: replay_market_day
       enabled: true
-    - name: replay_engine
+      script: replay_engine/replay_market_day.py
+      note: 市场日回放
+
+    - name: event_engine
       enabled: true
-    - name: integrity_check
+      script: scripts/event_engine.py
+      note: 盘中事件引擎
+
+    - name: daily_health_check
       enabled: true
-    - name: audit_engine
+      script: system_health/daily_health_check.py
+      note: 每日健康检查
+
+    - name: position_adapter
       enabled: true
-    - name: governance_controller
+      script: scripts/position_adapter.py
+      note: 持仓数据适配
+
+    - name: robot5_risk_sh
       enabled: true
-    - name: snapshot_generator
+      script: cron/scripts/robot5_risk.sh
+      note: 风控检查
+
+    - name: main_aggregate_sh
       enabled: true
+      script: cron/scripts/main_aggregate.sh
+      note: 聚合报告
 
   cockpit_layer:
-    - name: dashboard_snapshot
+    - name: rolling_snapshot
       enabled: true
-    - name: widget_runtime
+      script: cron/scripts/rolling_snapshot.py
+      note: 盘中滚动快照
+
+    - name: heartbeat_monitor
       enabled: true
-    - name: cockpit_sync
+      script: cron/scripts/heartbeat_monitor.py
+      note: 心跳监控
+
+    - name: robot4_match_sh
       enabled: true
+      script: cron/scripts/robot4_match.sh
+      note: 策略匹配
 
 runtime_schema:
   required_fields:

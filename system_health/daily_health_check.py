@@ -358,6 +358,7 @@ def main():
     builder_path = BASE_DIR / "governance" / "runtime_usage_builder.py"
     if builder_path.exists():
         try:
+            _builder_start = int(time.time() * 1000)
             result = subprocess.run(
                 [sys.executable, str(builder_path)],
                 cwd=BASE_DIR,
@@ -374,6 +375,13 @@ def main():
     else:
         print("[Runtime Builder] ⚠️ 文件不存在，跳过")
     print()
+    
+    # Runtime Event: runtime_usage_builder
+    try:
+        from runtime_events.runtime_event_logger import log_event
+        log_event(module="runtime_usage_builder", layer="governance_layer", status="success", message="auto refresh completed")
+    except ImportError:
+        pass
     
     # 生成健康报告
     report = generate_health_report()
@@ -406,6 +414,19 @@ def main():
     
     print()
     print(f"健康报告已保存到: {output_file}")
+    
+    # Runtime Event: daily_health_check
+    try:
+        from runtime_events.runtime_event_logger import log_event
+        status = "success" if report['overall_status'] in ('healthy', 'warning_accepted') else "warning"
+        log_event(
+            module="daily_health_check",
+            layer="governance_layer",
+            status=status,
+            message=f"{report['overall_status']} | {report['status_counts']['success']}✅ {report['status_counts']['warning']}⚠️ {report['status_counts']['error']}❌",
+        )
+    except ImportError:
+        pass
     
     return report
 

@@ -140,11 +140,25 @@ def main():
     msg = format_message(notify_type, detail)
 
     # 发送
-    if send_feishu(msg):
+    sent_ok = send_feishu(msg)
+    if sent_ok:
         mark_sent(notify_type)
         log(f"✓ {notify_type} 通知已发送")
     else:
         log(f"✗ {notify_type} 发送失败")
+
+    # Runtime Event
+    try:
+        sys.path.insert(0, str(CRON_BASE))
+        from runtime_events.runtime_event_logger import log_event
+        log_event(
+            module="notification_router",
+            layer="execution_layer",
+            status="success" if sent_ok else "error",
+            message=f"{notify_type} notification sent={sent_ok}",
+        )
+    except ImportError:
+        pass
 
 if __name__ == "__main__":
     main()

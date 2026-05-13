@@ -79,3 +79,20 @@ status = {
 OUT_FILE.write_text(json.dumps(status, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 LOG_FILE.write_text(f"[{now}] heartbeat OK (scheduler={scheduler_status})\n", encoding="utf-8")
 print("OK")
+
+# Runtime Event
+import time as _t
+_hb_start = _t.time()
+try:
+    import sys as _sys
+    _sys.path.insert(0, str(BASE))
+    from runtime_events.runtime_event_logger import log_event
+    log_event(
+        module="heartbeat_monitor",
+        layer="cockpit_layer",
+        status="success",
+        message=f"scheduler={scheduler_status}, openclaw={openclaw_last}, errors={cron_errors}",
+        runtime_ms=int(_t.time()*1000)-_hb_start,
+    )
+except ImportError:
+    pass

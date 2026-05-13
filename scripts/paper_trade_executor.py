@@ -988,3 +988,15 @@ def execute():
 # =============================================================================
 if __name__ == "__main__":
     execute()
+
+    # Runtime Event
+    try:
+        from runtime_events.runtime_event_logger import log_event
+        log_event(
+            module="paper_trade_executor",
+            layer="execution_layer",
+            status="success",
+            message="paper trade cycle completed",
+        )
+    except ImportError:
+        pass

@@ -142,3 +142,8 @@ if [ $result -ne 0 ]; then
 fi
 
 log_info "✅ ${STAGE} 完成"
+log_info "注意: 策略写入已禁止，仅生成报告"
+
+# Runtime Event
+source "${CRON_BASE}/runtime_events/log_event.sh"
+log_event "robot4_match_sh" "execution_layer" "success" "strategy matched: result written"

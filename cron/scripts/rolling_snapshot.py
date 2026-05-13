@@ -166,3 +166,21 @@ snapshot = {
 
 SNAPSHOT_FILE.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 log(f"Snapshot 已写入: {SNAPSHOT_FILE.name}")
+
+# Runtime Event
+import time as _time
+_snap_start = _time.time()
+import sys as _sys
+_sys.path.insert(0, str(BASE))
+try:
+    from runtime_events.runtime_event_logger import log_event
+    qual_alert = quality.get("alert")
+    log_event(
+        module="rolling_snapshot",
+        layer="cockpit_layer",
+        status="warning" if qual_alert else "success",
+        message=f"snapshot: candidates={len(candidate_stocks)}, matched={strategy_summary['matched']}" + (f" | {qual_alert}" if qual_alert else ""),
+        runtime_ms=int((_time.time()-_snap_start)*1000),
+    )
+except ImportError:
+    pass

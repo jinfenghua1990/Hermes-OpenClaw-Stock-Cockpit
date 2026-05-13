@@ -65,3 +65,8 @@ PY
 log_info "========== ${STAGE} 完成 =========="
 update_status "${TIMESTAMP}"
 log_info "✅ ${STAGE} 成功"
+
+# Runtime Event
+source "${CRON_BASE}/runtime_events/log_event.sh"
+quality="$(check_data_quality)"
+log_event "feature_engine" "execution_layer" "success" "features written: raw=${raw_count}, quality=${quality}"

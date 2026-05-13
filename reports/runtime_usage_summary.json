@@ -1,64 +1,51 @@
 {
-  "generated_at": "2026-05-13T05:47:39.623073Z",
+  "generated_at": "2026-05-13T06:18:31.168297Z",
   "source": "module_runtime_schema.yaml",
-  "total_modules": 18,
+  "total_modules": 17,
   "layers": {
     "execution_layer": {
-      "module_count": 5,
+      "module_count": 7,
       "modules": [
-        "OpenClaw",
-        "kline_update",
-        "symbol_normalizer",
+        "openclaw_fetch_sh",
+        "feature_engine_sh",
         "coverage_monitor",
-        "report_pipeline"
-      ]
-    },
-    "research_layer": {
-      "module_count": 3,
-      "modules": [
-        "robot_2",
-        "robot_3",
-        "robot_4"
+        "report_pipeline",
+        "daily_pipeline",
+        "paper_trade_executor",
+        "notification_router"
       ]
     },
     "governance_layer": {
       "module_count": 7,
       "modules": [
-        "robot_5",
-        "consensus_engine",
-        "replay_engine",
-        "integrity_check",
-        "audit_engine",
-        "governance_controller",
-        "snapshot_generator"
+        "scheduler_sh",
+        "replay_market_day",
+        "event_engine",
+        "daily_health_check",
+        "position_adapter",
+        "robot5_risk_sh",
+        "main_aggregate_sh"
       ]
     },
     "cockpit_layer": {
       "module_count": 3,
       "modules": [
-        "dashboard_snapshot",
-        "widget_runtime",
-        "cockpit_sync"
+        "rolling_snapshot",
+        "heartbeat_monitor",
+        "robot4_match_sh"
       ]
     }
   },
   "modules": [
     {
-      "name": "OpenClaw",
+      "name": "openclaw_fetch_sh",
       "layer": "execution_layer",
       "enabled": true,
       "runtime_detected": false,
       "last_runtime": null
     },
     {
-      "name": "kline_update",
-      "layer": "execution_layer",
-      "enabled": true,
-      "runtime_detected": false,
-      "last_runtime": null
-    },
-    {
-      "name": "symbol_normalizer",
+      "name": "feature_engine_sh",
       "layer": "execution_layer",
       "enabled": true,
       "runtime_detected": false,
@@ -79,91 +66,91 @@
       "last_runtime": null
     },
     {
-      "name": "robot_2",
-      "layer": "research_layer",
+      "name": "daily_pipeline",
+      "layer": "execution_layer",
       "enabled": true,
       "runtime_detected": false,
       "last_runtime": null
     },
     {
-      "name": "robot_3",
-      "layer": "research_layer",
+      "name": "paper_trade_executor",
+      "layer": "execution_layer",
       "enabled": true,
       "runtime_detected": false,
       "last_runtime": null
     },
     {
-      "name": "robot_4",
-      "layer": "research_layer",
+      "name": "notification_router",
+      "layer": "execution_layer",
       "enabled": true,
       "runtime_detected": false,
       "last_runtime": null
     },
     {
-      "name": "robot_5",
+      "name": "scheduler_sh",
       "layer": "governance_layer",
       "enabled": true,
       "runtime_detected": false,
       "last_runtime": null
     },
     {
-      "name": "consensus_engine",
+      "name": "replay_market_day",
       "layer": "governance_layer",
       "enabled": true,
       "runtime_detected": false,
       "last_runtime": null
     },
     {
-      "name": "replay_engine",
+      "name": "event_engine",
       "layer": "governance_layer",
       "enabled": true,
       "runtime_detected": false,
       "last_runtime": null
     },
     {
-      "name": "integrity_check",
+      "name": "daily_health_check",
       "layer": "governance_layer",
       "enabled": true,
       "runtime_detected": false,
       "last_runtime": null
     },
     {
-      "name": "audit_engine",
+      "name": "position_adapter",
       "layer": "governance_layer",
       "enabled": true,
       "runtime_detected": false,
       "last_runtime": null
     },
     {
-      "name": "governance_controller",
+      "name": "robot5_risk_sh",
       "layer": "governance_layer",
       "enabled": true,
       "runtime_detected": false,
       "last_runtime": null
     },
     {
-      "name": "snapshot_generator",
+      "name": "main_aggregate_sh",
       "layer": "governance_layer",
       "enabled": true,
       "runtime_detected": false,
       "last_runtime": null
     },
     {
-      "name": "dashboard_snapshot",
+      "name": "rolling_snapshot",
       "layer": "cockpit_layer",
       "enabled": true,
       "runtime_detected": false,
       "last_runtime": null
     },
     {
-      "name": "widget_runtime",
+      "name": "heartbeat_monitor",
       "layer": "cockpit_layer",
       "enabled": true,
       "runtime_detected": false,
       "last_runtime": null
     },
     {
-      "name": "cockpit_sync",
+      "name": "robot4_match_sh",
       "layer": "cockpit_layer",
       "enabled": true,
       "runtime_detected": false,

@@ -1,18 +1,10 @@
 {
   "SOUL_MODE": "OBSERVE_ONLY",
-  "freeze_status": "ACTIVE",
-  "governance_enabled": true,
-  "team_registry_source": "governance/team_register.yaml",
-  "freeze_source": "governance/freeze_status.json",
   "learning_enabled": false,
   "auto_strategy_mutation": false,
   "auto_weight_adjustment": false,
   "baseline_write_permission": false,
   "decision_write_permission": false,
-  "dynamic_robot_creation": false,
-  "temporary_role_creation": false,
-  "unregistered_robot_access": "blocked",
-  "official_robot_registry_required": true,
   "allowed_actions": [
     "observe",
     "record",
@@ -25,10 +17,6 @@
     "adjust_weights",
     "auto_trade",
     "auto_learn",
-    "write_decision",
-    "create_robot",
-    "extend_team",
-    "use_unregistered_robot",
-    "modify_team_structure"
+    "write_decision"
   ]
 }

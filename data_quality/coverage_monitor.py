@@ -79,4 +79,19 @@ def run_coverage_monitor(stock_pool_path="data/stock_pool.json"):
 
 
 if __name__ == "__main__":
-    run_coverage_monitor()
+    import time
+    start_ms = int(time.time() * 1000)
+    result = run_coverage_monitor()
+    end_ms = int(time.time() * 1000)
+    try:
+        from runtime_events.runtime_event_logger import log_event
+        status = "success" if result["coverage"] >= 80 else "warning"
+        log_event(
+            module="coverage_monitor",
+            layer="execution_layer",
+            status=status,
+            message=f"coverage: {result['coverage']}% ({result['valid']}/{result['total']})",
+            runtime_ms=end_ms - start_ms
+        )
+    except ImportError:
+        pass

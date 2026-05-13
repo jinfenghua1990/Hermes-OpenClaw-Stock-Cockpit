@@ -163,4 +163,19 @@ def main():
 
 
 if __name__ == "__main__":
+    import time
+    _start_ms = int(time.time() * 1000)
     main()
+    _end_ms = int(time.time() * 1000)
+    try:
+        sys.path.insert(0, str(BASE_DIR))
+        from runtime_events.runtime_event_logger import log_event
+        log_event(
+            module="replay_engine",
+            layer="governance_layer",
+            status="success",
+            message=f"replayed market day: {sys.argv[1] if len(sys.argv) > 1 else 'unknown'}",
+            runtime_ms=_end_ms - _start_ms
+        )
+    except ImportError:
+        pass

@@ -92,3 +92,12 @@ echo "  - report_engine/data/market_summary.json"
 echo "  - report_engine/outputs/$(date '+%Y-%m-%d').md"
 echo "  - reports/history/$(date '+%Y-%m-%d').md"
 echo "  - reports/history/index.json"
+
+# Runtime Event
+python3 -c "
+import sys
+sys.path.insert(0, '/Users/gino/project_ai_trading')
+from runtime_events.runtime_event_logger import log_event
+log_event('daily_pipeline', 'execution_layer', 'success', 'daily pipeline completed 8 steps')
+print('event logged')
+" 2>/dev/null || echo '[WARNING] Runtime event not logged'

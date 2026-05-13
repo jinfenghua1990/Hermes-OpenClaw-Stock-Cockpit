@@ -14,6 +14,8 @@ REPORT_TYPE="${1:-pre_market}"  # pre_market / intraday_am / intraday_pm / daily
 TIMESTAMP=$(date '+%Y-%m-%dT%H:%M:%S')
 LOG="${CRON_BASE}/cron/logs/main_$(date '+%Y%m%d_%H%M').log"
 
+source "${CRON_BASE}/runtime_events/log_event.sh"
+
 log_info "========== Main 汇总(${REPORT_TYPE}) 开始 =========="
 exec > >(tee -a "${LOG}")
 exec 2>&1
