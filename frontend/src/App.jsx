@@ -7,7 +7,9 @@ const BASE = '/Users/gino/project_ai_trading';
 
 async function fetchJSON(path) {
   try {
-    const r = await fetch(`file://${path}`);
+    // Use Vite dev server proxy to avoid file:// CORS issues
+    const apiPath = '/data' + path.replace(BASE, '');
+    const r = await fetch(apiPath);
     if (!r.ok) return null;
     return await r.json();
   } catch { return null; }
@@ -361,7 +363,8 @@ function ReportDelivery({ data }) {
 function DailyReport({ reportPath }) {
   const [content, setContent] = useState('');
   useEffect(() => {
-    fetch(reportPath).then(r => r.text()).then(t => setContent(t.slice(0, 3000))).catch(() => {});
+    const apiPath = '/data' + reportPath.replace(BASE, '');
+    fetch(apiPath).then(r => r.text()).then(t => setContent(t.slice(0, 3000))).catch(() => {});
   }, [reportPath]);
   if (!content) return <Card><div className="loading">加载中...</div></Card>;
   return (
