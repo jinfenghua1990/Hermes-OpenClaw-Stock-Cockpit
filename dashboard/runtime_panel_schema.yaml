@@ -1,0 +1,29 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+
+panel_name:
+  en: runtime_monitor_panel
+  zh: 模块运行面板
+
+tracked_modules:
+  - OpenClaw
+  - kline_update
+  - consensus_engine
+  - replay_engine
+  - governance_controller
+  - integrity_check
+
+required_fields:
+  - module_name
+  - module_name_zh
+  - runtime_status
+  - call_count
+  - last_execution
+  - error_count
+
+constraints:
+  read_only: true
+  no_execution_controls: true
+
+status: active
