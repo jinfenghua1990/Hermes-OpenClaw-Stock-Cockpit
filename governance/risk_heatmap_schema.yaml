@@ -1,0 +1,49 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Portfolio and governance risk visualization schema.
+
+risk_dimensions:
+  portfolio_exposure:
+    thresholds:
+      low: 0-20
+      medium: 20-40
+      high: 40-60
+      extreme: 60-100
+
+  volatility:
+    thresholds:
+      low: stable
+      medium: elevated
+      high: unstable
+
+  governance_risk:
+    triggers:
+      - freeze_violation_attempt
+      - unregistered_robot_usage
+      - baseline_change_attempt
+      - hidden_weight_modification
+
+  operational_risk:
+    triggers:
+      - missing_reports
+      - pipeline_failure
+      - health_check_failure
+      - github_sync_failure
+
+heatmap_output:
+  required_fields:
+    - timestamp
+    - symbol
+    - portfolio_risk
+    - governance_risk
+    - operational_risk
+    - consensus_risk
+    - overall_risk
+
+constraints:
+  visualization_only: true
+  no_auto_execution: true
+  no_auto_rebalance: true
+
+status: active
