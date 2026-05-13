@@ -1,0 +1,19 @@
+{
+  "baseline": {
+    "name": "four_modes_original",
+    "version": "baseline_v1",
+    "frozen": true,
+    "governance_anchor": true,
+    "mutation_allowed": false
+  },
+  "shadow_strategies": [],
+  "rules": {
+    "shadow_strategy_allowed": true,
+    "baseline_overwrite_allowed": false,
+    "paper_only_required": true,
+    "replay_required": true,
+    "governance_snapshot_required": true
+  },
+  "robot_6_10_status": "RESERVED_ONLY",
+  "updated_at": "2026-05-14"
+}
