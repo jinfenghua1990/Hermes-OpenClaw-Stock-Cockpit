@@ -1,6 +1,6 @@
 {
   "report_type": "rolling_snapshot",
-  "timestamp": "2026-05-12 11:05:24",
+  "timestamp": "2026-05-13 14:44:41",
   "phase": "Phase-1.6 OBSERVE_ONLY",
   "data_quality": {
     "openclaw_raw_freshness_min": null,
@@ -19,8 +19,8 @@
   "strategy_match": {
     "matched": 5,
     "details": [],
-    "latest_report": "intraday_signal_am.json",
-    "latest_report_time": "2026-05-12 10:30:21",
+    "latest_report": "pre_market_report.json",
+    "latest_report_time": "2026-05-12 08:30:37",
     "top_candidates": [
       {
         "code": "301282",
@@ -43,8 +43,10 @@
     ]
   },
   "risk_check": {
-    "flags": [],
-    "status": "无规则"
+    "flags": [
+      "risk_rules不存在"
+    ],
+    "status": "规则已加载"
   },
   "trade_reference": {
     "description": "此快照不作为交易依据",
@@ -53,6 +55,33 @@
       "reports/intraday/intraday_signal_am.json / intraday_signal_pm.json",
       "reports/daily_review/daily_review.json (15:30)"
     ]
+  },
+  "runtime_events": {
+    "total_modules": 17,
+    "active_modules": 0,
+    "layers": {
+      "execution_layer": {
+        "total": 7,
+        "active": 0
+      },
+      "governance_layer": {
+        "total": 7,
+        "active": 0
+      },
+      "cockpit_layer": {
+        "total": 3,
+        "active": 0
+      }
+    },
+    "latest_events": []
+  },
+  "runtime_event_health": {
+    "total_modules": 0,
+    "active_today": 0,
+    "missing_today": [],
+    "warning_modules": [],
+    "error_modules": [],
+    "status": "pending"
   },
   "prohibited": [
     "自动交易",

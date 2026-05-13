@@ -1,0 +1,78 @@
+{
+  "panel_name": "runtime_overview",
+  "description": "Cockpit 首页主面板 - 聚合系统运行态全量信息",
+  "schema_version": "1.0",
+  "phase": "Phase-2.4B",
+  "mode": "OBSERVE_ONLY",
+  "runtime_event_health": {
+    "date": "2026-05-13",
+    "total_modules": 17,
+    "active_today": 17,
+    "missing_today": [],
+    "warning_modules": [
+      "event_engine",
+      "daily_health_check"
+    ],
+    "error_modules": [],
+    "status": "pass"
+  },
+  "runtime_usage_summary": {
+    "total_modules": 17,
+    "layers": {
+      "execution_layer": {
+        "module_count": 7,
+        "modules": [
+          "openclaw_fetch_sh",
+          "feature_engine_sh",
+          "coverage_monitor",
+          "report_pipeline",
+          "daily_pipeline",
+          "paper_trade_executor",
+          "notification_router"
+        ]
+      },
+      "governance_layer": {
+        "module_count": 7,
+        "modules": [
+          "scheduler_sh",
+          "replay_market_day",
+          "event_engine",
+          "daily_health_check",
+          "position_adapter",
+          "robot5_risk_sh",
+          "main_aggregate_sh"
+        ]
+      },
+      "cockpit_layer": {
+        "module_count": 3,
+        "modules": [
+          "rolling_snapshot",
+          "heartbeat_monitor",
+          "robot4_match_sh"
+        ]
+      }
+    }
+  },
+  "system_health": {
+    "health_check_status": "pending",
+    "checks_passed": 0,
+    "checks_warning": 0,
+    "checks_error": 0,
+    "factor_cache_valid": 0,
+    "mode_candidates": 0
+  },
+  "coverage": {
+    "total_coverage_pct": 0,
+    "factor_cache_valid": 0,
+    "mode_candidates": 0
+  },
+  "governance_status": {
+    "freeze_state": "ACTIVE",
+    "observe_only": true,
+    "auto_trade_disabled": true,
+    "auto_learn_disabled": true,
+    "robot_6_10_frozen": true,
+    "freeze_integrity": "pass"
+  },
+  "timestamp": "2026-05-13 14:45:14"
+}

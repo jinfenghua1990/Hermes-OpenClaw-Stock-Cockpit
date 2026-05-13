@@ -1,0 +1,69 @@
+{
+  "analysis_date": "2026-05-13",
+  "analysis_time": "2026-05-13 09:09:28",
+  "data_source": {
+    "history_dir": "emotion_engine/history",
+    "files_count": 2,
+    "date_range": {
+      "start": "2026-05-12",
+      "end": "2026-05-13"
+    }
+  },
+  "basic_statistics": {
+    "average_emotion_score": 40.0,
+    "highest_emotion_day": {
+      "date": "2026-05-12",
+      "score": 40,
+      "market_phase": "recovery_phase",
+      "risk_level": "high"
+    },
+    "lowest_emotion_day": {
+      "date": "2026-05-12",
+      "score": 40,
+      "market_phase": "recovery_phase",
+      "risk_level": "high"
+    },
+    "most_common_market_phase": "recovery_phase",
+    "most_common_risk_level": "high",
+    "total_days": 2,
+    "date_range": {
+      "start": "2026-05-12",
+      "end": "2026-05-13"
+    }
+  },
+  "trend_analysis": {
+    "trend": "insufficient_data",
+    "message": "数据不足 2 天，需要至少 5 天分析趋势",
+    "recent_scores": [
+      40,
+      40
+    ],
+    "dates": [
+      "2026-05-12",
+      "2026-05-13"
+    ]
+  },
+  "mode_dominance_analysis": {
+    "total_days": 2,
+    "dominance_counts": {
+      "mode1": 0,
+      "mode2": 0,
+      "mode3": 2,
+      "mode4": 0
+    },
+    "dominance_percentages": {
+      "mode1": 0.0,
+      "mode2": 0.0,
+      "mode3": 100.0,
+      "mode4": 0.0
+    },
+    "most_dominant_mode": "mode3",
+    "most_dominant_percentage": 100.0
+  },
+  "interpretation": {
+    "average_emotion_score_explanation": "历史平均情绪分数，范围0-100，分数越高表示历史平均情绪越积极",
+    "trend_explanation": "基于最近5日情绪分数变化判断趋势：rising=持续上升，falling=持续下降，flat=波动小于5，volatile=大幅波动",
+    "market_phase_explanation": "最常见的市场阶段：breakout_phase=突破期，recovery_phase=复苏期，defensive_phase=防守期，trend_phase=趋势期",
+    "risk_level_explanation": "最常见的风险等级：high=高风险，medium=中风险，low=低风险"
+  }
+}

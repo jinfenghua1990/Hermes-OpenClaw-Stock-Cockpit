@@ -259,6 +259,32 @@ def load_runtime_event_summary() -> dict:
         }
 
 
+def load_runtime_event_health() -> dict:
+    """加载 Runtime Event Health 数据"""
+    try:
+        sys.path.insert(0, str(BASE_DIR.parent / "system_health"))
+        from runtime_event_health_check import check_runtime_event_health
+        reh = check_runtime_event_health()
+        return {
+            "rehealth_active_today": reh["active_today"],
+            "rehealth_total_modules": reh["total_modules"],
+            "rehealth_missing_today": ", ".join(reh["missing_today"]) if reh["missing_today"] else "无",
+            "rehealth_warning_modules": ", ".join(reh["warning_modules"]) if reh["warning_modules"] else "无",
+            "rehealth_error_modules": ", ".join(reh["error_modules"]) if reh["error_modules"] else "无",
+            "rehealth_status": reh["status"],
+        }
+    except Exception as e:
+        print(f"[WARN] 加载 Runtime Event Health 失败: {e}")
+        return {
+            "rehealth_active_today": 0,
+            "rehealth_total_modules": 17,
+            "rehealth_missing_today": "检查失败",
+            "rehealth_warning_modules": "检查失败",
+            "rehealth_error_modules": "检查失败",
+            "rehealth_status": "error",
+        }
+
+
 def generate_daily_report():
     if not TEMPLATE_PATH.exists():
         raise FileNotFoundError(f"Template not found: {TEMPLATE_PATH}")
@@ -304,6 +330,10 @@ def generate_daily_report():
     # 加载 Runtime Event 汇总
     runtime_data = load_runtime_event_summary()
     summary.update(runtime_data)
+    
+    # 加载 Runtime Event Health
+    rehealth_data = load_runtime_event_health()
+    summary.update(rehealth_data)
     
     report = template
     for key, value in summary.items():

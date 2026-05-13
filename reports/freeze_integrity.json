@@ -1,0 +1,10 @@
+{
+  "observe_only": true,
+  "auto_trade_disabled": true,
+  "auto_learn_disabled": true,
+  "adjust_weights_disabled": true,
+  "modify_baseline_disabled": true,
+  "robot_6_10_frozen": true,
+  "all_checks_passed": true,
+  "status": "pass"
+}

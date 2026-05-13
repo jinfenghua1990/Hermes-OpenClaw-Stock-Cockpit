@@ -298,6 +298,33 @@ def check_runtime_event_health():
         return {"status": "error", "message": f"Runtime Event 检查失败: {str(e)}"}
 
 
+def check_snapshot_consistency():
+    """检查 runtime_usage / runtime_event / dashboard / daily_report 模块数一致性"""
+    try:
+        from snapshot_consistency_check import check_snapshot_consistency as _check
+        result = _check()
+        if result["status"] == "pass":
+            return {"status": "success", "message": f"模块数一致: {result['runtime_usage_modules']}"}
+        else:
+            return {"status": "warning", "message": f"模块数不一致: usage={result['runtime_usage_modules']} event={result['runtime_event_modules']} dash={result['dashboard_modules']}"}
+    except Exception as e:
+        return {"status": "error", "message": f"一致性检查失败: {str(e)}"}
+
+
+def check_freeze_integrity():
+    """检查 OBSERVE_ONLY / auto_trade / auto_learn / robot_6~10 冻结状态"""
+    try:
+        from freeze_integrity_check import check_freeze_integrity as _check
+        result = _check()
+        if result["status"] == "pass":
+            return {"status": "success", "message": "冻结完整性通过"}
+        else:
+            failed = [k for k in ["observe_only", "auto_trade_disabled", "auto_learn_disabled", "adjust_weights_disabled", "modify_baseline_disabled", "robot_6_10_frozen"] if not result.get(k)]
+            return {"status": "error", "message": f"冻结违规: {', '.join(failed)}"}
+    except Exception as e:
+        return {"status": "error", "message": f"冻结检查失败: {str(e)}"}
+
+
 def generate_health_report():
     """生成健康报告"""
     checks = {
@@ -310,7 +337,9 @@ def generate_health_report():
         "replay_cache": check_replay_cache(),
         "git_push": check_git_push(),
         "system_monitor": check_system_monitor(),
-        "runtime_event_health": check_runtime_event_health()
+        "runtime_event_health": check_runtime_event_health(),
+        "snapshot_consistency": check_snapshot_consistency(),
+        "freeze_integrity": check_freeze_integrity(),
     }
     
     # 计算总体状态

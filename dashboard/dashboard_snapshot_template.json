@@ -32,6 +32,14 @@
     },
     "latest_events": []
   },
+  "runtime_event_health": {
+    "total_modules": 17,
+    "active_today": 0,
+    "missing_today": [],
+    "warning_modules": [],
+    "error_modules": [],
+    "status": "pending"
+  },
   "alerts": [],
   "user_decision_only": true
 }

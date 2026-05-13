@@ -1,0 +1,29 @@
+{
+  "snapshot_date": "2026-05-13",
+  "generated_at": "2026-05-13T09:09:28.853551",
+  "emotion_engine_version": "2.4B",
+  "data_source": {
+    "four_modes_file": "original_four_modes_2026-05-13.json",
+    "history_index": "reports/history/index.json"
+  },
+  "market_metrics": {
+    "mode1_count": 99,
+    "mode2_count": 0,
+    "mode3_count": 286,
+    "mode4_count": 142,
+    "total_candidates": 461,
+    "total_symbols": 4788
+  },
+  "emotion_analysis": {
+    "strongest_mode": "mode3",
+    "weakest_mode": "mode1",
+    "emotion_score": 40,
+    "market_phase": "recovery_phase",
+    "market_risk_level": "high"
+  },
+  "interpretation": {
+    "emotion_score_explanation": "情绪分数 (0-100): 基于四模式分布计算，分数越高表示市场情绪越积极",
+    "market_phase_explanation": "市场阶段: recovery_phase",
+    "risk_level_explanation": "风险等级: high"
+  }
+}

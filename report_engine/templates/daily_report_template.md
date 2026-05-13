@@ -70,7 +70,15 @@
 
 ---
 
-## 9. Runtime Event Summary
+## 9. Runtime Event Health
+
+- **活跃模块**: {{rehealth_active_today}}/{{rehealth_total_modules}}
+- **缺失模块**: {{rehealth_missing_today}}
+- **Warning 模块**: {{rehealth_warning_modules}}
+- **Error 模块**: {{rehealth_error_modules}}
+- **总体状态**: {{rehealth_status}}
+
+## 10. Runtime Event Summary
 
 - **总模块数**: {{runtime_total_modules}}
 - **活跃模块数**: {{runtime_active_modules}}
