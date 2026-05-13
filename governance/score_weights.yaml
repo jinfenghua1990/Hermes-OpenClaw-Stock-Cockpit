@@ -1,0 +1,72 @@
+version: 1.0
+phase: Phase-2.4B
+mode: OBSERVE_ONLY
+purpose: Unified scoring governance for official robot outputs.
+
+score_range:
+  min: 0
+  max: 10
+
+weights:
+  research_engine:
+    robot: robot_2
+    weight: 0.30
+    dimensions:
+      - fundamentals
+      - theme_strength
+      - event_quality
+
+  feature_engine:
+    robot: robot_3
+    weight: 0.20
+    dimensions:
+      - technical_quality
+      - momentum
+      - indicator_health
+
+  strategy_scan:
+    robot: robot_4
+    weight: 0.20
+    dimensions:
+      - baseline_match
+      - pattern_strength
+      - signal_quality
+
+  governance_and_risk:
+    robot: robot_5
+    weight: 0.30
+    dimensions:
+      - portfolio_risk
+      - exposure
+      - volatility
+      - governance_status
+
+risk_penalty:
+  enabled: true
+  conditions:
+    exposure_over_30_percent:
+      penalty: -1.0
+    exposure_over_50_percent:
+      penalty: -2.0
+    extreme_volatility:
+      penalty: -1.0
+
+final_score_bands:
+  8_to_10:
+    label: strong_but_review_required
+  6_to_8:
+    label: positive_with_risk
+  4_to_6:
+    label: neutral
+  2_to_4:
+    label: cautious
+  0_to_2:
+    label: high_risk
+
+constraints:
+  user_decision_only: true
+  no_auto_trade: true
+  no_baseline_modification: true
+  no_auto_learning: true
+
+status: active
