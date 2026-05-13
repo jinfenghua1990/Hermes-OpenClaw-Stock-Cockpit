@@ -50,20 +50,23 @@ MODULE_LAYER_MAP = {
     "report_pipeline":       "execution_layer",
     "daily_pipeline":        "execution_layer",
     "paper_trade_executor":  "execution_layer",
-    "notification_router":   "execution_layer",
+    "notification_router":    "execution_layer",
+    "position_manager":       "execution_layer",
+    "pnl_tracker":           "execution_layer",
     # governance_layer
-    "scheduler_sh":          "governance_layer",
+    "risk_controller":       "governance_layer",
+    "scheduler_sh":           "governance_layer",
     "replay_market_day":     "governance_layer",
     "event_engine":          "governance_layer",
     "daily_health_check":    "governance_layer",
-    "position_adapter":      "governance_layer",
+    "position_adapter":       "governance_layer",
     "robot5_risk_sh":        "governance_layer",
     "main_aggregate_sh":     "governance_layer",
-    "runtime_usage_builder": "governance_layer",
     # cockpit_layer
-    "rolling_snapshot":      "cockpit_layer",
-    "heartbeat_monitor":     "cockpit_layer",
+    "rolling_snapshot":       "cockpit_layer",
+    "heartbeat_monitor":      "cockpit_layer",
     "robot4_match_sh":       "cockpit_layer",
+    "cockpit_frontend":      "cockpit_layer",
 }
 
 
@@ -146,18 +149,15 @@ def summarize_events() -> dict:
     """汇总所有 runtime_events/*.jsonl，返回结构化摘要供 dashboard/日报使用"""
     EVENTS_DIR.mkdir(parents=True, exist_ok=True)
 
-    # 层级期望模块数
-    LAYER_EXPECTED = {
-        "execution_layer": 7,
-        "governance_layer": 7,
-        "cockpit_layer": 3,
-    }
-    TOTAL_EXPECTED = sum(LAYER_EXPECTED.values())  # 17
+    # 从 MODULE_LAYER_MAP 动态构建层模块列表
+    layer_modules = {"execution_layer": [], "governance_layer": [], "cockpit_layer": []}
+    for mod, layer in MODULE_LAYER_MAP.items():
+        if layer in layer_modules:
+            layer_modules[layer].append(mod)
 
-    # 按模块读取最新事件
+    # 读取所有 jsonl，取每个模块最后一条事件
     module_latest = {}
     for jsonl_file in EVENTS_DIR.glob("*.jsonl"):
-        module_name = jsonl_file.stem
         events = []
         with open(jsonl_file, "r", encoding="utf-8") as f:
             for line in f:
@@ -168,36 +168,35 @@ def summarize_events() -> dict:
                     except json.JSONDecodeError:
                         pass
         if events:
-            module_latest[module_name] = events[-1]  # 最后一条
+            module_latest[jsonl_file.stem] = events[-1]
 
-    # 按层统计 active 模块
+    # 按层统计 active 模块（以 layer_modules 的模块为全集）
     layer_active = {"execution_layer": 0, "governance_layer": 0, "cockpit_layer": 0}
-    for module, evt in module_latest.items():
-        layer = evt.get("layer", MODULE_LAYER_MAP.get(module, "execution_layer"))
-        if layer in layer_active:
-            layer_active[layer] += 1
+    for mod in layer_modules["execution_layer"] + layer_modules["governance_layer"] + layer_modules["cockpit_layer"]:
+        if mod in module_latest:
+            layer = MODULE_LAYER_MAP.get(mod, "execution_layer")
+            if layer in layer_active:
+                layer_active[layer] += 1
 
     total_active = sum(layer_active.values())
 
     # 取最近5条事件（按时间倒序）
     all_latest = sorted(module_latest.values(), key=lambda e: e.get("timestamp", ""), reverse=True)
-    latest_events = []
-    for evt in all_latest[:5]:
-        latest_events.append({
-            "module": evt.get("module", ""),
-            "layer": evt.get("layer", ""),
-            "status": evt.get("status", ""),
-            "timestamp": evt.get("timestamp", ""),
-            "message": evt.get("message", ""),
-        })
+    latest_events = [{
+        "module": evt.get("module", ""),
+        "layer": evt.get("layer", ""),
+        "status": evt.get("status", ""),
+        "timestamp": evt.get("timestamp", ""),
+        "message": evt.get("message", ""),
+    } for evt in all_latest[:5]]
 
     return {
-        "total_modules": TOTAL_EXPECTED,
+        "total_modules": len(MODULE_LAYER_MAP),
         "active_modules": total_active,
         "layers": {
-            "execution_layer": {"total": LAYER_EXPECTED["execution_layer"], "active": layer_active["execution_layer"]},
-            "governance_layer": {"total": LAYER_EXPECTED["governance_layer"], "active": layer_active["governance_layer"]},
-            "cockpit_layer": {"total": LAYER_EXPECTED["cockpit_layer"], "active": layer_active["cockpit_layer"]},
+            "execution_layer": {"total": len(layer_modules["execution_layer"]), "active": layer_active["execution_layer"]},
+            "governance_layer": {"total": len(layer_modules["governance_layer"]), "active": layer_active["governance_layer"]},
+            "cockpit_layer": {"total": len(layer_modules["cockpit_layer"]), "active": layer_active["cockpit_layer"]},
         },
         "latest_events": latest_events,
     }

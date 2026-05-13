@@ -1,7 +1,7 @@
-version: 2.0
-phase: Phase-2.4B
+version: 2.1
+phase: Phase-2.5
 mode: OBSERVE_ONLY
-purpose: Runtime monitoring structure — aligned with actual runtime_event integration (17 modules).
+purpose: Runtime monitoring structure — aligned with actual runtime_event integration (21 modules).
 
 # ==================================================
 # 所有模块定义（source of truth）
@@ -45,7 +45,21 @@ layers:
       script: cron/scripts/notification_router.py
       note: 飞书通知路由
 
+    - name: position_manager
+      enabled: true
+      script: paper_trading/position_manager.py
+      note: 持仓管理器（Phase-2.5）
+
+    - name: pnl_tracker
+      enabled: true
+      script: paper_trading/pnl_tracker.py
+      note: 盈亏追踪器（Phase-2.5）
+
   governance_layer:
+    - name: risk_controller
+      enabled: true
+      script: paper_trading/risk_controller.py
+      note: 风控控制器（Phase-2.5）
     - name: scheduler_sh
       enabled: true
       script: cron/scripts/scheduler.sh
@@ -96,6 +110,11 @@ layers:
       enabled: true
       script: cron/scripts/robot4_match.sh
       note: 策略匹配
+
+    - name: cockpit_frontend
+      enabled: true
+      script: frontend/
+      note: Cockpit本地UI（Phase-2.5）
 
 runtime_schema:
   required_fields:

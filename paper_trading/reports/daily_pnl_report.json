@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "report_type": "paper_trading_daily_pnl",
+  "generated_at": "2026-05-13T00:00:00Z",
+  "date": "2026-05-13",
+  "mode": "PAPER_TRADING",
+  "kill_switch": false,
+  "description": "Paper Trading 每日盈亏报告",
+  "pnl_summary": {
+    "realized_pnl": 0.0,
+    "unrealized_pnl": 0.0,
+    "total_pnl": 0.0,
+    "day_return": 0.0,
+    "win_trades": 0,
+    "loss_trades": 0,
+    "total_closed_trades": 0
+  },
+  "trade_count": {
+    "buys": 0,
+    "sells": 0,
+    "total": 0
+  },
+  "commission_total": 0.0,
+  "stamp_tax_total": 0.0
+}

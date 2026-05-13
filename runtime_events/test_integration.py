@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""全链路 Runtime Event 集成测试 — 覆盖全部17个已接入模块"""
+"""全链路 Runtime Event 集成测试 — 覆盖全部21个已接入模块"""
 import sys
 sys.path.insert(0, '/Users/gino/project_ai_trading')
 from runtime_events.runtime_event_logger import read_events, log_event, list_event_files
 
-# ── execution_layer (7) ──
+# ── execution_layer (9) ──
 log_event('openclaw_fetch_sh', 'execution_layer', 'success', 'test: OpenClaw data fetched', 2450)
 log_event('feature_engine_sh', 'execution_layer', 'success', 'test: features computed', 1800)
 log_event('coverage_monitor', 'execution_layer', 'success', 'test: coverage 95.2%', 3120)
@@ -12,20 +12,22 @@ log_event('report_pipeline', 'execution_layer', 'success', 'test: pre_market rep
 log_event('daily_pipeline', 'execution_layer', 'success', 'test: pipeline 8 steps done', 9800)
 log_event('paper_trade_executor', 'execution_layer', 'success', 'test: paper trade cycle done', 3400)
 log_event('notification_router', 'execution_layer', 'success', 'test: feishu sent ok', 800)
+log_event('position_manager', 'execution_layer', 'success', 'test: positions managed', 1100)
+log_event('pnl_tracker', 'execution_layer', 'success', 'test: pnl tracked', 900)
 
-# ── governance_layer (6) ──
+# ── governance_layer (9) ──
+log_event('risk_controller', 'governance_layer', 'success', 'test: risk rules checked', 1600)
 log_event('scheduler_sh', 'governance_layer', 'success', 'test: scheduler slot dispatched', 150)
 log_event('replay_market_day', 'governance_layer', 'success', 'test: replayed 2026-05-12', 850)
 log_event('event_engine', 'governance_layer', 'warning', 'test: 3 events: 1 red_alert', 2200)
-log_event('daily_health_check', 'governance_layer', 'success', 'test: healthy 8/1/0', 4500)
+log_event('daily_health_check', 'governance_layer', 'success', 'test: healthy 12/0/0', 4500)
 log_event('position_adapter', 'governance_layer', 'success', 'test: unified_positions written', 1200)
 log_event('robot5_risk_sh', 'governance_layer', 'success', 'test: risk check done', 2100)
 log_event('main_aggregate_sh', 'governance_layer', 'success', 'test: aggregate report done', 5600)
-
-# ── cockpit_layer (3) ──
 log_event('rolling_snapshot', 'cockpit_layer', 'success', 'test: snapshot written', 900)
 log_event('heartbeat_monitor', 'cockpit_layer', 'success', 'test: scheduler=ok', 120)
 log_event('robot4_match_sh', 'cockpit_layer', 'success', 'test: strategy match done', 1800)
+log_event('cockpit_frontend', 'cockpit_layer', 'success', 'test: frontend built', 12000)
 
 # ── Summary ──
 print('=== 全链路 Runtime Event 集成测试 ===\n')
@@ -47,9 +49,9 @@ print(f'文件列表: {[p.name for p in sorted(list_event_files())]}')
 
 # ── 验证：每层应有正确模块数 ──
 expected = {
-    'execution_layer': 7,
-    'governance_layer': 7,
-    'cockpit_layer': 3,
+    'execution_layer': 9,
+    'governance_layer': 8,
+    'cockpit_layer': 4,
 }
 ok = True
 for layer, expected_count in expected.items():
@@ -59,6 +61,6 @@ for layer, expected_count in expected.items():
         ok = False
 
 if ok:
-    print('\n✅ 全链路集成测试通过！17模块全部接入。')
+    print(f'\n✅ 全链路集成测试通过！{total}模块全部接入。')
 else:
     print('\n❌ 集成测试有缺失，请检查。')

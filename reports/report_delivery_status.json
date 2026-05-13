@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "description": "Track daily report delivery status to Feishu",
+  "last_updated": "",
+  "reports": {
+    "pre_market": {
+      "enabled": true,
+      "scheduled_time": "08:30",
+      "last_sent": "",
+      "last_status": "pending",
+      "last_error": "",
+      "delivery_count": 0
+    },
+    "daily_review": {
+      "enabled": true,
+      "scheduled_time": "15:30",
+      "last_sent": "",
+      "last_status": "pending",
+      "last_error": "",
+      "delivery_count": 0
+    }
+  },
+  "feishu_target": {
+    "group_id": "oc_174834d2967c4dfbdd692464f85398e0",
+    "notification_type": "daily_report"
+  },
+  "delivery_history": []
+}

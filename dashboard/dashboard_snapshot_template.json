@@ -1,6 +1,6 @@
 {
-  "schema_version": "2.0",
-  "phase": "Phase-2.4B",
+  "schema_version": "3.0",
+  "phase": "Phase-2.5",
   "mode": "OBSERVE_ONLY",
   "governance_overview": {
     "governance_state": "stable",
@@ -22,24 +22,61 @@
     "governance_risk": "",
     "operational_risk": ""
   },
+  "report_delivery": {
+    "enabled": true,
+    "feishu_group_id": "oc_174834d2967c4dfbdd692464f85398e0",
+    "pre_market": {
+      "scheduled_time": "08:30",
+      "last_sent": "",
+      "last_status": "pending",
+      "delivery_count": 0
+    },
+    "daily_review": {
+      "scheduled_time": "15:30",
+      "last_sent": "",
+      "last_status": "pending",
+      "delivery_count": 0
+    }
+  },
   "runtime_events": {
-    "total_modules": 17,
+    "total_modules": 21,
     "active_modules": 0,
     "layers": {
-      "execution_layer": {"total": 7, "active": 0},
-      "governance_layer": {"total": 7, "active": 0},
+      "execution_layer": {"total": 9, "active": 0},
+      "governance_layer": {"total": 9, "active": 0},
       "cockpit_layer": {"total": 3, "active": 0}
     },
     "latest_events": []
   },
   "runtime_event_health": {
-    "total_modules": 17,
+    "total_modules": 21,
     "active_today": 0,
     "missing_today": [],
     "warning_modules": [],
     "error_modules": [],
     "status": "pending"
   },
+  "paper_trading": {
+    "mode": "PAPER_ONLY",
+    "account_mode": "OBSERVE_ONLY",
+    "kill_switch": false,
+    "total_assets": 0,
+    "available_balance": 0,
+    "total_pnl": 0,
+    "positions_count": 0,
+    "last_updated": ""
+  },
+  "cockpit_frontend": {
+    "enabled": true,
+    "port": 5173,
+    "build_status": "success",
+    "last_build": ""
+  },
   "alerts": [],
-  "user_decision_only": true
+  "user_decision_only": true,
+  "prohibited": [
+    "自动交易", "自动调仓", "strategy_positions写入",
+    "baseline修改", "自动学习", "将snapshot作为交易依据",
+    "新增Robot", "调权重", "重构"
+  ]
 }

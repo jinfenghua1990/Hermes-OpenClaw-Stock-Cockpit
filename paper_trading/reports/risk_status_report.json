@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "report_type": "paper_trading_risk_status",
+  "generated_at": "2026-05-13T00:00:00Z",
+  "date": "2026-05-13",
+  "mode": "PAPER_TRADING",
+  "kill_switch": false,
+  "description": "Paper Trading 风险状态报告",
+  "risk_config": {
+    "max_position_ratio": 0.25,
+    "max_total_value": 1000000.0,
+    "stop_loss_threshold": -0.15,
+    "max_positions": 20
+  },
+  "current_exposure": {
+    "total_value": 0.0,
+    "total_ratio": 0.0,
+    "position_count": 0,
+    "largest_position_ratio": 0.0
+  },
+  "warnings": [],
+  "stop_loss_triggered": [],
+  "status": "normal"
+}

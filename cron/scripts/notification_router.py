@@ -12,11 +12,12 @@ from datetime import datetime
 # ---- 配置 ----
 HERMES_GROUP_ID = "oc_174834d2967c4dfbdd692464f85398e0"
 REPORTS_BASE = Path.home() / "project_ai_trading" / "reports"
-CACHE_DIR = Path.home() / "project_ai_trading" / "cron" / ".notify_cache"
+CRON_BASE = Path.home() / "project_ai_trading" / "cron"
+CACHE_DIR = CRON_BASE / ".notify_cache"
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 LOG_FILE = Path.home() / "project_ai_trading" / "cron" / "logs" / "notification_router.log"
 
-ALLOWED_TYPES = {"pre_market", "daily_review", "cron_error", "red_alert"}
+ALLOWED_TYPES = {"pre_market", "daily_review", "cron_error", "red_alert", "daily_report"}
 
 # ---- 日志 ----
 def log(msg):
@@ -111,6 +112,111 @@ def format_message(notify_type: str, report_path: str = "") -> str:
             lines.append(f"详情：{report_path}")
 
     return "\n".join(lines)
+
+# ---- 读取日报文件内容 ----
+def read_daily_report_content(report_type: str) -> str:
+    """读取日报内容用于发送"""
+    ts = datetime.now().strftime("%Y-%m-%d")
+    report_paths = {
+        "pre_market": REPORTS_BASE / "pre_market" / f"pre_market_report_{ts}.json",
+        "daily_review": REPORTS_BASE / "daily_review" / f"daily_review_{ts}.json",
+    }
+    path = report_paths.get(report_type)
+    if path and path.exists():
+        try:
+            data = json.loads(path.read_text())
+            return json.dumps(data, ensure_ascii=False, indent=2)
+        except:
+            return f"[{report_type}] 报告文件读取失败"
+    return f"[{report_type}] 报告文件不存在: {path}"
+
+# ---- 发送日报到飞书 ----
+def send_daily_report_to_feishu(report_type: str) -> bool:
+    """
+    发送日报摘要到飞书群
+    report_type: pre_market | daily_review
+    """
+    log(f"send_daily_report_to_feishu called with type={report_type}")
+
+    # 冷却检查
+    cooldown_map = {"pre_market": 300, "daily_review": 300}
+    cooldown = cooldown_map.get(report_type, 300)
+    if in_cooldown(report_type, cooldown):
+        log(f"{report_type} 冷却中 ({cooldown}s)，跳过")
+        return False
+
+    # 读取报告内容
+    report_content = read_daily_report_content(report_type)
+
+    # 截断过长内容（飞书限制）
+    max_len = 4000
+    if len(report_content) > max_len:
+        report_content = report_content[:max_len] + "\n...(内容已截断)"
+
+    # 格式化消息
+    ts = datetime.now().strftime("%Y-%m-%d %H:%M")
+    msg_lines = [
+        f"【Production Daily Report】",
+        f"⏰ {ts}",
+        f"📊 类型: {report_type}",
+        f"```",
+        report_content,
+        f"```",
+    ]
+    msg = "\n".join(msg_lines)
+
+    # 发送
+    sent_ok = send_feishu(msg)
+    if sent_ok:
+        mark_sent(report_type)
+        log(f"✓ {report_type} 日报已发送到飞书")
+    else:
+        log(f"✗ {report_type} 日报发送失败")
+
+    # 更新 delivery status
+    update_delivery_status(report_type, sent_ok)
+
+    return sent_ok
+
+# ---- 更新交付状态文件 ----
+def update_delivery_status(report_type: str, success: bool):
+    """更新 reports/report_delivery_status.json"""
+    status_file = REPORTS_BASE / "report_delivery_status.json"
+    try:
+        if status_file.exists():
+            data = json.loads(status_file.read_text())
+        else:
+            data = {"reports": {}, "delivery_history": []}
+    except:
+        data = {"reports": {}, "delivery_history": []}
+
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    entry = {
+        "timestamp": now,
+        "report_type": report_type,
+        "status": "success" if success else "error",
+    }
+
+    if report_type not in data.get("reports", {}):
+        data["reports"][report_type] = {
+            "enabled": True,
+            "last_sent": "",
+            "last_status": "pending",
+            "delivery_count": 0
+        }
+
+    data["reports"][report_type]["last_sent"] = now
+    data["reports"][report_type]["last_status"] = "success" if success else "error"
+    data["reports"][report_type]["delivery_count"] = \
+        data["reports"][report_type].get("delivery_count", 0) + (1 if success else 0)
+
+    data["last_updated"] = now
+    data.setdefault("delivery_history", []).append(entry)
+    # 保留最近 100 条历史
+    data["delivery_history"] = data["delivery_history"][-100:]
+
+    status_file.write_text(json.dumps(data, ensure_ascii=False, indent=2))
+    log(f"delivery status updated for {report_type}")
 
 # ---- 主逻辑 ----
 def main():

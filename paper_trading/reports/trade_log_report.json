@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "report_type": "paper_trading_trade_log",
+  "generated_at": "2026-05-13T00:00:00Z",
+  "date": "2026-05-13",
+  "mode": "PAPER_TRADING",
+  "kill_switch": false,
+  "description": "Paper Trading 当日交易流水",
+  "trades": [],
+  "summary": {
+    "total_trades": 0,
+    "buy_trades": 0,
+    "sell_trades": 0,
+    "total_buy_amount": 0.0,
+    "total_sell_amount": 0.0,
+    "net_flow": 0.0
+  }
+}

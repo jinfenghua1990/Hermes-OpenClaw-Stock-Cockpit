@@ -159,11 +159,11 @@ snapshot = {
         ]
     },
     "runtime_events": {
-        "total_modules": 17,
+        "total_modules": 21,
         "active_modules": 0,
         "layers": {
-            "execution_layer": {"total": 7, "active": 0},
-            "governance_layer": {"total": 7, "active": 0},
+            "execution_layer": {"total": 9, "active": 0},
+            "governance_layer": {"total": 9, "active": 0},
             "cockpit_layer": {"total": 3, "active": 0}
         },
         "latest_events": []
@@ -194,7 +194,7 @@ except ImportError:
 # ── 8b. Runtime Event Health ─────────────────────────────────
 try:
     sys.path.insert(0, str(BASE))
-    from runtime_event_health_check import check_runtime_event_health as _check_health
+    from system_health.runtime_event_health_check import check_runtime_event_health as _check_health
     reh = _check_health()
     snapshot["runtime_event_health"] = {
         "total_modules": reh["total_modules"],
@@ -207,6 +207,46 @@ try:
     log(f"Runtime Event Health: {reh['status'].upper()} ({reh['active_today']}/{reh['total_modules']})")
 except ImportError:
     pass
+
+# ── 8c. Paper Trading / Cockpit / Report Delivery 字段 ───────
+import json as _json, os as _os, datetime as _dt
+
+# Paper Trading
+pt_dir = BASE / "paper_trading" / "reports"
+pt_summary = {}
+if pt_dir.exists():
+    for fname in ["daily_pnl_report.json", "positions_snapshot_report.json", "risk_status_report.json"]:
+        fpath = pt_dir / fname
+        if fpath.exists():
+            try:
+                pt_summary.update(_json.loads(fpath.read_text(encoding="utf-8")))
+            except: pass
+snapshot["paper_trading"] = {
+    "mode": "PAPER_ONLY",
+    "account_mode": "OBSERVE_ONLY",
+    "kill_switch": pt_summary.get("kill_switch", False),
+    "total_assets": pt_summary.get("total_assets", 0),
+    "available_balance": pt_summary.get("available_balance", 0),
+    "total_pnl": pt_summary.get("total_pnl", 0),
+    "positions_count": pt_summary.get("positions_count", 0),
+    "last_updated": _dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+}
+
+# Report Delivery
+rd_path = BASE / "reports" / "report_delivery_status.json"
+if rd_path.exists():
+    try:
+        rd = _json.loads(rd_path.read_text(encoding="utf-8"))
+        snapshot["report_delivery"] = rd
+    except: pass
+
+# Cockpit Frontend
+fe_dir = BASE / "frontend"
+snapshot["cockpit_frontend"] = {
+    "enabled": fe_dir.exists(),
+    "build_status": "success" if (fe_dir / "dist").exists() else "not_built",
+    "last_build": "",
+}
 
 # ── 8c. 写入最终 Snapshot ─────────────────────────────────
 SNAPSHOT_FILE.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

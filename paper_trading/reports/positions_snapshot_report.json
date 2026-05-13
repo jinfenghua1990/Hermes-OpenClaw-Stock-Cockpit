@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "report_type": "paper_trading_positions_snapshot",
+  "generated_at": "2026-05-13T00:00:00Z",
+  "date": "2026-05-13",
+  "mode": "PAPER_TRADING",
+  "kill_switch": false,
+  "description": "Paper Trading 持仓快照报告",
+  "positions": [],
+  "summary": {
+    "total_positions": 0,
+    "total_cost": 0.0,
+    "total_market_value": 0.0,
+    "total_floating_pnl": 0.0,
+    "cash_balance": 0.0
+  },
+  "top_gainers": [],
+  "top_losers": []
+}

@@ -32,3 +32,4 @@ data/cache/
 .DS_Store
 .idea/
 .vscode/
+frontend/node_modules/
