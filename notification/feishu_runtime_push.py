@@ -15,12 +15,12 @@ PAPER_ONLY / OBSERVE_ONLY
 
 import json
 import os
+import subprocess
 from datetime import datetime
 from pathlib import Path
-from urllib.request import Request, urlopen
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-WEBHOOK = os.getenv("FEISHU_WEBHOOK", "")
+LARK_CLI = "/opt/homebrew/bin/lark-cli"  # 长连接，无需 Webhook
 
 
 def _load(path, default=None):
@@ -98,24 +98,27 @@ def build_message():
     return "\n".join(lines)
 
 
-def push_feishu(text: str):
-    if not WEBHOOK:
-        raise RuntimeError("FEISHU_WEBHOOK not configured")
+def push_feishu(text: str, chat_id: str = None):
+    """通过 lark-cli 长连接发送飞书消息"""
+    # 飞书群 ID
+    target = chat_id or "oc_174834d2967c4dfbdd692464f85398e0"
 
-    payload = {
-        "msg_type": "text",
-        "content": {"text": text},
-    }
+    payload = json.dumps({"msg_type": "text", "content": {"text": text}})
 
-    req = Request(
-        WEBHOOK,
-        data=json.dumps(payload).encode("utf-8"),
-        headers={"Content-Type": "application/json"},
-        method="POST",
+    result = subprocess.run(
+        [
+            LARK_CLI, "im", "+messages-send",
+            "--chat-id", target,
+            "--content", payload,
+        ],
+        capture_output=True,
+        text=True,
+        timeout=20,
     )
 
-    with urlopen(req, timeout=15) as resp:
-        return resp.read().decode("utf-8")
+    if result.returncode != 0:
+        raise RuntimeError(f"lark-cli failed: {result.stderr.strip()}")
+    return result.stdout.strip()
 
 
 if __name__ == "__main__":
