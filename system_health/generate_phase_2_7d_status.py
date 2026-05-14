@@ -6,10 +6,14 @@ Phase-2.7D Unified Governance Status Generator
 """
 
 import json
+import sys
 from datetime import datetime
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+
 OUT_FILE = BASE_DIR / "system_health" / "phase_2_7d_status.json"
 
 
