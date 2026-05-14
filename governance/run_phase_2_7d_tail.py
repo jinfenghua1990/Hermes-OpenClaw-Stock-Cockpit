@@ -6,7 +6,8 @@ Phase-2.7D Daily Pipeline Tail
 1. Governance Guard
 2. 生成 replay snapshot
 3. 生成 Phase-2.7D unified governance status
-4. 输出收口结果
+4. 运行 Phase-2.7D acceptance check
+5. 输出收口结果
 
 不修改 baseline，不改变 account_mode，不触碰 robot_6~10。
 """
@@ -61,6 +62,11 @@ def main():
     steps.append(_run(
         "phase_2_7d_status",
         BASE_DIR / "system_health" / "generate_phase_2_7d_status.py",
+    ))
+
+    steps.append(_run(
+        "phase_2_7d_acceptance",
+        BASE_DIR / "system_health" / "phase_2_7d_acceptance_check.py",
     ))
 
     overall = "SUCCESS"
