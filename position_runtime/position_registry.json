@@ -1,0 +1,7 @@
+{
+  "phase": "Phase-2.8B",
+  "account_mode": "PAPER_ONLY",
+  "positions": [],
+  "updated_at": null,
+  "description": "Paper position registry for runtime monitoring"
+}
