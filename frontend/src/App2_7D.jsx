@@ -73,6 +73,9 @@ function TopPicks({ topPicks, decisionLog }) {
               <div style={{ fontSize: 11, color: 'var(--blue-bright)', marginTop: 4 }}>
                 Structure: {p.structure_type || dec.structure_type || 'unknown'} | Confidence: {p.structure_confidence ?? dec.structure_confidence ?? '—'}
               </div>
+              <div style={{ fontSize: 11, color: 'var(--text-dim)', marginTop: 4 }}>
+                Agent: {dec.source_agent || 'unknown'} | Source: {dec.data_source || 'unknown'} | Trace: {dec.trace_id || 'unknown'}
+              </div>
             </div>
           );
         })}
@@ -120,12 +123,14 @@ export default function App2_7D() {
   const ms = replay?.market_structure_summary || {};
   const risk = replay?.risk_validation_summary || {};
   const ext = replay?.phase_2_7d_extension || {};
+  const sourceTrace = replay?.source_trace_summary || {};
+  const guard = phase27d?.checks?.governance_guard || {};
 
   const governancePanelData = {
     shadow_strategy_count: ext?.strategy_registry_ref?.shadow_strategy_count || 0,
     arbitration_enabled: Boolean(ext?.arbitration_result?.enabled),
     conflict_count: replay?.agent_conflict_count || 0,
-    reconciliation_status: ext?.execution_reconciliation?.status || phase27d?.checks?.execution_reconciliation_health?.status || 'UNKNOWN',
+    reconciliation_status: ext?.execution_reconciliation?.status || 'UNKNOWN',
     baseline_drift_detected: Boolean(ext?.baseline_drift_detected),
     replay_split_snapshot_ready: Boolean(ext?.split_snapshot_ready),
     version: ext?.phase || 'Phase-2.7D'
@@ -145,18 +150,22 @@ export default function App2_7D() {
           <Metric label="SOUL_MODE" value={<Badge value={replay?.soul_mode || 'OBSERVE_ONLY'} />} />
           <Metric label="Account" value={<Badge value={replay?.account_mode || 'PAPER_ONLY'} />} />
           <Metric label="Phase" value={replay?.phase || 'Phase-2.7D'} />
+          <Metric label="Governance Guard" value={<Badge value={guard?.status || 'UNKNOWN'} />} />
         </Card>
+
         <Card title="Health">
           <Metric label="Overall" value={<Badge value={health?.overall_status || 'UNKNOWN'} />} />
           <Metric label="Success" value={health?.status_counts?.success ?? '—'} />
           <Metric label="Warning" value={health?.status_counts?.warning ?? '—'} />
           <Metric label="Critical" value={health?.status_counts?.critical ?? '—'} />
         </Card>
+
         <Card title="Market Structure">
           <Metric label="Valid Rate" value={ms.valid_rate ?? '—'} />
           <Metric label="Valid" value={ms.valid_count ?? '—'} />
           <Metric label="Invalid" value={ms.invalid_count ?? '—'} />
         </Card>
+
         <Card title="Execution">
           <Metric label="Manual Filled" value={executionSummary.manual_filled_count ?? 0} />
           <Metric label="Manual Pending" value={executionSummary.manual_pending_count ?? 0} />
@@ -166,10 +175,13 @@ export default function App2_7D() {
 
       <div className="grid-2" style={{ marginTop: 12 }}>
         <GovernanceScalabilityPanel data={governancePanelData} />
-        <Card title="Risk Validation">
-          <Metric label="Total" value={risk.total ?? '—'} />
-          <Metric label="Pass" value={risk.pass_count ?? '—'} />
-          <Metric label="Invalid" value={risk.invalid_count ?? '—'} />
+
+        <Card title="Risk + Source Trace">
+          <Metric label="Risk Total" value={risk.total ?? '—'} />
+          <Metric label="Risk Invalid" value={risk.invalid_count ?? '—'} />
+          <Metric label="Source Trace" value={<Badge value={sourceTrace.status || 'UNKNOWN'} />} />
+          <Metric label="Missing Trace" value={sourceTrace.missing_trace_id ?? 0} />
+          <Metric label="Missing Agent" value={sourceTrace.missing_source_agent ?? 0} />
           <Metric label="Snapshot UUID" value={replay?.snapshot_uuid || '—'} />
         </Card>
       </div>
