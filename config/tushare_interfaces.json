@@ -1,0 +1,126 @@
+{
+  "version": "1.0",
+  "phase": "Phase-2.3C",
+  "principle": "2000积分可用接口全部封装，默认不全部启用",
+
+  "default_enabled": {
+    "stock_basic": {
+      "status": "enabled",
+      "api": "stock_basic",
+      "description": "股票列表基础信息",
+      "积分需求": 0,
+      "进入baseline": true
+    },
+    "trade_cal": {
+      "status": "enabled",
+      "api": "trade_cal",
+      "description": "交易日历",
+      "积分需求": 0,
+      "进入baseline": true
+    },
+    "daily": {
+      "status": "enabled",
+      "api": "daily",
+      "description": "日K线（开高低收量）",
+      "积分需求": 0,
+      "进入baseline": true
+    },
+    "daily_basic": {
+      "status": "enabled",
+      "api": "daily_basic",
+      "description": "每日行情指标（量比/换手率/振幅等）",
+      "积分需求": 0,
+      "进入baseline": true
+    },
+    "adj_factor": {
+      "status": "enabled",
+      "api": "adj_factor",
+      "description": "复权因子",
+      "积分需求": 120,
+      "进入baseline": true
+    },
+    "stk_limit": {
+      "status": "enabled",
+      "api": "stk_limit",
+      "description": "涨跌停价格",
+      "积分需求": 0,
+      "进入baseline": true
+    }
+  },
+
+  "reserved_disabled": {
+    "index_basic": {
+      "status": "备用",
+      "api": "index_basic",
+      "description": "指数基础信息",
+      "积分需求": 0,
+      "进入baseline": false,
+      "experimental": true
+    },
+    "index_daily": {
+      "status": "备用",
+      "api": "index_daily",
+      "description": "指数日K线",
+      "积分需求": 0,
+      "进入baseline": false,
+      "experimental": true
+    },
+    "moneyflow": {
+      "status": "备用",
+      "api": "moneyflow",
+      "description": "个股资金流向",
+      "积分需求": 2000,
+      "进入baseline": false,
+      "experimental": true
+    },
+    "fina_indicator": {
+      "status": "备用",
+      "api": "fina_indicator",
+      "description": "财务指标",
+      "积分需求": 2000,
+      "进入baseline": false,
+      "experimental": true
+    },
+    "balancesheet": {
+      "status": "备用",
+      "api": "balancesheet",
+      "description": "资产负债表",
+      "积分需求": 2000,
+      "进入baseline": false,
+      "experimental": true
+    },
+    "income": {
+      "status": "备用",
+      "api": "income",
+      "description": "利润表",
+      "积分需求": 2000,
+      "进入baseline": false,
+      "experimental": true
+    },
+    "cashflow": {
+      "status": "备用",
+      "api": "cashflow",
+      "description": "现金流量表",
+      "积分需求": 2000,
+      "进入baseline": false,
+      "experimental": true
+    }
+  },
+
+  "constraints": {
+    "baseline_v1_pure": true,
+    "no_sqlite": true,
+    "no_strategy_upgrade": true,
+    "no_baseline_pollution": true,
+    "experimental_isolation": true,
+    "baseline_readonly": true
+  },
+
+  "current_phase_goals": [
+    "用TuShare重建data/kline_daily/*.csv",
+    "修复high<low问题",
+    "重建daily_technical_factors.json",
+    "K线质量检查",
+    "CRITICAL=0后恢复选股/cockpit/paper_trading"
+  ]
+}

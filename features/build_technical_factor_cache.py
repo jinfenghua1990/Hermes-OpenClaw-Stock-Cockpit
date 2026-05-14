@@ -87,25 +87,57 @@ def build_factor_for_symbol(path: Path):
         "ma20_trend": calc_ma20_trend(df)
     }
 
-def main():
+def main(resume=False):
+    # 支持断点续跑：只处理剩余未完成的股票
+    already_done = set()
+    if resume and LOG_DIR.exists():
+        done_marker = LOG_DIR / ".done_stocks.json"
+        if done_marker.exists():
+            raw = json.load(open(done_marker))
+            # 支持两种格式：{"done": [...]} 或 [...]
+            if isinstance(raw, dict):
+                already_done = set(raw.get("done", []))
+            else:
+                already_done = set(raw)
+            print(f"[RESUME] 已完成: {len(already_done)} 只，跳过")
+
     factors = {}
     invalid = []
     csv_files = sorted(KLINE_DIR.glob("*.csv"))
-    for path in csv_files:
+    start_time = datetime.now()
+    total = len(csv_files)
+    done_count = 0
+
+    for i, path in enumerate(csv_files):
         symbol = path.stem
+        if resume and symbol in already_done:
+            continue
         try:
             factors[symbol] = build_factor_for_symbol(path)
-            print(f"[OK] {symbol}")
+            already_done.add(symbol)
+            done_count += 1
+            if done_count % 200 == 0:
+                elapsed = (datetime.now() - start_time).total_seconds()
+                rate = done_count / elapsed if elapsed > 0 else 0
+                remaining = total - done_count
+                eta = remaining / rate if rate > 0 else 0
+                print(f"[进度] {done_count}/{total} ({done_count*100//total}%) 已完成，剩余约{eta:.0f}秒")
         except Exception as e:
             invalid.append({
                 "symbol": symbol,
                 "reason": str(e)
             })
             print(f"[FAIL] {symbol}: {e}")
+        # 每100只保存一次进度快照
+        if done_count > 0 and done_count % 500 == 0:
+            _save_progress(already_done, factors, invalid, total, done_count)
+
+    _save_progress(already_done, factors, invalid, total, done_count)
+
     result = {
         "date": datetime.now().strftime("%Y-%m-%d"),
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "total": len(csv_files),
+        "total": total,
         "valid": len(factors),
         "invalid": len(invalid),
         "factors": factors
@@ -125,5 +157,16 @@ def main():
     print(f"[OUTPUT] {output_path}")
     print(f"[INVALID] {invalid_path}")
 
+def _save_progress(done_set, factors, invalid, total, done_count):
+    """每500只保存一次进度快照"""
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    done_marker = LOG_DIR / ".done_stocks.json"
+    done_marker.write_text(json.dumps(list(done_set), ensure_ascii=False))
+    print(f"[快照] 已保存 {done_count}/{total} 到 {done_marker}")
+
 if __name__ == "__main__":
-    main()
+    import sys
+    resume = "--resume" in sys.argv
+    if resume:
+        print("[RESUME模式] 断点续跑，只处理未完成的股票")
+    main(resume=resume)
