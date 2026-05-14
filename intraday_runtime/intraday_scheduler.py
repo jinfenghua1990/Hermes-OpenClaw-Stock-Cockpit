@@ -34,7 +34,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 LOG_DIR = BASE_DIR / "logs"
 LOG_FILE = LOG_DIR / "runtime_scheduler_log.json"
 
-
 RUNTIME_PIPELINE = [
     "candidate_pool_refresh",
     "market_runtime",
@@ -109,32 +108,6 @@ def run_scheduler():
             "generated_at": now,
         })
 
-        build_governance_report()
-        build_market_report()
-        build_position_report()
-
-        stages.append({
-            "stage": "runtime_reports",
-            "status": "PASS",
-            "generated_at": now,
-        })
-
-        build_feishu_routes()
-
-        stages.append({
-            "stage": "feishu_router",
-            "status": "PASS",
-            "generated_at": now,
-        })
-
-        build_replay_snapshot()
-
-        stages.append({
-            "stage": "runtime_replay",
-            "status": "PASS",
-            "generated_at": now,
-        })
-
         final_status = "BLOCKED" if blocked else "PASS"
 
     except Exception as e:
@@ -159,6 +132,13 @@ def run_scheduler():
 
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     LOG_FILE.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    if final_status != "FAILED":
+        build_governance_report()
+        build_market_report()
+        build_position_report()
+        build_feishu_routes()
+        build_replay_snapshot()
 
     print(f"Intraday Scheduler finished: {final_status}")
     return payload
