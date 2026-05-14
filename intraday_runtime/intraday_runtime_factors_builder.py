@@ -82,7 +82,11 @@ def build_intraday_factors():
             item["pct_chg"] = live.get("涨跌幅", item.get("pct_chg", 0))
             item["latest_high"] = live.get("最高价", item.get("latest_high", 0))
             item["latest_low"] = live.get("最低价", item.get("最低价", item.get("latest_low", 0)))
-            item["volume_ratio"] = live.get("成交量", item.get("volume_ratio", 0))
+            # ⚠️ 注意：AkShare snapshot 没有 volume_ratio，只有绝对成交量
+            # volume_ratio 保留 factors 底座的值（历史均值计算），不覆盖
+            # live_vol 暂时保留供后续计算参考（不覆盖 volume_ratio）
+            if live.get("成交量"):
+                item["_intraday_volume"] = live.get("成交量")
             # 今日时间戳
             if live.get("时间戳"):
                 item["intraday_timestamp"] = live.get("时间戳")
