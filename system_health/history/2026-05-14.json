@@ -1,0 +1,113 @@
+{
+  "timestamp": "2026-05-14T17:00:28.815861",
+  "date": "2026-05-14",
+  "phase": "Phase-2.4B-Stable",
+  "overall_status": "critical",
+  "status_counts": {
+    "success": 11,
+    "warning": 4,
+    "error": 0,
+    "critical": 1
+  },
+  "critical_metrics": {
+    "daily_pipeline_success": false,
+    "factor_valid_count": 4788,
+    "mode_candidate_count": 380,
+    "emotion_score": 0,
+    "market_phase": "stable",
+    "risk_level": "medium"
+  },
+  "checks": {
+    "kline_update": {
+      "status": "warning",
+      "message": "未找到今日K线更新记录"
+    },
+    "factor_cache": {
+      "status": "success",
+      "message": "有效因子缓存数量: 4788",
+      "valid_count": 4788,
+      "threshold": 4000
+    },
+    "mode_scan": {
+      "status": "success",
+      "message": "四模式扫描完成，找到380个候选",
+      "candidate_count": 380
+    },
+    "daily_report": {
+      "status": "success",
+      "message": "日报已生成 (4589字节)",
+      "file_size": 4589
+    },
+    "emotion_snapshot": {
+      "status": "success",
+      "message": "情绪快照已生成 (分数: 0)",
+      "emotion_score": 0
+    },
+    "emotion_history": {
+      "status": "success",
+      "message": "情绪历史分析已更新 ()",
+      "last_updated": ""
+    },
+    "replay_cache": {
+      "status": "warning",
+      "message": "Replay缓存已过期 (41.8小时)"
+    },
+    "git_push": {
+      "status": "success",
+      "message": "最新提交已推送: a4eb01a fix: intraday_runtime_factors_builder - 不覆盖volume_ratio",
+      "last_commit": "a4eb01a fix: intraday_runtime_factors_builder - 不覆盖volume_ratio"
+    },
+    "risk_price_validation": {
+      "status": "critical",
+      "message": "CRITICAL: 1 只 stop_loss >= current_price",
+      "details": {
+        "valid_structure_rate": 0.0,
+        "invalid_price_structure_count": 4,
+        "invalid_stop_loss_count": 1,
+        "invalid_pressure_count": 3,
+        "cross_timestamp_conflict_count": 0,
+        "stale_price_snapshot_count": 0,
+        "total_checked": 4
+      }
+    },
+    "replay_snapshot_persistence": {
+      "status": "success",
+      "message": "Replay snapshot 存在 (2026-05-14)",
+      "snapshot_date": "2026-05-14",
+      "snapshot_uuid": "b56e6c9d"
+    },
+    "market_structure_health": {
+      "status": "success",
+      "message": "有效结构率 100% | invalid: 0 | fallback_ma20: 0 | valid: 4/4",
+      "valid_structure_rate": 1.0,
+      "invalid_count": 0,
+      "fallback_count": 0,
+      "valid_count": 4,
+      "total": 4
+    },
+    "paper_execution_bridge_health": {
+      "status": "success",
+      "message": "Execution Bridge 正常 | account_mode=PAPER_ONLY",
+      "pending_count": 0,
+      "account_mode": "PAPER_ONLY"
+    },
+    "system_monitor": {
+      "status": "success",
+      "message": "系统监控文件存在"
+    },
+    "runtime_event_health": {
+      "status": "warning",
+      "message": "Runtime Event 不完整: 21 模块今日无事件 (openclaw_fetch_sh, feature_engine_sh, coverage_monitor, paper_trade_executor, notification_router)"
+    },
+    "snapshot_consistency": {
+      "status": "warning",
+      "message": "模块数不一致: usage=23 event=23 dash=21"
+    },
+    "freeze_integrity": {
+      "status": "success",
+      "message": "冻结完整性通过"
+    }
+  },
+  "warnings": [],
+  "notes": "Phase-2.4B-Stable 稳定运行期，禁止自动学习、baseline修改、权重调整、自动交易、AI自治"
+}

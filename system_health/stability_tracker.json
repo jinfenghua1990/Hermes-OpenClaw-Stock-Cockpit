@@ -41,6 +41,46 @@
       "overall": "warning",
       "freeze_ok": true,
       "pipeline_should_stop": false
+    },
+    "2026-05-14": {
+      "date": "2026-05-14",
+      "checks": {
+        "runtime_event_health": {
+          "status": "warning",
+          "active_today": 4,
+          "total_modules": 23
+        },
+        "snapshot_consistency": {
+          "status": "warning",
+          "consistent": false,
+          "modules": 23
+        },
+        "freeze_integrity": {
+          "status": "pass",
+          "all_passed": true
+        },
+        "daily_health_check": {
+          "status": "critical",
+          "passed": 11,
+          "warning": 4,
+          "error": 0
+        },
+        "soul_mode": {
+          "status": "pass",
+          "mode": "OBSERVE_ONLY"
+        },
+        "dashboard_snapshot": {
+          "status": "warning",
+          "total_modules": 21
+        },
+        "runtime_usage_summary": {
+          "status": "warning",
+          "total_modules": 23
+        }
+      },
+      "overall": "warning",
+      "freeze_ok": true,
+      "pipeline_should_stop": false
     }
   },
   "completed": false

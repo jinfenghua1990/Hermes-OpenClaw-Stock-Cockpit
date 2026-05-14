@@ -1,6 +1,6 @@
 {
   "report_type": "rolling_snapshot",
-  "timestamp": "2026-05-13 17:01:19",
+  "timestamp": "2026-05-14 17:00:28",
   "phase": "Phase-1.6 OBSERVE_ONLY",
   "data_quality": {
     "openclaw_raw_freshness_min": null,
@@ -20,7 +20,7 @@
     "matched": 5,
     "details": [],
     "latest_report": "daily_review.json",
-    "latest_report_time": "2026-05-13 15:30:11",
+    "latest_report_time": "2026-05-14 15:30:05",
     "top_candidates": [
       {
         "code": "301282",
@@ -76,17 +76,18 @@
     "latest_events": []
   },
   "runtime_event_health": {
-    "total_modules": 21,
+    "total_modules": 23,
     "active_today": 3,
     "missing_today": [
       "openclaw_fetch_sh",
       "feature_engine_sh",
       "coverage_monitor",
-      "report_pipeline",
       "paper_trade_executor",
       "notification_router",
       "position_manager",
       "pnl_tracker",
+      "action_engine",
+      "paper_decision_engine",
       "risk_controller",
       "scheduler_sh",
       "replay_market_day",
@@ -94,6 +95,7 @@
       "position_adapter",
       "robot5_risk_sh",
       "main_aggregate_sh",
+      "rolling_snapshot",
       "heartbeat_monitor",
       "robot4_match_sh",
       "cockpit_frontend"
@@ -120,7 +122,7 @@
     "available_balance": 0,
     "total_pnl": 0,
     "positions_count": 0,
-    "last_updated": "2026-05-13 17:01:19"
+    "last_updated": "2026-05-14 17:00:28"
   },
   "report_delivery": {
     "schema_version": "1.0",

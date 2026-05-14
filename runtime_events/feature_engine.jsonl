@@ -1,0 +1,2 @@
+{"timestamp": "2026-05-14T00:28:54Z", "module": "feature_engine", "layer": "execution_layer", "status": "error", "message": "Feature Engine 盘前计算失败 (exit 1)", "runtime_ms": 210605}
+{"timestamp": "2026-05-14T07:29:04Z", "module": "feature_engine", "layer": "execution_layer", "status": "error", "message": "Feature Engine 收盘计算失败 (exit 1)", "runtime_ms": 190662}
