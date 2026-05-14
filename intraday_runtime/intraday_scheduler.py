@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Phase-2.8C Intraday Scheduler
+Phase-2.8D Intraday Scheduler
 
 职责：
 - Runtime 主调度器
@@ -8,6 +8,7 @@ Phase-2.8C Intraday Scheduler
 - Runtime freshness blocking
 - Runtime governance logging
 - Runtime replay generation
+- Scanner Adapter → Candidate Pool → Runtime Chain
 
 System Mode:
 - PAPER_ONLY
@@ -25,10 +26,14 @@ from intraday_runtime.sector_runtime_engine import build_sector_runtime
 from intraday_runtime.market_emotion_runtime import build_market_emotion_runtime
 from intraday_runtime.ai_arbitration_runtime import build_runtime as build_ai_arbitration
 from intraday_runtime.intraday_feishu_router import build_feishu_routes
+from intraday_runtime.intraday_quote_snapshot import build_snapshot as build_quote_snapshot
+from intraday_runtime.intraday_runtime_factors_builder import build_intraday_factors
 from runtime_reports.governance_runtime_report import build_report as build_governance_report
 from runtime_reports.market_runtime_report import build_report as build_market_report
+import subprocess
 from runtime_reports.position_runtime_report import build_report as build_position_report
 from runtime_replay.runtime_replay_snapshot import build_replay_snapshot
+from runtime_adapters.scanner_to_candidate_rankings_adapter import main as run_scanner_adapter
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOG_DIR = BASE_DIR / "logs"
@@ -62,6 +67,22 @@ def run_scheduler():
     blocked = False
 
     try:
+        # === Phase-2.8D: 盘中实时行情链路 ===
+        # Step 1: 拉取 AkShare 全市场实时快照
+        print("[scheduler] Phase-2.8D: Step 1 - Fetching AkShare intraday snapshot...")
+        build_quote_snapshot()
+        print("[scheduler] AkShare snapshot done → runtime_data/intraday_quote_snapshot.json")
+
+        # Step 2: 合并 factors + snapshot → intraday_runtime_factors.json
+        print("[scheduler] Phase-2.8D: Step 2 - Building intraday runtime factors...")
+        build_intraday_factors()
+        print("[scheduler] Intraday factors done → runtime_data/intraday_runtime_factors.json")
+
+        # Step 3: Scanner Adapter 读 intraday_runtime_factors（今日真实涨跌幅）
+        print("[scheduler] Phase-2.8D: Step 3 - Running Scanner Adapter...")
+        run_scanner_adapter()
+        print("[scheduler] Scanner Adapter done → candidate_rankings.json updated")
+
         candidate = refresh_candidate_pool()
         candidate_status = candidate.get("status", "UNKNOWN")
 

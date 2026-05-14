@@ -24,17 +24,32 @@ from datetime import datetime
 from typing import Dict, List, Any
 
 # 目录配置
-CACHE_FILE = Path("features/cache/daily_technical_factors.json")
+# Phase-2.8D: 优先读取盘中 runtime factors（AkShare今日实时涨跌幅）
+# 回退到昨日 factors 底座
+import os
+BASE_DIR = Path(os.environ.get("HERMES_PROJECT_DIR", Path(__file__).resolve().parent.parent))
+INTRADAY_CACHE = BASE_DIR / "runtime_data/intraday_runtime_factors.json"
+FACTORS_CACHE = BASE_DIR / "features/cache/daily_technical_factors.json"
+CACHE_FILE = INTRADAY_CACHE if INTRADAY_CACHE.exists() else FACTORS_CACHE
 OUTPUT_DIR = Path("strategies/outputs")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def load_technical_factors() -> Dict[str, Any]:
-    """加载技术因子缓存"""
+    """加载技术因子缓存
+    Phase-2.8D: 优先读取 intraday_runtime_factors.json (今日AkShare实时涨跌幅)
+    回退读取 daily_technical_factors.json (昨日收盘底座)
+    """
     if not CACHE_FILE.exists():
         raise FileNotFoundError(f"技术因子文件不存在: {CACHE_FILE}")
+    print(f"[scanner] 读取因子文件: {CACHE_FILE}")
     with open(CACHE_FILE, "r", encoding="utf-8") as f:
         data = json.load(f)
+    src = data.get("quote_data_as_of", "")
+    if src:
+        print(f"[scanner] 数据来源: AkShare 实时行情 ({src})")
+    else:
+        print(f"[scanner] 数据来源: 昨日收盘底座 ({data.get('generated_at', '')})")
     return data
 
 
