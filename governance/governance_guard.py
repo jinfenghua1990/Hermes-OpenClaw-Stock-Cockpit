@@ -2,7 +2,7 @@
 """
 Phase-2.7D Governance Guard
 
-用于检查关键治理锁是否被绕过。
+检查关键治理锁是否被绕过。
 """
 
 import json
@@ -12,7 +12,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 REQUIRED_LOCKS = {
-    "SOUL_MODE": "OBSERVE_ONLY",
+    "soul_mode": "OBSERVE_ONLY",
     "account_mode": "PAPER_ONLY",
     "baseline_frozen": True,
     "robot_6_10_status": "RESERVED_ONLY",
@@ -26,6 +26,11 @@ def _safe_load(path, default=None):
         return default or {}
 
 
+def _get_lock_value(registry: dict, key: str):
+    # 兼容历史大小写字段：SOUL_MODE / soul_mode
+    return registry.get(key, registry.get(key.upper()))
+
+
 def run_governance_guard():
     version_registry = _safe_load(
         BASE_DIR / "governance" / "registry" / "version_registry.json",
@@ -35,15 +40,8 @@ def run_governance_guard():
     checks = {}
     violations = []
 
-    actual = {
-        "SOUL_MODE": version_registry.get("soul_mode"),
-        "account_mode": version_registry.get("account_mode"),
-        "baseline_frozen": version_registry.get("baseline_frozen"),
-        "robot_6_10_status": version_registry.get("robot_6_10_status"),
-    }
-
     for key, expected in REQUIRED_LOCKS.items():
-        value = actual.get(key)
+        value = _get_lock_value(version_registry, key)
         passed = value == expected
 
         checks[key] = {
