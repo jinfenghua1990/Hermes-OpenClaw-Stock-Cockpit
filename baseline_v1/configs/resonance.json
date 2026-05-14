@@ -1,0 +1,33 @@
+{
+  "resonance_mechanism": "Hermes Baseline v1.0",
+  "version": "v1.0",
+  "frozen": true,
+
+  "trigger_table": {
+    "4_modes_triggered": {
+      "action": "strongest_watchlist",
+      "description": "最强观察仓，4种模式同时满足",
+      "priority": 1
+    },
+    "3_modes_triggered": {
+      "action": "priority_candidate",
+      "description": "优先候选，3种模式同时满足",
+      "priority": 2
+    },
+    "2_modes_triggered": {
+      "action": "secondary_watch",
+      "description": "次级观察，2种模式同时满足",
+      "priority": 3
+    },
+    "1_mode_triggered": {
+      "action": "observe_only",
+      "description": "仅观察，不操作",
+      "priority": 4
+    },
+    "0_modes_triggered": {
+      "action": "no_trade",
+      "description": "空仓，不交易",
+      "priority": 5
+    }
+  }
+}

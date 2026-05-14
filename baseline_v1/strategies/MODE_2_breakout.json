@@ -1,0 +1,37 @@
+{
+  "mode": "MODE_2",
+  "name": "突破启动型",
+  "version": "v1.0",
+  "frozen": true,
+  "core_logic": "大阳突破 + MA20加速上行",
+  "stability": "高（4星）",
+  "characteristics": "爆发力强",
+
+  "must_conditions": {
+    "daily_change": ">5%",
+    "ma20_trend": "up_continuous",
+    "ma20_daily_rise": ">0.3",
+    "rsi14": "<60"
+  },
+
+  "optional_conditions": {
+    "lower_shadow": "preferred"
+  },
+
+  "scoring": {
+    "daily_change_gt_8_percent": "+3",
+    "ma20_daily_rise_gt_1": "+2",
+    "lower_shadow_gt_1_percent": "+1",
+    "volume_ratio_lt_150_percent": "+1"
+  },
+
+  "entry_threshold": {
+    "min_score": 3
+  },
+
+  "notes": [
+    "爆发力最强模式",
+    "大阳线是关键信号",
+    "MA20必须处于上升趋势"
+  ]
+}

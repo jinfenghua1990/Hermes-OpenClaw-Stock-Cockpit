@@ -1,0 +1,35 @@
+{
+  "mode": "MODE_1",
+  "name": "回踩止跌型",
+  "version": "v1.0",
+  "frozen": true,
+  "core_logic": "MA20上升趋势中的缩量回踩",
+  "stability": "最高（5星）",
+
+  "must_conditions": {
+    "ma20_trend": "up_continuous",
+    "price_ma20_deviation_percent": "<15%",
+    "daily_change": "0~6%",
+    "lower_shadow_percent": ">1%",
+    "rsi14": "15~55",
+    "volume_ratio": "<85%"
+  },
+
+  "scoring": {
+    "lower_shadow_gt_1_percent": "+2",
+    "daily_change_0_to_6_percent": "+2",
+    "volume_ratio_lt_85_percent": "+1",
+    "rsi14_25_to_45": "+1",
+    "ma20_deviation_minus5_to_plus10_percent": "+2"
+  },
+
+  "entry_threshold": {
+    "min_score": 4
+  },
+
+  "notes": [
+    "必须所有必须条件全部满足",
+    "评分越高越好",
+    "低量比是关键特征（缩量回踩）"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "baseline_version": "v1.0",
+  "freeze_date": "2026-03-25",
+  "frozen": true,
+  "modifiable": false,
+  "frozen_by": "user_confirmation",
+  
+  "permissions": {
+    "read": ["all_robots", "main", "experimental"],
+    "write": [],
+    "modify": []
+  },
+
+  "prohibited_actions": {
+    "auto_learning": false,
+    "auto_parameter_tuning": false,
+    "auto_strategy_modification": false,
+    "auto_trading": false,
+    "runtime_threshold_adjustment": false,
+    "third_party_strategy_dependency": false
+  },
+
+  "experimental_features": {
+    "isolated_namespace_only": true,
+    "allowed_paths": [
+      "experimental/ai_scoring/",
+      "experimental/market_filter/",
+      "experimental/sentiment/",
+      "experimental/risk_factor/"
+    ]
+  },
+
+  "freeze_enforcement": {
+    "any_attempt_to_modify_baseline": "BLOCK",
+    "any_auto_learning_attempt": "BLOCK",
+    "any_third_party_contamination": "BLOCK"
+  }
+}

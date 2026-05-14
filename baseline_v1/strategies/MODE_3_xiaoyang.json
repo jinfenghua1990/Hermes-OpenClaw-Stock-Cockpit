@@ -1,0 +1,32 @@
+{
+  "mode": "MODE_3",
+  "name": "小阳启动型",
+  "version": "v1.0",
+  "frozen": true,
+  "core_logic": "MA20走平转升阶段的小阳启动",
+  "stability": "中（3星）",
+
+  "must_conditions": {
+    "daily_change": "1~6%",
+    "price_above_ma5": true,
+    "ma20_trend": "flat_or_up",
+    "rsi14": "15~55"
+  },
+
+  "scoring": {
+    "ma20_daily_rise_gt_0.3": "+2",
+    "daily_change_2_to_5_percent": "+2",
+    "price_gt_ma5_times_1.02": "+1",
+    "volume_ratio_lt_90_percent": "+1"
+  },
+
+  "entry_threshold": {
+    "min_score": 3
+  },
+
+  "notes": [
+    "适合稳健型投资者",
+    "小阳线稳步上涨",
+    "MA20从走平转为上升是最佳时机"
+  ]
+}

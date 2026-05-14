@@ -1,0 +1,28 @@
+{
+  "mode": "MODE_4",
+  "name": "2波启动型",
+  "version": "v1.0",
+  "frozen": true,
+  "core_logic": "前期强势完成第一波后，回调结束再次启动",
+  "stability": "低频高波动",
+  "tracking_required": true,
+
+  "must_conditions": {
+    "previous_limit_up_wave": true,
+    "previous_wave_gain": ">8%",
+    "price_reclaim_ma5": true,
+    "daily_change": "<10%",
+    "rsi14": "<60"
+  },
+
+  "characteristics": {
+    "low_frequency": true,
+    "high_volatility": true
+  },
+
+  "notes": [
+    "需要跟踪前期强势股",
+    "低频模式，不是每天都有",
+    "高波动，需要严格止损"
+  ]
+}
