@@ -7,6 +7,7 @@ Phase-2.8C Intraday Scheduler
 - 串联 Runtime 主链
 - Runtime freshness blocking
 - Runtime governance logging
+- Runtime replay generation
 
 System Mode:
 - PAPER_ONLY
@@ -22,6 +23,12 @@ from intraday_runtime.intraday_market_data_runtime import build_runtime
 from intraday_runtime.realtime_structure_refresh import refresh_runtime
 from intraday_runtime.sector_runtime_engine import build_sector_runtime
 from intraday_runtime.market_emotion_runtime import build_market_emotion_runtime
+from intraday_runtime.ai_arbitration_runtime import build_runtime as build_ai_arbitration
+from intraday_runtime.intraday_feishu_router import build_feishu_routes
+from runtime_reports.governance_runtime_report import build_report as build_governance_report
+from runtime_reports.market_runtime_report import build_report as build_market_report
+from runtime_reports.position_runtime_report import build_report as build_position_report
+from runtime_replay.runtime_replay_snapshot import build_replay_snapshot
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOG_DIR = BASE_DIR / "logs"
@@ -34,6 +41,10 @@ RUNTIME_PIPELINE = [
     "realtime_structure",
     "sector_runtime",
     "market_emotion",
+    "ai_arbitration",
+    "runtime_reports",
+    "feishu_router",
+    "runtime_replay",
 ]
 
 
@@ -90,6 +101,40 @@ def run_scheduler():
             "generated_at": now,
         })
 
+        arbitration = build_ai_arbitration()
+        stages.append({
+            "stage": "ai_arbitration",
+            "status": arbitration.get("status", "UNKNOWN"),
+            "arbitration_result": arbitration.get("arbitration_result"),
+            "generated_at": now,
+        })
+
+        build_governance_report()
+        build_market_report()
+        build_position_report()
+
+        stages.append({
+            "stage": "runtime_reports",
+            "status": "PASS",
+            "generated_at": now,
+        })
+
+        build_feishu_routes()
+
+        stages.append({
+            "stage": "feishu_router",
+            "status": "PASS",
+            "generated_at": now,
+        })
+
+        build_replay_snapshot()
+
+        stages.append({
+            "stage": "runtime_replay",
+            "status": "PASS",
+            "generated_at": now,
+        })
+
         final_status = "BLOCKED" if blocked else "PASS"
 
     except Exception as e:
@@ -115,7 +160,7 @@ def run_scheduler():
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     LOG_FILE.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    print(f"✅ Intraday Scheduler finished: {final_status}")
+    print(f"Intraday Scheduler finished: {final_status}")
     return payload
 
 
