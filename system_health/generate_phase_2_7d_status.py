@@ -42,23 +42,39 @@ def _check_execution_reconciliation():
     return reconcile_execution()
 
 
+def _check_governance_guard():
+    from governance.governance_guard import run_governance_guard
+    return run_governance_guard()
+
+
+def _normalize_status(s):
+    s = str(s or "UNKNOWN").upper()
+    if s in ("PASS", "SUCCESS"):
+        return "SUCCESS"
+    if s in ("CRITICAL", "FAIL", "ERROR"):
+        return "CRITICAL"
+    return "WARNING"
+
+
 def generate_status():
     governance = _safe_call(_check_governance_scalability, {"overall": "UNKNOWN", "checks": {}})
     source_trace = _safe_call(_check_source_trace, {"status": "UNKNOWN"})
     baseline_drift = _safe_call(_check_baseline_drift, {"status": "UNKNOWN", "baseline_drift_detected": False})
     reconciliation = _safe_call(_check_execution_reconciliation, {"status": "UNKNOWN"})
+    guard = _safe_call(_check_governance_guard, {"status": "UNKNOWN", "governance_bypass_detected": False})
 
     statuses = [
-        governance.get("overall", "UNKNOWN"),
-        source_trace.get("status", "UNKNOWN"),
-        baseline_drift.get("status", "UNKNOWN"),
-        reconciliation.get("status", "UNKNOWN"),
+        _normalize_status(governance.get("overall")),
+        _normalize_status(source_trace.get("status")),
+        _normalize_status(baseline_drift.get("status")),
+        _normalize_status(reconciliation.get("status")),
+        _normalize_status(guard.get("status")),
     ]
 
     overall = "SUCCESS"
-    if any(s in ("CRITICAL", "FAIL", "ERROR") for s in statuses):
+    if "CRITICAL" in statuses:
         overall = "CRITICAL"
-    elif any(s in ("WARNING", "UNKNOWN") for s in statuses):
+    elif "WARNING" in statuses:
         overall = "WARNING"
 
     status = {
@@ -69,7 +85,9 @@ def generate_status():
         "source_trace_required": True,
         "baseline_frozen": True,
         "robot_6_10_status": "RESERVED_ONLY",
+        "governance_bypass_detected": guard.get("governance_bypass_detected", False),
         "checks": {
+            "governance_guard": guard,
             "governance_scalability": governance,
             "source_trace": source_trace,
             "baseline_drift": baseline_drift,
