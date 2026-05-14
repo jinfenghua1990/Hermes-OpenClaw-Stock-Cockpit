@@ -9,7 +9,9 @@ Phase-2.7D 用于收口：
 - Governance Scalability
 - Baseline Drift Monitor
 - Execution Reconciliation
+- Governance Guard
 - Cockpit 2.7D Runtime
+- Acceptance Runtime
 
 ---
 
@@ -46,14 +48,17 @@ python governance/run_phase_2_7d_tail.py
 
 该命令会自动执行：
 
-1. `replay_engine/generate_replay_snapshot.py`
-2. `system_health/generate_phase_2_7d_status.py`
+1. `governance/governance_guard.py`
+2. `replay_engine/generate_replay_snapshot.py`
+3. `system_health/generate_phase_2_7d_status.py`
+4. `system_health/phase_2_7d_acceptance_check.py`
 
 并输出：
 
 ```text
 system_health/phase_2_7d_tail_result.json
 system_health/phase_2_7d_status.json
+system_health/phase_2_7d_acceptance_result.json
 replay_engine/snapshots/YYYY-MM-DD.json
 ```
 
@@ -99,6 +104,7 @@ npm run build
 
 `system_health/phase_2_7d_status.json` 必须包含：
 
+- governance_guard
 - governance_scalability
 - source_trace
 - baseline_drift
@@ -110,6 +116,20 @@ npm run build
 
 ```jsx
 App2_7D
+```
+
+### 5. Governance Guard
+
+不得出现：
+
+```text
+governance_bypass_detected = true
+```
+
+否则：
+
+```text
+CRITICAL
 ```
 
 ---
@@ -133,6 +153,17 @@ App2_7D
 - data_as_of
 
 必须修复后再进入执行链路。
+
+### Governance Guard CRITICAL
+
+说明：
+
+- PAPER_ONLY 被绕过
+- OBSERVE_ONLY 被关闭
+- Baseline Freeze 被关闭
+- robot_6~10 被启用
+
+必须立即冻结 runtime。
 
 ### Baseline Drift CRITICAL
 
@@ -167,5 +198,6 @@ App2_7D
 - Replay
 - Source Trace
 - Governance Snapshot
+- Governance Guard
 - Baseline Freeze
 - Execution Audit
