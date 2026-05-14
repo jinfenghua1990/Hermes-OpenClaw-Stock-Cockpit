@@ -46,6 +46,15 @@ RUNTIME_PIPELINE = [
     "runtime_replay",
 ]
 
+CRITICAL_BLOCK_STATUSES = {
+    "CRITICAL",
+    "FAILED",
+}
+
+
+def _should_block_runtime(stage_status):
+    return stage_status in CRITICAL_BLOCK_STATUSES
+
 
 def run_scheduler():
     now = datetime.now().isoformat()
@@ -62,15 +71,20 @@ def run_scheduler():
             "generated_at": now,
         })
 
-        if candidate_status == "CRITICAL":
+        if _should_block_runtime(candidate_status):
             blocked = True
 
         market = build_runtime()
+        market_status = market.get("status", "UNKNOWN")
+
         stages.append({
             "stage": "market_runtime",
-            "status": market.get("status", "UNKNOWN"),
+            "status": market_status,
             "generated_at": now,
         })
+
+        if _should_block_runtime(market_status):
+            blocked = True
 
         structure = refresh_runtime()
         structure_status = structure.get("status", "UNKNOWN")
@@ -82,31 +96,47 @@ def run_scheduler():
             "generated_at": now,
         })
 
-        if structure.get("stale_count", 0) > 0:
+        # WARNING stale 不阻断 Runtime，只进入 Governance。
+        if _should_block_runtime(structure_status):
             blocked = True
 
         sector = build_sector_runtime()
+        sector_status = sector.get("status", "UNKNOWN")
+
         stages.append({
             "stage": "sector_runtime",
-            "status": sector.get("status", "UNKNOWN"),
+            "status": sector_status,
             "generated_at": now,
         })
 
+        if _should_block_runtime(sector_status):
+            blocked = True
+
         emotion = build_market_emotion_runtime()
+        emotion_status = emotion.get("status", "UNKNOWN")
+
         stages.append({
             "stage": "market_emotion",
-            "status": emotion.get("status", "UNKNOWN"),
+            "status": emotion_status,
             "market_emotion": emotion.get("market_emotion"),
             "generated_at": now,
         })
 
+        if _should_block_runtime(emotion_status):
+            blocked = True
+
         arbitration = build_ai_arbitration()
+        arbitration_status = arbitration.get("status", "UNKNOWN")
+
         stages.append({
             "stage": "ai_arbitration",
-            "status": arbitration.get("status", "UNKNOWN"),
+            "status": arbitration_status,
             "arbitration_result": arbitration.get("arbitration_result"),
             "generated_at": now,
         })
+
+        if _should_block_runtime(arbitration_status):
+            blocked = True
 
         final_status = "BLOCKED" if blocked else "PASS"
 
@@ -127,6 +157,7 @@ def run_scheduler():
         "pipeline": RUNTIME_PIPELINE,
         "final_status": final_status,
         "paper_decision_allowed": final_status == "PASS",
+        "governance_mode": "WARNING_DOES_NOT_BLOCK_RUNTIME",
         "stages": stages,
     }
 
