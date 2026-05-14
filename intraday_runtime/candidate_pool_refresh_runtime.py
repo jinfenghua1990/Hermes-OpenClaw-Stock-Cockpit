@@ -65,7 +65,7 @@ def _extract_feature_rows(data):
         for key, value in data.items():
             if isinstance(value, dict):
                 row = _flatten_row(value)
-                row.setdefault("股票代码", key)
+                row.setdefault("stock_code", key)
                 symbol_keyed_rows.append(row)
         if symbol_keyed_rows:
             return symbol_keyed_rows
@@ -88,6 +88,15 @@ def _to_float(value, default=0.0):
         return float(value)
     except Exception:
         return default
+
+
+def _normalize_symbol(value):
+    if value in (None, "", "--"):
+        return ""
+    symbol = str(value).strip()
+    if symbol.isdigit() and len(symbol) <= 6:
+        return symbol.zfill(6)
+    return symbol
 
 
 def _normalize_vol_ratio(value):
@@ -192,8 +201,9 @@ def refresh_candidate_pool():
 
     candidates = []
     for row in rows:
-        symbol = row.get("股票代码") or row.get("symbol") or row.get("code")
-        name = row.get("股票名称") or row.get("name") or row.get("stock_name", "")
+        # stock_code is the canonical runtime symbol from mx-data style payloads.
+        symbol = _normalize_symbol(_first(row, ("stock_code", "股票代码", "symbol", "code"), ""))
+        name = _first(row, ("stock_name", "股票名称", "name"), "")
         if not symbol:
             continue
 
@@ -202,7 +212,8 @@ def refresh_candidate_pool():
             continue
 
         item = dict(row)
-        item["股票代码"] = str(symbol).zfill(6) if str(symbol).isdigit() and len(str(symbol)) <= 6 else str(symbol)
+        item["stock_code"] = symbol
+        item["股票代码"] = symbol
         item["股票名称"] = name
         item["runtime_candidate_score"] = score
         item["source_module"] = "candidate_pool_refresh_runtime"
