@@ -3,9 +3,10 @@
 Phase-2.7D Daily Pipeline Tail
 
 每日 pipeline 最后运行：
-1. 生成 replay snapshot
-2. 生成 Phase-2.7D unified governance status
-3. 输出收口结果
+1. Governance Guard
+2. 生成 replay snapshot
+3. 生成 Phase-2.7D unified governance status
+4. 输出收口结果
 
 不修改 baseline，不改变 account_mode，不触碰 robot_6~10。
 """
@@ -46,6 +47,11 @@ def _run(label, script_path):
 
 def main():
     steps = []
+
+    steps.append(_run(
+        "governance_guard",
+        BASE_DIR / "governance" / "governance_guard.py",
+    ))
 
     steps.append(_run(
         "replay_snapshot_phase_2_7d",
