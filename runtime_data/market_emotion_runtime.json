@@ -1,0 +1,17 @@
+{
+  "phase": "Phase-2.8C",
+  "runtime_type": "market_emotion_runtime",
+  "system_mode": "PAPER_ONLY_OBSERVE_ONLY",
+  "generated_at": "2026-05-14T16:44:50.424890",
+  "updated_at": "2026-05-14T16:44:50.424890",
+  "market_emotion": "NEUTRAL",
+  "risk_level": 0.55,
+  "limit_up_count": 0,
+  "limit_down_count": 0,
+  "positive_count": 0,
+  "negative_count": 0,
+  "turnover_status": "WEAK",
+  "dominant_theme": "UNKNOWN",
+  "rotation_speed": "NORMAL",
+  "status": "PASS"
+}

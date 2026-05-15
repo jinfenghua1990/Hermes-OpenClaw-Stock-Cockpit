@@ -1,19 +1,19 @@
 {
-  "analysis_date": "2026-05-13",
-  "analysis_time": "2026-05-13 17:01:17",
+  "analysis_date": "2026-05-14",
+  "analysis_time": "2026-05-14 17:00:27",
   "data_source": {
     "history_dir": "emotion_engine/history",
-    "files_count": 2,
+    "files_count": 3,
     "date_range": {
       "start": "2026-05-12",
-      "end": "2026-05-13"
+      "end": "2026-05-14"
     }
   },
   "basic_statistics": {
-    "average_emotion_score": 40.0,
+    "average_emotion_score": 40.33,
     "highest_emotion_day": {
-      "date": "2026-05-12",
-      "score": 40,
+      "date": "2026-05-14",
+      "score": 41,
       "market_phase": "recovery_phase",
       "risk_level": "high"
     },
@@ -25,30 +25,32 @@
     },
     "most_common_market_phase": "recovery_phase",
     "most_common_risk_level": "high",
-    "total_days": 2,
+    "total_days": 3,
     "date_range": {
       "start": "2026-05-12",
-      "end": "2026-05-13"
+      "end": "2026-05-14"
     }
   },
   "trend_analysis": {
     "trend": "insufficient_data",
-    "message": "数据不足 2 天，需要至少 5 天分析趋势",
+    "message": "数据不足 3 天，需要至少 5 天分析趋势",
     "recent_scores": [
       40,
-      40
+      40,
+      41
     ],
     "dates": [
       "2026-05-12",
-      "2026-05-13"
+      "2026-05-13",
+      "2026-05-14"
     ]
   },
   "mode_dominance_analysis": {
-    "total_days": 2,
+    "total_days": 3,
     "dominance_counts": {
       "mode1": 0,
       "mode2": 0,
-      "mode3": 2,
+      "mode3": 3,
       "mode4": 0
     },
     "dominance_percentages": {

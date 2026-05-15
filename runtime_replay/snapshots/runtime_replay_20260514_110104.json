@@ -1,0 +1,310 @@
+{
+  "phase": "Phase-2.8C",
+  "runtime_type": "runtime_replay_snapshot",
+  "system_mode": "PAPER_ONLY_OBSERVE_ONLY",
+  "generated_at": "2026-05-14T11:01:04.858656",
+  "snapshot_id": "20260514_110104",
+  "sources": {
+    "scheduler": "/Users/gino/project_ai_trading/logs/runtime_scheduler_log.json",
+    "sector_runtime": "/Users/gino/project_ai_trading/runtime_data/sector_runtime.json",
+    "market_emotion": "/Users/gino/project_ai_trading/runtime_data/market_emotion_runtime.json",
+    "ai_arbitration": "/Users/gino/project_ai_trading/runtime_data/ai_arbitration_runtime.json",
+    "structure_runtime": "/Users/gino/project_ai_trading/intraday_runtime/realtime_structure_runtime.json",
+    "feishu_router": "/Users/gino/project_ai_trading/runtime_data/intraday_feishu_router.json"
+  },
+  "runtime": {
+    "scheduler": {
+      "phase": "Phase-2.8C",
+      "runtime_type": "intraday_scheduler",
+      "system_mode": "PAPER_ONLY_OBSERVE_ONLY",
+      "generated_at": "2026-05-14T11:01:04.855769",
+      "pipeline": [
+        "candidate_pool_refresh",
+        "market_runtime",
+        "realtime_structure",
+        "sector_runtime",
+        "market_emotion",
+        "ai_arbitration",
+        "runtime_reports",
+        "feishu_router",
+        "runtime_replay"
+      ],
+      "final_status": "PASS",
+      "paper_decision_allowed": true,
+      "stages": [
+        {
+          "stage": "candidate_pool_refresh",
+          "status": "WARNING",
+          "generated_at": "2026-05-14T11:01:04.855769"
+        },
+        {
+          "stage": "market_runtime",
+          "status": "PASS",
+          "generated_at": "2026-05-14T11:01:04.855769"
+        },
+        {
+          "stage": "realtime_structure",
+          "status": "PASS",
+          "stale_count": 0,
+          "generated_at": "2026-05-14T11:01:04.855769"
+        },
+        {
+          "stage": "sector_runtime",
+          "status": "PASS",
+          "generated_at": "2026-05-14T11:01:04.855769"
+        },
+        {
+          "stage": "market_emotion",
+          "status": "PASS",
+          "market_emotion": "NEUTRAL",
+          "generated_at": "2026-05-14T11:01:04.855769"
+        },
+        {
+          "stage": "ai_arbitration",
+          "status": "PASS",
+          "arbitration_result": "NEUTRAL",
+          "generated_at": "2026-05-14T11:01:04.855769"
+        }
+      ]
+    },
+    "sector_runtime": {
+      "phase": "Phase-2.8C",
+      "runtime_type": "sector_runtime_engine",
+      "system_mode": "PAPER_ONLY_OBSERVE_ONLY",
+      "generated_at": "2026-05-14T11:01:04.857234",
+      "updated_at": "2026-05-14T11:01:04.857234",
+      "source": "candidate_rankings_or_top_picks",
+      "sector_count": 1,
+      "status": "PASS",
+      "reason": "sector_runtime_generated",
+      "sectors": [
+        {
+          "sector_name": "UNKNOWN",
+          "strength_score": 76.19,
+          "momentum": "UP",
+          "volume_status": "NORMAL",
+          "leaders": [
+            {
+              "symbol": "920068",
+              "name": "天工股份",
+              "change_pct": 0.61,
+              "runtime_candidate_score": 0
+            },
+            {
+              "symbol": "300275",
+              "name": "梅安森",
+              "change_pct": 0.45,
+              "runtime_candidate_score": 0
+            },
+            {
+              "symbol": "002382",
+              "name": "蓝帆医疗",
+              "change_pct": 0.29,
+              "runtime_candidate_score": 0
+            },
+            {
+              "symbol": "601156",
+              "name": "东航物流",
+              "change_pct": 0.25,
+              "runtime_candidate_score": 0
+            },
+            {
+              "symbol": "601236",
+              "name": "红塔证券",
+              "change_pct": 0.13,
+              "runtime_candidate_score": 0
+            }
+          ],
+          "risk_flag": false,
+          "member_count": 8,
+          "updated_at": "2026-05-14T11:01:04.857234"
+        }
+      ]
+    },
+    "market_emotion": {
+      "phase": "Phase-2.8C",
+      "runtime_type": "market_emotion_runtime",
+      "system_mode": "PAPER_ONLY_OBSERVE_ONLY",
+      "generated_at": "2026-05-14T11:01:04.857575",
+      "updated_at": "2026-05-14T11:01:04.857575",
+      "market_emotion": "NEUTRAL",
+      "risk_level": 0.55,
+      "limit_up_count": 0,
+      "limit_down_count": 0,
+      "positive_count": 0,
+      "negative_count": 0,
+      "turnover_status": "WEAK",
+      "dominant_theme": "UNKNOWN",
+      "rotation_speed": "NORMAL",
+      "status": "PASS"
+    },
+    "ai_arbitration": {
+      "phase": "Phase-2.8C",
+      "runtime_type": "ai_arbitration_runtime",
+      "system_mode": "PAPER_ONLY_OBSERVE_ONLY",
+      "generated_at": "2026-05-14T11:01:04.857757",
+      "arbitration_result": "NEUTRAL",
+      "bullish_score": 50,
+      "bearish_score": 50,
+      "confidence": 50,
+      "risk_override": false,
+      "trace": [],
+      "status": "PASS",
+      "governance_constraints": {
+        "auto_trade": false,
+        "auto_learning": false,
+        "baseline_mutation": false
+      }
+    },
+    "structure_runtime": {
+      "phase": "Phase-2.8C",
+      "generated_at": "2026-05-14T11:01:04.857113",
+      "runtime_type": "realtime_structure_refresh",
+      "stale_threshold_minutes": 20,
+      "total": 8,
+      "stale_count": 0,
+      "status": "PASS",
+      "structures": [
+        {
+          "symbol": "601236",
+          "name": "红塔证券",
+          "current_price": 7.5,
+          "structure_type": "invalid",
+          "support": 6.97,
+          "pressure": 8.24,
+          "runtime_refreshed_at": "2026-05-14T11:01:04.857094",
+          "runtime_data_stale_or_missing": false,
+          "stale_reason": "",
+          "source_agent": "robot_2",
+          "source_module": "realtime_structure_refresh",
+          "data_source": "runtime_cache"
+        },
+        {
+          "symbol": "301339",
+          "name": "通行宝",
+          "current_price": 12.97,
+          "structure_type": "fallback_ma20",
+          "support": null,
+          "pressure": null,
+          "runtime_refreshed_at": "2026-05-14T11:01:04.857099",
+          "runtime_data_stale_or_missing": false,
+          "stale_reason": "",
+          "source_agent": "robot_2",
+          "source_module": "realtime_structure_refresh",
+          "data_source": "runtime_cache"
+        },
+        {
+          "symbol": "920068",
+          "name": "天工股份",
+          "current_price": 19.69,
+          "structure_type": "fallback_ma20",
+          "support": null,
+          "pressure": null,
+          "runtime_refreshed_at": "2026-05-14T11:01:04.857102",
+          "runtime_data_stale_or_missing": false,
+          "stale_reason": "",
+          "source_agent": "robot_2",
+          "source_module": "realtime_structure_refresh",
+          "data_source": "runtime_cache"
+        },
+        {
+          "symbol": "601156",
+          "name": "东航物流",
+          "current_price": 16.14,
+          "structure_type": "invalid",
+          "support": 14.97,
+          "pressure": 17.71,
+          "runtime_refreshed_at": "2026-05-14T11:01:04.857104",
+          "runtime_data_stale_or_missing": false,
+          "stale_reason": "",
+          "source_agent": "robot_2",
+          "source_module": "realtime_structure_refresh",
+          "data_source": "runtime_cache"
+        },
+        {
+          "symbol": "600750",
+          "name": "华润江中",
+          "current_price": 24.04,
+          "structure_type": "invalid",
+          "support": 22.33,
+          "pressure": 26.41,
+          "runtime_refreshed_at": "2026-05-14T11:01:04.857106",
+          "runtime_data_stale_or_missing": false,
+          "stale_reason": "",
+          "source_agent": "robot_2",
+          "source_module": "realtime_structure_refresh",
+          "data_source": "runtime_cache"
+        },
+        {
+          "symbol": "002382",
+          "name": "蓝帆医疗",
+          "current_price": 6.92,
+          "structure_type": "invalid",
+          "support": 6.42,
+          "pressure": 7.59,
+          "runtime_refreshed_at": "2026-05-14T11:01:04.857108",
+          "runtime_data_stale_or_missing": false,
+          "stale_reason": "",
+          "source_agent": "robot_2",
+          "source_module": "realtime_structure_refresh",
+          "data_source": "runtime_cache"
+        },
+        {
+          "symbol": "300275",
+          "name": "梅安森",
+          "current_price": 11.07,
+          "structure_type": "fallback_ma20",
+          "support": null,
+          "pressure": null,
+          "runtime_refreshed_at": "2026-05-14T11:01:04.857110",
+          "runtime_data_stale_or_missing": false,
+          "stale_reason": "",
+          "source_agent": "robot_2",
+          "source_module": "realtime_structure_refresh",
+          "data_source": "runtime_cache"
+        },
+        {
+          "symbol": "300432",
+          "name": "富临精工",
+          "current_price": 25.41,
+          "structure_type": "invalid",
+          "support": 23.62,
+          "pressure": 27.94,
+          "runtime_refreshed_at": "2026-05-14T11:01:04.857112",
+          "runtime_data_stale_or_missing": false,
+          "stale_reason": "",
+          "source_agent": "robot_2",
+          "source_module": "realtime_structure_refresh",
+          "data_source": "runtime_cache"
+        }
+      ]
+    },
+    "feishu_router": {
+      "phase": "Phase-2.8C",
+      "runtime_type": "intraday_feishu_router",
+      "system_mode": "PAPER_ONLY_OBSERVE_ONLY",
+      "generated_at": "2026-05-14T11:01:04.858532",
+      "source": "/Users/gino/project_ai_trading/logs/runtime_scheduler_log.json",
+      "final_status": "PASS",
+      "route_count": 1,
+      "notify_count": 0,
+      "routes": [
+        {
+          "route_type": "RUNTIME",
+          "severity": "LOW",
+          "event_type": "runtime_ok",
+          "stage": "scheduler",
+          "message": "Runtime finished. Deep details are in runtime_reports.",
+          "should_notify": false,
+          "created_at": "2026-05-14T11:01:04.858532"
+        }
+      ],
+      "status": "PASS"
+    }
+  },
+  "governance": {
+    "auto_trade": false,
+    "auto_learning": false,
+    "baseline_mutation": false
+  }
+}

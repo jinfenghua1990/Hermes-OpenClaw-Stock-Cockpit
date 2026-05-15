@@ -38,8 +38,14 @@ class TuShareClient:
             "token": self.token,
             "params": params or {},
         }
+        # 注意：fields放在哪里取决于API
+        # stock_basic/ trade_cal 等：fields在params里
+        # daily/daily_basic/index_daily 等：fields在顶层
         if fields:
-            payload["fields"] = fields
+            if api_name in ("stock_basic", "trade_cal", "index_basic"):
+                payload["params"]["fields"] = fields
+            else:
+                payload["fields"] = fields
 
         for attempt in range(retry):
             try:
@@ -77,20 +83,19 @@ class TuShareClient:
         """股票列表基础信息"""
         data = self._call("stock_basic", {
             "list_status": list_status,
-            "fields": "ts_code,symbol,name,area,industry,market,list_date,exchange"
         })
-        return self._items_to_df(data, "ts_code,symbol,name,area,industry,market,list_date,exchange")
+        return self._items_to_df(data)
 
     def trade_cal(self, exchange: str = "SSE", start_date: str = "", end_date: str = "") -> pd.DataFrame:
         """交易日历"""
         today = datetime.now().strftime("%Y%m%d")
-        data = self._call("trade_cal", {
+        params = {
             "exchange": exchange,
             "start_date": start_date or (datetime.now() - timedelta(days=365)).strftime("%Y%m%d"),
             "end_date": end_date or today,
-            "fields": "exchange,cal_date,is_open"
-        })
-        return self._items_to_df(data, "exchange,cal_date,is_open")
+        }
+        data = self._call("trade_cal", params)
+        return self._items_to_df(data)
 
     def daily(self, ts_code: str = "", trade_date: str = "", start_date: str = "", end_date: str = "") -> pd.DataFrame:
         """日K线 - 核心数据源"""

@@ -1,0 +1,24 @@
+{
+  "phase": "Phase-2.8A",
+  "pipeline": "morning_feishu_pipeline",
+  "generated_at": "2026-05-14T08:57:43.261881",
+  "overall_status": "SUCCESS",
+  "paper_only_lock": true,
+  "observe_only_lock": true,
+  "steps": [
+    {
+      "label": "phase_2_7d_tail",
+      "status": "SUCCESS",
+      "returncode": 0,
+      "stdout": "✅ Phase-2.7D Tail completed: SUCCESS\n   output=/Users/gino/project_ai_trading/system_health/phase_2_7d_tail_result.json\n",
+      "stderr": ""
+    },
+    {
+      "label": "feishu_runtime_push",
+      "status": "SUCCESS",
+      "returncode": 0,
+      "stdout": "【Hermes AI 盘前简报】\n日期：2026-05-14\n模式：PAPER_ONLY / OBSERVE_ONLY\n\n【1. Top Picks】\n- 金禄电子(301282) | AI:97.09 | 结构:unknown\n- 沃尔核材(002130) | AI:81.0 | 结构:unknown\n- 沪电股份(002463) | AI:52.78 | 结构:unknown\n- 利通电子(603629) | AI:28.35 | 结构:unknown\n\n【2. 模拟盘执行建议】\n- 金禄电子(301282) | decision:paper_skip | side:NONE | price:- | qty:0 | status:unknown\n  来源: agent=- | data=- | trace=-\n- 沃尔核材(002130) | decision:paper_skip | side:NONE | price:- | qty:0 | status:unknown\n  来源: agent=- | data=- | trace=-\n- 沪电股份(002463) | decision:paper_skip | side:NONE | price:- | qty:0 | status:unknown\n  来源: agent=- | data=- | trace=-\n- 利通电子(603629) | decision:paper_skip | side:NONE | price:- | qty:0 | status:unknown\n  来源: agent=- | data=- | trace=-\n\n【3. Governance】\n状态: CRITICAL\nReplay: b56e6c9d\nAcceptance: FAIL\nGovernance Bypass: False\n\n【4. 风控锁】\nPAPER_ONLY ✅ | OBSERVE_ONLY ✅ | Baseline Frozen ✅ | robot_6~10 RESERVED_ONLY ✅\n❌ Feishu push failed: lark-cli failed: {\n  \"ok\": false,\n  \"identity\": \"bot\",\n  \"error\": {\n    \"type\": \"api_error\",\n    \"code\": 230001,\n    \"message\": \"HTTP 400: Your request contains an invalid request parameter, ext=invalid message content. validate content fail.\",\n    \"detail\": null\n  },\n  \"_notice\": {\n    \"update\": {\n      \"current\": \"1.0.23\",\n      \"latest\": \"1.0.28\",\n      \"message\": \"lark-cli 1.0.28 available, current 1.0.23\"\n    }\n  }\n}\n",
+      "stderr": ""
+    }
+  ]
+}

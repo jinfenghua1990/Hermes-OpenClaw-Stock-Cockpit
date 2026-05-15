@@ -1,0 +1,679 @@
+{
+  "metadata": {
+    "generated_at": "2026-05-14T18:46:35.949973",
+    "scan_base": "/Users/gino",
+    "total_crontab_entries": 15,
+    "total_scripts_scanned": 14,
+    "total_hermes_jobs": 4
+  },
+  "workflow_summary": {
+    "description": "Phase-1.6 有限自动化 - 机器人依赖链",
+    "daily_pipeline": "OpenClaw → robot-3 → (robot-4 → robot-5) → Main Aggregate",
+    "execution_times": {
+      "pre_market": "08:20-08:30",
+      "intraday_am": "10:25-10:30",
+      "intraday_pm": "13:25-13:30",
+      "daily_review": "15:20-15:30"
+    }
+  },
+  "nodes": {
+    "robot-3 FeatureEngine": {
+      "id": "robot-3 FeatureEngine",
+      "type": "robot",
+      "layer": "execution_layer",
+      "description": "robot-3 Feature Engine",
+      "scripts": [
+        "feature_engine.sh"
+      ],
+      "crontab_entries": [
+        {
+          "schedule": "25 8 * * 1-5",
+          "line": 5
+        },
+        {
+          "schedule": "28 10 * * 1-5",
+          "line": 8
+        },
+        {
+          "schedule": "28 13 * * 1-5",
+          "line": 11
+        },
+        {
+          "schedule": "25 15 * * 1-5",
+          "line": 14
+        }
+      ],
+      "hermes_jobs": []
+    },
+    "Main Aggregate": {
+      "id": "Main Aggregate",
+      "type": "robot",
+      "layer": "reporting_layer",
+      "description": "Main 汇总生成报告",
+      "scripts": [
+        "main_aggregate.sh"
+      ],
+      "crontab_entries": [
+        {
+          "schedule": "30 8 * * 1-5",
+          "line": 6
+        },
+        {
+          "schedule": "30 10 * * 1-5",
+          "line": 9
+        },
+        {
+          "schedule": "30 13 * * 1-5",
+          "line": 12
+        },
+        {
+          "schedule": "30 15 * * 1-5",
+          "line": 17
+        }
+      ],
+      "hermes_jobs": []
+    },
+    "OpenClaw": {
+      "id": "OpenClaw",
+      "type": "robot",
+      "layer": "execution_layer",
+      "description": "OpenClaw 数据抓取",
+      "scripts": [
+        "openclaw_fetch.sh"
+      ],
+      "crontab_entries": [
+        {
+          "schedule": "20 8 * * 1-5",
+          "line": 4
+        },
+        {
+          "schedule": "25 10 * * 1-5",
+          "line": 7
+        },
+        {
+          "schedule": "25 13 * * 1-5",
+          "line": 10
+        },
+        {
+          "schedule": "20 15 * * 1-5",
+          "line": 13
+        }
+      ],
+      "hermes_jobs": []
+    },
+    "robot-4 PatternMatch": {
+      "id": "robot-4 PatternMatch",
+      "type": "robot",
+      "layer": "execution_layer",
+      "description": "robot-4 模式匹配",
+      "scripts": [
+        "robot4_match.sh"
+      ],
+      "crontab_entries": [
+        {
+          "schedule": "28 15 * * 1-5",
+          "line": 15
+        }
+      ],
+      "hermes_jobs": []
+    },
+    "robot-5 RiskAudit": {
+      "id": "robot-5 RiskAudit",
+      "type": "robot",
+      "layer": "governance_layer",
+      "description": "robot-5 风控检查",
+      "scripts": [
+        "robot5_risk.sh"
+      ],
+      "crontab_entries": [
+        {
+          "schedule": "29 15 * * 1-5",
+          "line": 16
+        }
+      ],
+      "hermes_jobs": []
+    },
+    "Scheduler": {
+      "id": "Scheduler",
+      "type": "robot",
+      "layer": "unknown",
+      "description": "",
+      "scripts": [
+        "scheduler.sh"
+      ],
+      "crontab_entries": [],
+      "hermes_jobs": []
+    },
+    "robot-1": {
+      "id": "robot-1",
+      "type": "hermes_robot",
+      "layer": "unknown",
+      "description": "Hermes robot-1",
+      "scripts": [],
+      "crontab_entries": [],
+      "hermes_jobs": [
+        {
+          "job_id": "f27ff87588e4",
+          "job_name": "报告汇总收集 - 收盘后",
+          "schedule": "30 16 * * 1-5",
+          "enabled": true,
+          "state": "scheduled"
+        },
+        {
+          "job_id": "c8ee6c056693",
+          "job_name": "报告汇总收集 - 盘前",
+          "schedule": "0 9 * * 1-5",
+          "enabled": true,
+          "state": "scheduled"
+        },
+        {
+          "job_id": "f819ab9ee085",
+          "job_name": "自动交易监控 - 检查止盈止损",
+          "schedule": "every 15m",
+          "enabled": false,
+          "state": "paused"
+        },
+        {
+          "job_id": "db36a42c4e3c",
+          "job_name": "收盘检查 - 调整持仓",
+          "schedule": "50 14 * * *",
+          "enabled": true,
+          "state": "scheduled"
+        }
+      ]
+    }
+  },
+  "edges": [
+    {
+      "source": "Scheduler",
+      "target": "OpenClaw",
+      "type": "workflow_dependency",
+      "reason": "triggers at 08:20/10:25/13:25/15:20"
+    },
+    {
+      "source": "Scheduler",
+      "target": "robot-3 FeatureEngine",
+      "type": "workflow_dependency",
+      "reason": "triggers at 08:25/10:28/13:28/15:25"
+    },
+    {
+      "source": "Scheduler",
+      "target": "robot-4 PatternMatch",
+      "type": "workflow_dependency",
+      "reason": "triggers at 15:28"
+    },
+    {
+      "source": "Scheduler",
+      "target": "robot-5 RiskAudit",
+      "type": "workflow_dependency",
+      "reason": "triggers at 15:29"
+    },
+    {
+      "source": "Scheduler",
+      "target": "Main Aggregate",
+      "type": "workflow_dependency",
+      "reason": "triggers at 08:30/10:30/13:30/15:30"
+    },
+    {
+      "source": "OpenClaw",
+      "target": "robot-3 FeatureEngine",
+      "type": "workflow_dependency",
+      "reason": "data output → feature input"
+    },
+    {
+      "source": "robot-3 FeatureEngine",
+      "target": "robot-4 PatternMatch",
+      "type": "workflow_dependency",
+      "reason": "daily_review path: features → strategy"
+    },
+    {
+      "source": "robot-3 FeatureEngine",
+      "target": "Main Aggregate",
+      "type": "workflow_dependency",
+      "reason": "pre_market/intraday paths"
+    },
+    {
+      "source": "robot-4 PatternMatch",
+      "target": "robot-5 RiskAudit",
+      "type": "workflow_dependency",
+      "reason": "strategy → risk check"
+    },
+    {
+      "source": "robot-5 RiskAudit",
+      "target": "Main Aggregate",
+      "type": "workflow_dependency",
+      "reason": "risk results → daily review"
+    }
+  ],
+  "crontab_raw_entries": [
+    {
+      "source": "crontab",
+      "line": 2,
+      "schedule": "0 23 * * *",
+      "command": "cd /Users/gino/.openclaw/workspace && /usr/bin/env python3 model_monitor.py >> /Users/gino/.openclaw/workspace/reports/cron.log 2>&1",
+      "robots": [
+        "OpenClaw"
+      ],
+      "raw_script": "cd"
+    },
+    {
+      "source": "crontab",
+      "line": 4,
+      "schedule": "20 8 * * 1-5",
+      "command": "/Users/gino/project_ai_trading/cron/scripts/openclaw_fetch.sh >> /Users/gino/project_ai_trading/cron/logs/cron_stdout.log 2>&1",
+      "robots": [
+        "OpenClaw"
+      ],
+      "raw_script": "openclaw_fetch.sh"
+    },
+    {
+      "source": "crontab",
+      "line": 5,
+      "schedule": "25 8 * * 1-5",
+      "command": "/Users/gino/project_ai_trading/cron/scripts/feature_engine.sh >> /Users/gino/project_ai_trading/cron/logs/cron_stdout.log 2>&1",
+      "robots": [
+        "robot-3 FeatureEngine"
+      ],
+      "raw_script": "feature_engine.sh"
+    },
+    {
+      "source": "crontab",
+      "line": 6,
+      "schedule": "30 8 * * 1-5",
+      "command": "/Users/gino/project_ai_trading/cron/scripts/main_aggregate.sh pre_market >> /Users/gino/project_ai_trading/cron/logs/cron_stdout.log 2>&1",
+      "robots": [
+        "Main Aggregate"
+      ],
+      "raw_script": "main_aggregate.sh"
+    },
+    {
+      "source": "crontab",
+      "line": 7,
+      "schedule": "25 10 * * 1-5",
+      "command": "/Users/gino/project_ai_trading/cron/scripts/openclaw_fetch.sh >> /Users/gino/project_ai_trading/cron/logs/cron_stdout.log 2>&1",
+      "robots": [
+        "OpenClaw"
+      ],
+      "raw_script": "openclaw_fetch.sh"
+    },
+    {
+      "source": "crontab",
+      "line": 8,
+      "schedule": "28 10 * * 1-5",
+      "command": "/Users/gino/project_ai_trading/cron/scripts/feature_engine.sh >> /Users/gino/project_ai_trading/cron/logs/cron_stdout.log 2>&1",
+      "robots": [
+        "robot-3 FeatureEngine"
+      ],
+      "raw_script": "feature_engine.sh"
+    },
+    {
+      "source": "crontab",
+      "line": 9,
+      "schedule": "30 10 * * 1-5",
+      "command": "/Users/gino/project_ai_trading/cron/scripts/main_aggregate.sh intraday_am >> /Users/gino/project_ai_trading/cron/logs/cron_stdout.log 2>&1",
+      "robots": [
+        "Main Aggregate"
+      ],
+      "raw_script": "main_aggregate.sh"
+    },
+    {
+      "source": "crontab",
+      "line": 10,
+      "schedule": "25 13 * * 1-5",
+      "command": "/Users/gino/project_ai_trading/cron/scripts/openclaw_fetch.sh >> /Users/gino/project_ai_trading/cron/logs/cron_stdout.log 2>&1",
+      "robots": [
+        "OpenClaw"
+      ],
+      "raw_script": "openclaw_fetch.sh"
+    },
+    {
+      "source": "crontab",
+      "line": 11,
+      "schedule": "28 13 * * 1-5",
+      "command": "/Users/gino/project_ai_trading/cron/scripts/feature_engine.sh >> /Users/gino/project_ai_trading/cron/logs/cron_stdout.log 2>&1",
+      "robots": [
+        "robot-3 FeatureEngine"
+      ],
+      "raw_script": "feature_engine.sh"
+    },
+    {
+      "source": "crontab",
+      "line": 12,
+      "schedule": "30 13 * * 1-5",
+      "command": "/Users/gino/project_ai_trading/cron/scripts/main_aggregate.sh intraday_pm >> /Users/gino/project_ai_trading/cron/logs/cron_stdout.log 2>&1",
+      "robots": [
+        "Main Aggregate"
+      ],
+      "raw_script": "main_aggregate.sh"
+    },
+    {
+      "source": "crontab",
+      "line": 13,
+      "schedule": "20 15 * * 1-5",
+      "command": "/Users/gino/project_ai_trading/cron/scripts/openclaw_fetch.sh >> /Users/gino/project_ai_trading/cron/logs/cron_stdout.log 2>&1",
+      "robots": [
+        "OpenClaw"
+      ],
+      "raw_script": "openclaw_fetch.sh"
+    },
+    {
+      "source": "crontab",
+      "line": 14,
+      "schedule": "25 15 * * 1-5",
+      "command": "/Users/gino/project_ai_trading/cron/scripts/feature_engine.sh >> /Users/gino/project_ai_trading/cron/logs/cron_stdout.log 2>&1",
+      "robots": [
+        "robot-3 FeatureEngine"
+      ],
+      "raw_script": "feature_engine.sh"
+    },
+    {
+      "source": "crontab",
+      "line": 15,
+      "schedule": "28 15 * * 1-5",
+      "command": "/Users/gino/project_ai_trading/cron/scripts/robot4_match.sh >> /Users/gino/project_ai_trading/cron/logs/cron_stdout.log 2>&1",
+      "robots": [
+        "Robot4"
+      ],
+      "raw_script": "robot4_match.sh"
+    },
+    {
+      "source": "crontab",
+      "line": 16,
+      "schedule": "29 15 * * 1-5",
+      "command": "/Users/gino/project_ai_trading/cron/scripts/robot5_risk.sh >> /Users/gino/project_ai_trading/cron/logs/cron_stdout.log 2>&1",
+      "robots": [
+        "Robot5"
+      ],
+      "raw_script": "robot5_risk.sh"
+    },
+    {
+      "source": "crontab",
+      "line": 17,
+      "schedule": "30 15 * * 1-5",
+      "command": "/Users/gino/project_ai_trading/cron/scripts/main_aggregate.sh daily_review >> /Users/gino/project_ai_trading/cron/logs/cron_stdout.log 2>&1",
+      "robots": [
+        "Main Aggregate"
+      ],
+      "raw_script": "main_aggregate.sh"
+    }
+  ],
+  "script_details": [
+    {
+      "script_name": "cron_utils.sh",
+      "robot_id": null,
+      "layer": "unknown",
+      "description": "工具库",
+      "invocations": [
+        "_check_quality.py",
+        "_update_status.py"
+      ],
+      "robots_mentioned": [],
+      "pre_requisites": [],
+      "post_conditions": [],
+      "source_file": "/Users/gino/project_ai_trading/cron/scripts/cron_utils.sh"
+    },
+    {
+      "script_name": "feature_engine.sh",
+      "robot_id": "robot-3 FeatureEngine",
+      "layer": "execution_layer",
+      "description": "robot-3 Feature Engine",
+      "invocations": [
+        "cron_utils.sh",
+        "log_event.sh"
+      ],
+      "robots_mentioned": [
+        "Robot4",
+        "Main Aggregate",
+        "Robot5",
+        "Robot-3"
+      ],
+      "pre_requisites": [
+        "openclaw_fetch.sh"
+      ],
+      "post_conditions": [
+        "main_aggregate.sh",
+        "robot5_risk.sh",
+        "robot4_match.sh"
+      ],
+      "source_file": "/Users/gino/project_ai_trading/cron/scripts/feature_engine.sh"
+    },
+    {
+      "script_name": "heartbeat_monitor.sh",
+      "robot_id": null,
+      "layer": "unknown",
+      "description": "",
+      "invocations": [],
+      "robots_mentioned": [],
+      "pre_requisites": [],
+      "post_conditions": [],
+      "source_file": "/Users/gino/project_ai_trading/cron/scripts/heartbeat_monitor.sh"
+    },
+    {
+      "script_name": "main_aggregate.sh",
+      "robot_id": "Main Aggregate",
+      "layer": "reporting_layer",
+      "description": "Main 汇总生成报告",
+      "invocations": [
+        "cron_utils.sh",
+        "log_event.sh"
+      ],
+      "robots_mentioned": [
+        "Robot-4",
+        "Robot-5",
+        "Robot5",
+        "Robot-3",
+        "OpenClaw",
+        "Robot4",
+        "robot-3 FeatureEngine"
+      ],
+      "pre_requisites": [
+        "robot5_risk.sh",
+        "feature_engine.sh"
+      ],
+      "post_conditions": [],
+      "source_file": "/Users/gino/project_ai_trading/cron/scripts/main_aggregate.sh"
+    },
+    {
+      "script_name": "notify_feishu.sh",
+      "robot_id": null,
+      "layer": "unknown",
+      "description": "",
+      "invocations": [],
+      "robots_mentioned": [],
+      "pre_requisites": [],
+      "post_conditions": [],
+      "source_file": "/Users/gino/project_ai_trading/cron/scripts/notify_feishu.sh"
+    },
+    {
+      "script_name": "openclaw_fetch.sh",
+      "robot_id": "OpenClaw",
+      "layer": "execution_layer",
+      "description": "OpenClaw 数据抓取",
+      "invocations": [
+        "cron_utils.sh",
+        "log_event.sh"
+      ],
+      "robots_mentioned": [
+        "robot-3 FeatureEngine",
+        "Robot-3"
+      ],
+      "pre_requisites": [],
+      "post_conditions": [
+        "feature_engine.sh"
+      ],
+      "source_file": "/Users/gino/project_ai_trading/cron/scripts/openclaw_fetch.sh"
+    },
+    {
+      "script_name": "robot4_match.sh",
+      "robot_id": "robot-4 PatternMatch",
+      "layer": "execution_layer",
+      "description": "robot-4 模式匹配",
+      "invocations": [
+        "cron_utils.sh",
+        "log_event.sh"
+      ],
+      "robots_mentioned": [
+        "Robot4",
+        "Robot-4",
+        "Robot5"
+      ],
+      "pre_requisites": [
+        "feature_engine.sh"
+      ],
+      "post_conditions": [
+        "robot5_risk.sh"
+      ],
+      "source_file": "/Users/gino/project_ai_trading/cron/scripts/robot4_match.sh"
+    },
+    {
+      "script_name": "robot5_risk.sh",
+      "robot_id": "robot-5 RiskAudit",
+      "layer": "governance_layer",
+      "description": "robot-5 风控检查",
+      "invocations": [
+        "cron_utils.sh",
+        "log_event.sh"
+      ],
+      "robots_mentioned": [
+        "Robot4",
+        "Robot-5",
+        "Robot5"
+      ],
+      "pre_requisites": [
+        "robot4_match.sh"
+      ],
+      "post_conditions": [
+        "main_aggregate.sh"
+      ],
+      "source_file": "/Users/gino/project_ai_trading/cron/scripts/robot5_risk.sh"
+    },
+    {
+      "script_name": "scheduler.sh",
+      "robot_id": "Scheduler",
+      "layer": "unknown",
+      "description": "",
+      "invocations": [
+        "robot4_match.sh",
+        "position_adapter.py",
+        "feature_engine.sh",
+        "log_event.sh",
+        "robot5_risk.sh",
+        "notification_router.py",
+        "main_aggregate.sh",
+        "openclaw_fetch.sh"
+      ],
+      "robots_mentioned": [
+        "Robot4",
+        "Robot5"
+      ],
+      "pre_requisites": [],
+      "post_conditions": [],
+      "source_file": "/Users/gino/project_ai_trading/cron/scripts/scheduler.sh"
+    },
+    {
+      "script_name": "_check_quality.py",
+      "robot_id": null,
+      "layer": "unknown",
+      "description": "",
+      "invocations": [],
+      "robots_mentioned": [],
+      "pre_requisites": [],
+      "post_conditions": [],
+      "source_file": "/Users/gino/project_ai_trading/cron/scripts/_check_quality.py"
+    },
+    {
+      "script_name": "_update_status.py",
+      "robot_id": null,
+      "layer": "unknown",
+      "description": "",
+      "invocations": [],
+      "robots_mentioned": [],
+      "pre_requisites": [],
+      "post_conditions": [],
+      "source_file": "/Users/gino/project_ai_trading/cron/scripts/_update_status.py"
+    },
+    {
+      "script_name": "heartbeat_monitor.py",
+      "robot_id": null,
+      "layer": "unknown",
+      "description": "",
+      "invocations": [],
+      "robots_mentioned": [],
+      "pre_requisites": [],
+      "post_conditions": [],
+      "source_file": "/Users/gino/project_ai_trading/cron/scripts/heartbeat_monitor.py"
+    },
+    {
+      "script_name": "notification_router.py",
+      "robot_id": null,
+      "layer": "reporting_layer",
+      "description": "",
+      "invocations": [],
+      "robots_mentioned": [],
+      "pre_requisites": [],
+      "post_conditions": [],
+      "source_file": "/Users/gino/project_ai_trading/cron/scripts/notification_router.py"
+    },
+    {
+      "script_name": "rolling_snapshot.py",
+      "robot_id": null,
+      "layer": "unknown",
+      "description": "",
+      "invocations": [],
+      "robots_mentioned": [],
+      "pre_requisites": [],
+      "post_conditions": [],
+      "source_file": "/Users/gino/project_ai_trading/cron/scripts/rolling_snapshot.py"
+    }
+  ],
+  "hermes_cron_jobs": [
+    {
+      "robot_id": "robot-1",
+      "job_id": "f27ff87588e4",
+      "job_name": "报告汇总收集 - 收盘后",
+      "script": "python3 ~/.agents/shared-data/scripts/collect_reports.py",
+      "prompt": "执行报告汇总收集脚本，收集各 Robot 的最新分析报告并存入数据库。\n\n步骤：\n1. 运行 `python3 ~/.agents/shared-data/scripts/collect_reports.py`\n2. 检查输出，确认收集到的报告数量\n3. 如果有报告被收集，读取共享 Skill `~/.agents/shared-skills/daily-summary/references/la",
+      "schedule": "30 16 * * 1-5",
+      "schedule_kind": "cron",
+      "enabled": true,
+      "state": "scheduled",
+      "source": "hermes-robot-1"
+    },
+    {
+      "robot_id": "robot-1",
+      "job_id": "c8ee6c056693",
+      "job_name": "报告汇总收集 - 盘前",
+      "script": "python3 ~/.agents/shared-data/scripts/collect_reports.py",
+      "prompt": "执行盘前报告汇总收集，查看各 Robot 是否已输出盘前分析报告。\n\n步骤：\n1. 运行 `python3 ~/.agents/shared-data/scripts/collect_reports.py`\n2. 列出各 Robot 目录下的报告文件数量\n3. 检查昨日的收盘汇总是否完整\n4. 简要输出盘前汇总信息",
+      "schedule": "0 9 * * 1-5",
+      "schedule_kind": "cron",
+      "enabled": true,
+      "state": "scheduled",
+      "source": "hermes-robot-1"
+    },
+    {
+      "robot_id": "robot-1",
+      "job_id": "f819ab9ee085",
+      "job_name": "自动交易监控 - 检查止盈止损",
+      "script": null,
+      "prompt": "运行自动交易监控脚本，检查持仓状态并执行止盈止损操作。如果有卖出操作，输出执行结果。",
+      "schedule": "every 15m",
+      "schedule_kind": "interval",
+      "enabled": false,
+      "state": "paused",
+      "source": "hermes-robot-1"
+    },
+    {
+      "robot_id": "robot-1",
+      "job_id": "db36a42c4e3c",
+      "job_name": "收盘检查 - 调整持仓",
+      "script": null,
+      "prompt": "收盘前检查持仓，执行当日盈亏总结，判断是否需要调整仓位。输出持仓状态和操作建议。",
+      "schedule": "50 14 * * *",
+      "schedule_kind": "cron",
+      "enabled": true,
+      "state": "scheduled",
+      "source": "hermes-robot-1"
+    }
+  ]
+}

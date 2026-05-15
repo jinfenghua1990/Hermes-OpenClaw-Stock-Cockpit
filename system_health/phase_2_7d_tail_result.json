@@ -1,0 +1,38 @@
+{
+  "phase": "Phase-2.7D",
+  "generated_at": "2026-05-14T08:57:41.091572",
+  "overall_status": "SUCCESS",
+  "paper_only_lock": true,
+  "baseline_frozen": true,
+  "robot_6_10_status": "RESERVED_ONLY",
+  "steps": [
+    {
+      "label": "governance_guard",
+      "status": "SUCCESS",
+      "returncode": 0,
+      "stdout": "✅ Governance Guard: PASS\n",
+      "stderr": ""
+    },
+    {
+      "label": "replay_snapshot_phase_2_7d",
+      "status": "SUCCESS",
+      "returncode": 0,
+      "stdout": "✅ Replay Snapshot: /Users/gino/project_ai_trading/replay_engine/snapshots/2026-05-14.json\n   Date: 2026-05-14 | UUID: b56e6c9d\n   TopPicks: 4 | Decisions: 4\n   Invalid price structure: 4 | Paper skip: 4\n   Source Trace: PASS\n   Phase: Phase-2.7D\n",
+      "stderr": ""
+    },
+    {
+      "label": "phase_2_7d_status",
+      "status": "SUCCESS",
+      "returncode": 0,
+      "stdout": "✅ Governance Guard: PASS\n✅ Phase-2.7D status written: /Users/gino/project_ai_trading/system_health/phase_2_7d_status.json\n   overall_status=CRITICAL\n",
+      "stderr": ""
+    },
+    {
+      "label": "phase_2_7d_acceptance",
+      "status": "SUCCESS",
+      "returncode": 0,
+      "stdout": "✅ Phase-2.7D Acceptance: FAIL\n   output=/Users/gino/project_ai_trading/system_health/phase_2_7d_acceptance_result.json\n",
+      "stderr": ""
+    }
+  ]
+}

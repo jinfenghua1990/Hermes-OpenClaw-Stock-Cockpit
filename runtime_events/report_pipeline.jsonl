@@ -2,3 +2,5 @@
 {"timestamp": "2026-05-14T02:30:29Z", "module": "report_pipeline", "layer": "execution_layer", "status": "success", "message": "上午日内报告生成", "runtime_ms": 0}
 {"timestamp": "2026-05-14T05:30:14Z", "module": "report_pipeline", "layer": "execution_layer", "status": "success", "message": "下午日内报告生成", "runtime_ms": 0}
 {"timestamp": "2026-05-14T07:30:05Z", "module": "report_pipeline", "layer": "execution_layer", "status": "success", "message": "收盘复盘报告生成", "runtime_ms": 0}
+{"timestamp": "2026-05-15T00:36:32Z", "module": "report_pipeline", "layer": "execution_layer", "status": "success", "message": "盘前报告生成完成", "runtime_ms": 0}
+{"timestamp": "2026-05-15T02:30:12Z", "module": "report_pipeline", "layer": "execution_layer", "status": "success", "message": "上午日内报告生成", "runtime_ms": 0}

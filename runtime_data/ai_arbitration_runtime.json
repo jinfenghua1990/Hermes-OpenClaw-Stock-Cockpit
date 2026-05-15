@@ -1,0 +1,20 @@
+{
+  "phase": "Phase-2.8C",
+  "runtime_type": "ai_arbitration_runtime",
+  "system_mode": "PAPER_ONLY_OBSERVE_ONLY",
+  "generated_at": "2026-05-14T16:44:50.425083",
+  "arbitration_result": "BEARISH",
+  "bullish_score": 50,
+  "bearish_score": 65,
+  "confidence": 35,
+  "risk_override": true,
+  "trace": [
+    "structure_runtime_stale"
+  ],
+  "status": "PASS",
+  "governance_constraints": {
+    "auto_trade": false,
+    "auto_learning": false,
+    "baseline_mutation": false
+  }
+}

@@ -1,0 +1,514 @@
+{
+  "scan_time": "2026-05-14T18:46:00.138452",
+  "workspace": "/Users/gino",
+  "robots": [
+    {
+      "robot_name": ".hermes-robot-4",
+      "robot_path": "/Users/gino/.hermes-robot-4",
+      "scanned_at": "2026-05-14T18:46:00.138588",
+      "logs": {
+        "path": "/Users/gino/.hermes-robot-4/logs",
+        "file_count": 8,
+        "total_size": 214363,
+        "file_types": {
+          ".log": 8
+        },
+        "agent.log": {
+          "size": 92363,
+          "lines": 593
+        },
+        "gateway.log": {
+          "size": 61066,
+          "lines": 376
+        },
+        "errors.log": {
+          "size": 41154,
+          "lines": 190
+        },
+        "nohup.log": {
+          "size": 7503,
+          "lines": 41
+        },
+        "restart.log": {
+          "size": 4335,
+          "lines": 25
+        }
+      },
+      "sessions": {
+        "path": "/Users/gino/.hermes-robot-4/sessions",
+        "file_count": 14,
+        "total_size": 1983351,
+        "file_types": {
+          ".json": 8,
+          ".jsonl": 6
+        }
+      },
+      "cache": {},
+      "total_output_size": 2198706,
+      "total_output_files": 28,
+      "memories": {
+        "path": "/Users/gino/.hermes-robot-4/memories",
+        "file_count": 4,
+        "total_size": 750,
+        "file_types": {
+          ".lock": 2,
+          ".md": 2
+        }
+      },
+      "feishu_card": {
+        "path": "/Users/gino/.hermes-robot-4/feishu_card",
+        "file_count": 1,
+        "total_size": 242,
+        "file_types": {
+          ".yaml": 1
+        }
+      },
+      "cron": {
+        "path": "/Users/gino/.hermes-robot-4/cron",
+        "file_count": 1,
+        "total_size": 0,
+        "file_types": {
+          ".lock": 1
+        }
+      }
+    },
+    {
+      "robot_name": ".hermes-robot-3",
+      "robot_path": "/Users/gino/.hermes-robot-3",
+      "scanned_at": "2026-05-14T18:46:00.146201",
+      "logs": {
+        "path": "/Users/gino/.hermes-robot-3/logs",
+        "file_count": 8,
+        "total_size": 220612,
+        "file_types": {
+          ".log": 8
+        },
+        "agent.log": {
+          "size": 98756,
+          "lines": 632
+        },
+        "gateway.log": {
+          "size": 68652,
+          "lines": 418
+        },
+        "errors.log": {
+          "size": 35023,
+          "lines": 166
+        },
+        "nohup.log": {
+          "size": 7267,
+          "lines": 40
+        },
+        "restart.log": {
+          "size": 4335,
+          "lines": 25
+        }
+      },
+      "sessions": {
+        "path": "/Users/gino/.hermes-robot-3/sessions",
+        "file_count": 18,
+        "total_size": 2298229,
+        "file_types": {
+          ".jsonl": 7,
+          ".json": 11
+        }
+      },
+      "cache": {},
+      "total_output_size": 2519822,
+      "total_output_files": 30,
+      "memories": {
+        "path": "/Users/gino/.hermes-robot-3/memories",
+        "file_count": 2,
+        "total_size": 739,
+        "file_types": {
+          ".lock": 1,
+          ".md": 1
+        }
+      },
+      "feishu_card": {
+        "path": "/Users/gino/.hermes-robot-3/feishu_card",
+        "file_count": 1,
+        "total_size": 242,
+        "file_types": {
+          ".yaml": 1
+        }
+      },
+      "cron": {
+        "path": "/Users/gino/.hermes-robot-3/cron",
+        "file_count": 1,
+        "total_size": 0,
+        "file_types": {
+          ".lock": 1
+        }
+      }
+    },
+    {
+      "robot_name": ".hermes-robot-2",
+      "robot_path": "/Users/gino/.hermes-robot-2",
+      "scanned_at": "2026-05-14T18:46:00.152158",
+      "logs": {
+        "path": "/Users/gino/.hermes-robot-2/logs",
+        "file_count": 8,
+        "total_size": 227560,
+        "file_types": {
+          ".log": 8
+        },
+        "agent.log": {
+          "size": 101734,
+          "lines": 655
+        },
+        "gateway.log": {
+          "size": 70638,
+          "lines": 433
+        },
+        "errors.log": {
+          "size": 36063,
+          "lines": 170
+        },
+        "nohup.log": {
+          "size": 8211,
+          "lines": 44
+        },
+        "restart.log": {
+          "size": 4335,
+          "lines": 25
+        }
+      },
+      "sessions": {
+        "path": "/Users/gino/.hermes-robot-2/sessions",
+        "file_count": 26,
+        "total_size": 3437386,
+        "file_types": {
+          ".jsonl": 9,
+          ".json": 17
+        }
+      },
+      "cache": {},
+      "total_output_size": 3666619,
+      "total_output_files": 38,
+      "memories": {
+        "path": "/Users/gino/.hermes-robot-2/memories",
+        "file_count": 2,
+        "total_size": 1431,
+        "file_types": {
+          ".lock": 1,
+          ".md": 1
+        }
+      },
+      "feishu_card": {
+        "path": "/Users/gino/.hermes-robot-2/feishu_card",
+        "file_count": 1,
+        "total_size": 242,
+        "file_types": {
+          ".yaml": 1
+        }
+      },
+      "cron": {
+        "path": "/Users/gino/.hermes-robot-2/cron",
+        "file_count": 1,
+        "total_size": 0,
+        "file_types": {
+          ".lock": 1
+        }
+      }
+    },
+    {
+      "robot_name": ".hermes-robot-5",
+      "robot_path": "/Users/gino/.hermes-robot-5",
+      "scanned_at": "2026-05-14T18:46:00.159297",
+      "logs": {
+        "path": "/Users/gino/.hermes-robot-5/logs",
+        "file_count": 8,
+        "total_size": 200736,
+        "file_types": {
+          ".log": 8
+        },
+        "agent.log": {
+          "size": 85765,
+          "lines": 570
+        },
+        "gateway.log": {
+          "size": 60930,
+          "lines": 379
+        },
+        "errors.log": {
+          "size": 35758,
+          "lines": 175
+        },
+        "nohup.log": {
+          "size": 7503,
+          "lines": 41
+        },
+        "restart.log": {
+          "size": 4335,
+          "lines": 25
+        }
+      },
+      "sessions": {
+        "path": "/Users/gino/.hermes-robot-5/sessions",
+        "file_count": 11,
+        "total_size": 1493296,
+        "file_types": {
+          ".json": 6,
+          ".jsonl": 5
+        }
+      },
+      "cache": {},
+      "total_output_size": 1694274,
+      "total_output_files": 21,
+      "feishu_card": {
+        "path": "/Users/gino/.hermes-robot-5/feishu_card",
+        "file_count": 1,
+        "total_size": 242,
+        "file_types": {
+          ".yaml": 1
+        }
+      },
+      "cron": {
+        "path": "/Users/gino/.hermes-robot-5/cron",
+        "file_count": 1,
+        "total_size": 0,
+        "file_types": {
+          ".lock": 1
+        }
+      }
+    },
+    {
+      "robot_name": ".hermes-robot-7",
+      "robot_path": "/Users/gino/.hermes-robot-7",
+      "scanned_at": "2026-05-14T18:46:00.163315",
+      "logs": {
+        "path": "/Users/gino/.hermes-robot-7/logs",
+        "file_count": 4,
+        "total_size": 16300,
+        "file_types": {
+          ".log": 4
+        },
+        "agent.log": {
+          "size": 5132,
+          "lines": 36
+        },
+        "gateway.log": {
+          "size": 4323,
+          "lines": 30
+        },
+        "errors.log": {
+          "size": 2791,
+          "lines": 12
+        }
+      },
+      "sessions": {},
+      "cache": {},
+      "total_output_size": 16542,
+      "total_output_files": 6,
+      "feishu_card": {
+        "path": "/Users/gino/.hermes-robot-7/feishu_card",
+        "file_count": 1,
+        "total_size": 242,
+        "file_types": {
+          ".yaml": 1
+        }
+      },
+      "cron": {
+        "path": "/Users/gino/.hermes-robot-7/cron",
+        "file_count": 1,
+        "total_size": 0,
+        "file_types": {
+          ".lock": 1
+        }
+      }
+    },
+    {
+      "robot_name": ".hermes-robot-6",
+      "robot_path": "/Users/gino/.hermes-robot-6",
+      "scanned_at": "2026-05-14T18:46:00.164610",
+      "logs": {
+        "path": "/Users/gino/.hermes-robot-6/logs",
+        "file_count": 8,
+        "total_size": 246187,
+        "file_types": {
+          ".log": 8
+        },
+        "agent.log": {
+          "size": 116214,
+          "lines": 717
+        },
+        "gateway.log": {
+          "size": 75696,
+          "lines": 454
+        },
+        "errors.log": {
+          "size": 35994,
+          "lines": 176
+        },
+        "nohup.log": {
+          "size": 7503,
+          "lines": 41
+        },
+        "restart.log": {
+          "size": 4335,
+          "lines": 25
+        }
+      },
+      "sessions": {
+        "path": "/Users/gino/.hermes-robot-6/sessions",
+        "file_count": 34,
+        "total_size": 3550202,
+        "file_types": {
+          ".json": 23,
+          ".jsonl": 11
+        }
+      },
+      "cache": {},
+      "total_output_size": 3797304,
+      "total_output_files": 48,
+      "memories": {
+        "path": "/Users/gino/.hermes-robot-6/memories",
+        "file_count": 4,
+        "total_size": 673,
+        "file_types": {
+          ".lock": 2,
+          ".md": 2
+        }
+      },
+      "feishu_card": {
+        "path": "/Users/gino/.hermes-robot-6/feishu_card",
+        "file_count": 1,
+        "total_size": 242,
+        "file_types": {
+          ".yaml": 1
+        }
+      },
+      "cron": {
+        "path": "/Users/gino/.hermes-robot-6/cron",
+        "file_count": 1,
+        "total_size": 0,
+        "file_types": {
+          ".lock": 1
+        }
+      }
+    },
+    {
+      "robot_name": ".hermes-robot-1",
+      "robot_path": "/Users/gino/.hermes-robot-1",
+      "scanned_at": "2026-05-14T18:46:00.173595",
+      "logs": {
+        "path": "/Users/gino/.hermes-robot-1/logs",
+        "file_count": 8,
+        "total_size": 320810,
+        "file_types": {
+          ".log": 8
+        },
+        "agent.log": {
+          "size": 166346,
+          "lines": 1008
+        },
+        "gateway.log": {
+          "size": 100421,
+          "lines": 614
+        },
+        "errors.log": {
+          "size": 34180,
+          "lines": 171
+        },
+        "nohup.log": {
+          "size": 7739,
+          "lines": 42
+        },
+        "restart.log": {
+          "size": 4335,
+          "lines": 25
+        }
+      },
+      "sessions": {
+        "path": "/Users/gino/.hermes-robot-1/sessions",
+        "file_count": 68,
+        "total_size": 7922479,
+        "file_types": {
+          ".jsonl": 22,
+          ".json": 46
+        }
+      },
+      "cache": {},
+      "total_output_size": 8272224,
+      "total_output_files": 92,
+      "memories": {
+        "path": "/Users/gino/.hermes-robot-1/memories",
+        "file_count": 4,
+        "total_size": 1874,
+        "file_types": {
+          ".lock": 2,
+          ".md": 2
+        }
+      },
+      "feishu_card": {
+        "path": "/Users/gino/.hermes-robot-1/feishu_card",
+        "file_count": 1,
+        "total_size": 242,
+        "file_types": {
+          ".yaml": 1
+        }
+      },
+      "cron": {
+        "path": "/Users/gino/.hermes-robot-1/cron",
+        "file_count": 11,
+        "total_size": 26819,
+        "file_types": {
+          ".lock": 1,
+          ".json": 1,
+          ".md": 9
+        }
+      }
+    },
+    {
+      "robot_name": ".hermes-robot-8",
+      "robot_path": "/Users/gino/.hermes-robot-8",
+      "scanned_at": "2026-05-14T18:46:00.189326",
+      "logs": {
+        "path": "/Users/gino/.hermes-robot-8/logs",
+        "file_count": 4,
+        "total_size": 16538,
+        "file_types": {
+          ".log": 4
+        },
+        "agent.log": {
+          "size": 5251,
+          "lines": 37
+        },
+        "gateway.log": {
+          "size": 4442,
+          "lines": 31
+        },
+        "errors.log": {
+          "size": 2791,
+          "lines": 12
+        }
+      },
+      "sessions": {},
+      "cache": {},
+      "total_output_size": 16780,
+      "total_output_files": 6,
+      "feishu_card": {
+        "path": "/Users/gino/.hermes-robot-8/feishu_card",
+        "file_count": 1,
+        "total_size": 242,
+        "file_types": {
+          ".yaml": 1
+        }
+      },
+      "cron": {
+        "path": "/Users/gino/.hermes-robot-8/cron",
+        "file_count": 1,
+        "total_size": 0,
+        "file_types": {
+          ".lock": 1
+        }
+      }
+    }
+  ],
+  "summary": {
+    "total_robots": 8,
+    "total_output_files": 269,
+    "total_output_size": 22182271
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "phase": "Phase-2.8C",
+  "generated_at": "2026-05-14T16:44:50.424263",
+  "runtime_type": "realtime_structure_refresh",
+  "stale_threshold_minutes": 20,
+  "total": 4,
+  "stale_count": 4,
+  "status": "WARNING",
+  "structures": [
+    {
+      "symbol": "301282",
+      "name": "金禄电子",
+      "current_price": 30.75,
+      "structure_type": "unknown",
+      "support": null,
+      "pressure": null,
+      "runtime_refreshed_at": "2026-05-14T16:44:50.424256",
+      "runtime_data_stale_or_missing": true,
+      "stale_reason": "structure_or_price_missing",
+      "source_agent": "robot_2",
+      "source_module": "realtime_structure_refresh",
+      "data_source": "runtime_cache"
+    },
+    {
+      "symbol": "002130",
+      "name": "沃尔核材",
+      "current_price": 23.5,
+      "structure_type": "unknown",
+      "support": null,
+      "pressure": null,
+      "runtime_refreshed_at": "2026-05-14T16:44:50.424259",
+      "runtime_data_stale_or_missing": true,
+      "stale_reason": "structure_or_price_missing",
+      "source_agent": "robot_2",
+      "source_module": "realtime_structure_refresh",
+      "data_source": "runtime_cache"
+    },
+    {
+      "symbol": "002463",
+      "name": "沪电股份",
+      "current_price": 108.68,
+      "structure_type": "unknown",
+      "support": null,
+      "pressure": null,
+      "runtime_refreshed_at": "2026-05-14T16:44:50.424261",
+      "runtime_data_stale_or_missing": true,
+      "stale_reason": "structure_or_price_missing",
+      "source_agent": "robot_2",
+      "source_module": "realtime_structure_refresh",
+      "data_source": "runtime_cache"
+    },
+    {
+      "symbol": "603629",
+      "name": "利通电子",
+      "current_price": 162.82,
+      "structure_type": "unknown",
+      "support": null,
+      "pressure": null,
+      "runtime_refreshed_at": "2026-05-14T16:44:50.424262",
+      "runtime_data_stale_or_missing": true,
+      "stale_reason": "structure_or_price_missing",
+      "source_agent": "robot_2",
+      "source_module": "realtime_structure_refresh",
+      "data_source": "runtime_cache"
+    }
+  ]
+}

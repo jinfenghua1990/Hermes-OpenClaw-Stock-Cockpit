@@ -1,0 +1,62 @@
+{
+  "phase": "Phase-2.8C",
+  "runtime_type": "runtime_replay_index",
+  "system_mode": "PAPER_ONLY_OBSERVE_ONLY",
+  "generated_at": "2026-05-14T12:23:11.622941",
+  "snapshot_count": 6,
+  "timeline": [
+    {
+      "snapshot_file": "runtime_replay_20260514_110104.json",
+      "snapshot_id": "20260514_110104",
+      "generated_at": "2026-05-14T11:01:04.858656",
+      "scheduler_status": "PASS",
+      "market_emotion": "NEUTRAL",
+      "arbitration_result": "NEUTRAL"
+    },
+    {
+      "snapshot_file": "runtime_replay_20260514_111337.json",
+      "snapshot_id": "20260514_111337",
+      "generated_at": "2026-05-14T11:13:37.242106",
+      "scheduler_status": "BLOCKED",
+      "market_emotion": "NEUTRAL",
+      "arbitration_result": "BEARISH"
+    },
+    {
+      "snapshot_file": "runtime_replay_20260514_111447.json",
+      "snapshot_id": "20260514_111447",
+      "generated_at": "2026-05-14T11:14:47.680807",
+      "scheduler_status": "BLOCKED",
+      "market_emotion": "NEUTRAL",
+      "arbitration_result": "BEARISH"
+    },
+    {
+      "snapshot_file": "runtime_replay_20260514_111550.json",
+      "snapshot_id": "20260514_111550",
+      "generated_at": "2026-05-14T11:15:50.645989",
+      "scheduler_status": "PASS",
+      "market_emotion": "NEUTRAL",
+      "arbitration_result": "BEARISH"
+    },
+    {
+      "snapshot_file": "runtime_replay_20260514_115756.json",
+      "snapshot_id": "20260514_115756",
+      "generated_at": "2026-05-14T11:57:56.699309",
+      "scheduler_status": "PASS",
+      "market_emotion": "NEUTRAL",
+      "arbitration_result": "BEARISH"
+    },
+    {
+      "snapshot_file": "runtime_replay_20260514_122311.json",
+      "snapshot_id": "20260514_122311",
+      "generated_at": "2026-05-14T12:23:11.566582",
+      "scheduler_status": "PASS",
+      "market_emotion": "NEUTRAL",
+      "arbitration_result": "BEARISH"
+    }
+  ],
+  "governance_constraints": {
+    "auto_trade": false,
+    "auto_learning": false,
+    "baseline_mutation": false
+  }
+}

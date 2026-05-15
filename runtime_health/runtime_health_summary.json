@@ -1,0 +1,54 @@
+{
+  "phase": "Phase-2.8C",
+  "runtime_type": "runtime_health_aggregator",
+  "system_mode": "PAPER_ONLY_OBSERVE_ONLY",
+  "generated_at": "2026-05-14T13:22:27.905027",
+  "overall_status": "PASS",
+  "pass_count": 6,
+  "warning_count": 0,
+  "critical_count": 0,
+  "missing_count": 0,
+  "items": [
+    {
+      "name": "scheduler",
+      "status": "PASS",
+      "source": "/Users/gino/project_ai_trading/logs/runtime_scheduler_log.json",
+      "updated_at": "2026-05-14T13:22:21.374579"
+    },
+    {
+      "name": "candidate_pool",
+      "status": "PASS_DYNAMIC",
+      "source": "/Users/gino/project_ai_trading/intraday_runtime/candidate_pool_refresh_status.json",
+      "updated_at": "2026-05-14T13:22:21.382191"
+    },
+    {
+      "name": "sector_runtime",
+      "status": "PASS",
+      "source": "/Users/gino/project_ai_trading/runtime_data/sector_runtime.json",
+      "updated_at": "2026-05-14T13:22:21.386375"
+    },
+    {
+      "name": "market_emotion",
+      "status": "PASS",
+      "source": "/Users/gino/project_ai_trading/runtime_data/market_emotion_runtime.json",
+      "updated_at": "2026-05-14T13:22:21.388486"
+    },
+    {
+      "name": "ai_arbitration",
+      "status": "PASS",
+      "source": "/Users/gino/project_ai_trading/runtime_data/ai_arbitration_runtime.json",
+      "updated_at": "2026-05-14T13:22:21.390198"
+    },
+    {
+      "name": "feishu_router",
+      "status": "PASS",
+      "source": "/Users/gino/project_ai_trading/runtime_data/intraday_feishu_router.json",
+      "updated_at": "2026-05-14T13:22:21.390923"
+    }
+  ],
+  "governance_constraints": {
+    "auto_trade": false,
+    "auto_learning": false,
+    "baseline_mutation": false
+  }
+}

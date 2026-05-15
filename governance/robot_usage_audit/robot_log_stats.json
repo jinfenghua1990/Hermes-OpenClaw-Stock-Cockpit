@@ -1,0 +1,58 @@
+{
+  "robot-1": {
+    "robot_id": 1,
+    "last_run_time": "2026-05-14T18:03:22+00:00",
+    "runs_7d": 77,
+    "error_count": 159,
+    "warning_count": 92
+  },
+  "robot-2": {
+    "robot_id": 2,
+    "last_run_time": "2026-05-14T18:03:23+00:00",
+    "runs_7d": 85,
+    "error_count": 189,
+    "warning_count": 90
+  },
+  "robot-3": {
+    "robot_id": 3,
+    "last_run_time": "2026-05-14T18:14:38+00:00",
+    "runs_7d": 86,
+    "error_count": 159,
+    "warning_count": 79
+  },
+  "robot-4": {
+    "robot_id": 4,
+    "last_run_time": "2026-05-14T18:03:15+00:00",
+    "runs_7d": 95,
+    "error_count": 192,
+    "warning_count": 93
+  },
+  "robot-5": {
+    "robot_id": 5,
+    "last_run_time": "2026-05-14T18:03:35+00:00",
+    "runs_7d": 79,
+    "error_count": 173,
+    "warning_count": 78
+  },
+  "robot-6": {
+    "robot_id": 6,
+    "last_run_time": "2026-05-14T18:03:18+00:00",
+    "runs_7d": 85,
+    "error_count": 163,
+    "warning_count": 98
+  },
+  "robot-7": {
+    "robot_id": 7,
+    "last_run_time": "2026-05-14T18:03:21+00:00",
+    "runs_7d": 62,
+    "error_count": 146,
+    "warning_count": 62
+  },
+  "robot-8": {
+    "robot_id": 8,
+    "last_run_time": "2026-05-14T18:03:31+00:00",
+    "runs_7d": 68,
+    "error_count": 224,
+    "warning_count": 72
+  }
+}

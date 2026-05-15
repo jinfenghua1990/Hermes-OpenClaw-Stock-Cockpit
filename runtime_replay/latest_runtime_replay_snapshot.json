@@ -1,0 +1,260 @@
+{
+  "phase": "Phase-2.8C",
+  "runtime_type": "runtime_replay_snapshot",
+  "system_mode": "PAPER_ONLY_OBSERVE_ONLY",
+  "generated_at": "2026-05-14T16:44:50.426669",
+  "snapshot_id": "20260514_164450",
+  "sources": {
+    "scheduler": "/Users/gino/project_ai_trading/logs/runtime_scheduler_log.json",
+    "sector_runtime": "/Users/gino/project_ai_trading/runtime_data/sector_runtime.json",
+    "market_emotion": "/Users/gino/project_ai_trading/runtime_data/market_emotion_runtime.json",
+    "ai_arbitration": "/Users/gino/project_ai_trading/runtime_data/ai_arbitration_runtime.json",
+    "structure_runtime": "/Users/gino/project_ai_trading/intraday_runtime/realtime_structure_runtime.json",
+    "feishu_router": "/Users/gino/project_ai_trading/runtime_data/intraday_feishu_router.json"
+  },
+  "runtime": {
+    "scheduler": {
+      "phase": "Phase-2.8C",
+      "runtime_type": "intraday_scheduler",
+      "system_mode": "PAPER_ONLY_OBSERVE_ONLY",
+      "generated_at": "2026-05-14T16:44:29.624248",
+      "pipeline": [
+        "candidate_pool_refresh",
+        "market_runtime",
+        "realtime_structure",
+        "sector_runtime",
+        "market_emotion",
+        "ai_arbitration",
+        "runtime_reports",
+        "feishu_router",
+        "runtime_replay"
+      ],
+      "final_status": "PASS",
+      "paper_decision_allowed": true,
+      "governance_mode": "WARNING_DOES_NOT_BLOCK_RUNTIME",
+      "stages": [
+        {
+          "stage": "candidate_pool_refresh",
+          "status": "PASS_DYNAMIC",
+          "generated_at": "2026-05-14T16:44:29.624248"
+        },
+        {
+          "stage": "market_runtime",
+          "status": "PASS",
+          "generated_at": "2026-05-14T16:44:29.624248"
+        },
+        {
+          "stage": "realtime_structure",
+          "status": "WARNING",
+          "stale_count": 4,
+          "generated_at": "2026-05-14T16:44:29.624248"
+        },
+        {
+          "stage": "sector_runtime",
+          "status": "PASS",
+          "generated_at": "2026-05-14T16:44:29.624248"
+        },
+        {
+          "stage": "market_emotion",
+          "status": "PASS",
+          "market_emotion": "NEUTRAL",
+          "generated_at": "2026-05-14T16:44:29.624248"
+        },
+        {
+          "stage": "ai_arbitration",
+          "status": "PASS",
+          "arbitration_result": "BEARISH",
+          "generated_at": "2026-05-14T16:44:29.624248"
+        }
+      ]
+    },
+    "sector_runtime": {
+      "phase": "Phase-2.8C",
+      "runtime_type": "sector_runtime_engine",
+      "system_mode": "PAPER_ONLY_OBSERVE_ONLY",
+      "generated_at": "2026-05-14T16:44:50.424522",
+      "updated_at": "2026-05-14T16:44:50.424522",
+      "source": "candidate_rankings_or_top_picks",
+      "sector_count": 1,
+      "status": "PASS",
+      "reason": "sector_runtime_generated",
+      "sectors": [
+        {
+          "sector_name": "UNKNOWN",
+          "strength_score": 42.49,
+          "momentum": "NEUTRAL",
+          "volume_status": "EXPANDING",
+          "leaders": [
+            {
+              "symbol": "002463",
+              "name": "沪电股份",
+              "change_pct": -0.79,
+              "runtime_candidate_score": 0
+            },
+            {
+              "symbol": "002130",
+              "name": "沃尔核材",
+              "change_pct": -1.18,
+              "runtime_candidate_score": 0
+            },
+            {
+              "symbol": "301282",
+              "name": "金禄电子",
+              "change_pct": -1.98,
+              "runtime_candidate_score": 0
+            },
+            {
+              "symbol": "603629",
+              "name": "利通电子",
+              "change_pct": -2.85,
+              "runtime_candidate_score": 0
+            }
+          ],
+          "risk_flag": false,
+          "member_count": 4,
+          "updated_at": "2026-05-14T16:44:50.424522"
+        }
+      ]
+    },
+    "market_emotion": {
+      "phase": "Phase-2.8C",
+      "runtime_type": "market_emotion_runtime",
+      "system_mode": "PAPER_ONLY_OBSERVE_ONLY",
+      "generated_at": "2026-05-14T16:44:50.424890",
+      "updated_at": "2026-05-14T16:44:50.424890",
+      "market_emotion": "NEUTRAL",
+      "risk_level": 0.55,
+      "limit_up_count": 0,
+      "limit_down_count": 0,
+      "positive_count": 0,
+      "negative_count": 0,
+      "turnover_status": "WEAK",
+      "dominant_theme": "UNKNOWN",
+      "rotation_speed": "NORMAL",
+      "status": "PASS"
+    },
+    "ai_arbitration": {
+      "phase": "Phase-2.8C",
+      "runtime_type": "ai_arbitration_runtime",
+      "system_mode": "PAPER_ONLY_OBSERVE_ONLY",
+      "generated_at": "2026-05-14T16:44:50.425083",
+      "arbitration_result": "BEARISH",
+      "bullish_score": 50,
+      "bearish_score": 65,
+      "confidence": 35,
+      "risk_override": true,
+      "trace": [
+        "structure_runtime_stale"
+      ],
+      "status": "PASS",
+      "governance_constraints": {
+        "auto_trade": false,
+        "auto_learning": false,
+        "baseline_mutation": false
+      }
+    },
+    "structure_runtime": {
+      "phase": "Phase-2.8C",
+      "generated_at": "2026-05-14T16:44:50.424263",
+      "runtime_type": "realtime_structure_refresh",
+      "stale_threshold_minutes": 20,
+      "total": 4,
+      "stale_count": 4,
+      "status": "WARNING",
+      "structures": [
+        {
+          "symbol": "301282",
+          "name": "金禄电子",
+          "current_price": 30.75,
+          "structure_type": "unknown",
+          "support": null,
+          "pressure": null,
+          "runtime_refreshed_at": "2026-05-14T16:44:50.424256",
+          "runtime_data_stale_or_missing": true,
+          "stale_reason": "structure_or_price_missing",
+          "source_agent": "robot_2",
+          "source_module": "realtime_structure_refresh",
+          "data_source": "runtime_cache"
+        },
+        {
+          "symbol": "002130",
+          "name": "沃尔核材",
+          "current_price": 23.5,
+          "structure_type": "unknown",
+          "support": null,
+          "pressure": null,
+          "runtime_refreshed_at": "2026-05-14T16:44:50.424259",
+          "runtime_data_stale_or_missing": true,
+          "stale_reason": "structure_or_price_missing",
+          "source_agent": "robot_2",
+          "source_module": "realtime_structure_refresh",
+          "data_source": "runtime_cache"
+        },
+        {
+          "symbol": "002463",
+          "name": "沪电股份",
+          "current_price": 108.68,
+          "structure_type": "unknown",
+          "support": null,
+          "pressure": null,
+          "runtime_refreshed_at": "2026-05-14T16:44:50.424261",
+          "runtime_data_stale_or_missing": true,
+          "stale_reason": "structure_or_price_missing",
+          "source_agent": "robot_2",
+          "source_module": "realtime_structure_refresh",
+          "data_source": "runtime_cache"
+        },
+        {
+          "symbol": "603629",
+          "name": "利通电子",
+          "current_price": 162.82,
+          "structure_type": "unknown",
+          "support": null,
+          "pressure": null,
+          "runtime_refreshed_at": "2026-05-14T16:44:50.424262",
+          "runtime_data_stale_or_missing": true,
+          "stale_reason": "structure_or_price_missing",
+          "source_agent": "robot_2",
+          "source_module": "realtime_structure_refresh",
+          "data_source": "runtime_cache"
+        }
+      ]
+    },
+    "feishu_router": {
+      "phase": "Phase-2.8C",
+      "runtime_type": "intraday_feishu_router",
+      "system_mode": "PAPER_ONLY_OBSERVE_ONLY",
+      "generated_at": "2026-05-14T16:44:50.426476",
+      "source": "/Users/gino/project_ai_trading/logs/runtime_scheduler_log.json",
+      "final_status": "PASS",
+      "route_count": 2,
+      "notify_count": 1,
+      "routes": [
+        {
+          "route_type": "STRUCTURE",
+          "severity": "MEDIUM",
+          "event_type": "structure_stale",
+          "stage": "realtime_structure",
+          "message": "Structure stale count=4",
+          "should_notify": true,
+          "created_at": "2026-05-14T16:44:50.426476"
+        },
+        {
+          "route_type": "RUNTIME",
+          "severity": "LOW",
+          "event_type": "runtime_ok",
+          "stage": "scheduler",
+          "message": "Runtime finished. Deep details are in runtime_reports.",
+          "should_notify": false,
+          "created_at": "2026-05-14T16:44:50.426476"
+        }
+      ],
+      "status": "PASS"
+    }
+  },
+  "governance": {
+    "auto_trade": false,
+    "auto_learning": false,
+    "baseline_mutation": false
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "phase": "Phase-2.7D",
+  "generated_at": "2026-05-14T08:57:41.018047",
+  "status": "PASS",
+  "checks": {
+    "soul_mode": {
+      "expected": "OBSERVE_ONLY",
+      "actual": "OBSERVE_ONLY",
+      "passed": true
+    },
+    "account_mode": {
+      "expected": "PAPER_ONLY",
+      "actual": "PAPER_ONLY",
+      "passed": true
+    },
+    "baseline_frozen": {
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    "robot_6_10_status": {
+      "expected": "RESERVED_ONLY",
+      "actual": "RESERVED_ONLY",
+      "passed": true
+    }
+  },
+  "violations": [],
+  "governance_bypass_detected": false
+}

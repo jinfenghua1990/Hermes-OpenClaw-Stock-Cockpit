@@ -1,0 +1,105 @@
+{
+  "total_robots": 10,
+  "robots": [
+    {
+      "robot_name": "Robot-1",
+      "role": "SysAdmin — 系统维护机器人",
+      "enabled": true,
+      "schedule": "任务管理、部署更新",
+      "owner": "机器人",
+      "dependency": null,
+      "model": "MiniMax-M2.7",
+      "last_session": null
+    },
+    {
+      "robot_name": "Robot-10",
+      "role": "自动化市场选股",
+      "enabled": true,
+      "schedule": null,
+      "owner": null,
+      "dependency": null,
+      "model": "deepseek-v3.2",
+      "last_session": null
+    },
+    {
+      "robot_name": "Robot-2",
+      "role": "Exec-Bridge — OpenClaw 执行桥接机器人",
+      "enabled": true,
+      "schedule": null,
+      "owner": null,
+      "dependency": null,
+      "model": "MiniMax-M2.7",
+      "last_session": null
+    },
+    {
+      "robot_name": "Robot-3",
+      "role": "Research — 综合研究分析机器人",
+      "enabled": true,
+      "schedule": null,
+      "owner": null,
+      "dependency": null,
+      "model": "MiniMax-M2.7",
+      "last_session": null
+    },
+    {
+      "robot_name": "Robot-4",
+      "role": "Sandbox — 宏观研究机器人",
+      "enabled": false,
+      "schedule": "推送）",
+      "owner": null,
+      "dependency": null,
+      "model": null,
+      "last_session": null
+    },
+    {
+      "robot_name": "Robot-5",
+      "role": "Risk — 风险控制 / 持仓管理机器人",
+      "enabled": true,
+      "schedule": null,
+      "owner": null,
+      "dependency": null,
+      "model": "MiniMax-M2.7",
+      "last_session": null
+    },
+    {
+      "robot_name": "Robot-6",
+      "role": "📊 市场分析专家",
+      "enabled": true,
+      "schedule": "开盘前 (09:00)",
+      "owner": "+策略 | 他提供风险评估 |",
+      "dependency": null,
+      "model": "kimi-k2.5",
+      "last_session": null
+    },
+    {
+      "robot_name": "Robot-7",
+      "role": "四种选股模式专家",
+      "enabled": true,
+      "schedule": null,
+      "owner": null,
+      "dependency": null,
+      "model": "MiniMax-M2.7",
+      "last_session": null
+    },
+    {
+      "robot_name": "Robot-8",
+      "role": "选股机器人",
+      "enabled": true,
+      "schedule": null,
+      "owner": null,
+      "dependency": null,
+      "model": "MiniMax-M2.5",
+      "last_session": null
+    },
+    {
+      "robot_name": "Robot-9",
+      "role": "自动化操盘手",
+      "enabled": true,
+      "schedule": null,
+      "owner": null,
+      "dependency": null,
+      "model": "deepseek-v3.2",
+      "last_session": null
+    }
+  ]
+}

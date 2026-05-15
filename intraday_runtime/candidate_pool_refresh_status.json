@@ -1,0 +1,24 @@
+{
+  "phase": "Phase-2.8D",
+  "generated_at": "2026-05-14T16:44:50.423295",
+  "runtime_type": "candidate_pool_refresh_runtime",
+  "system_mode": "PAPER_ONLY_OBSERVE_ONLY",
+  "candidate_file": "/Users/gino/project_ai_trading/portfolio/candidate_rankings.json",
+  "data_source": "scanner_adapter",
+  "status": "PASS_DYNAMIC",
+  "reason": "scanner_adapter_candidate_pool",
+  "refreshed": true,
+  "candidate_count": 0,
+  "field_quality": {
+    "dynamic_quality": "SCANNER_DYNAMIC",
+    "total_universe": 4788,
+    "scanner_stats": {
+      "mode_1_revert": 55,
+      "mode_2_breakout": 0,
+      "mode_3_xiaoyang": 220,
+      "mode_4_second_wave": 105,
+      "any_mode_count": 367
+    }
+  },
+  "candidate_file_updated_at": "2026-05-14T16:44:50.423295"
+}

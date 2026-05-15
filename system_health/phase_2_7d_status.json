@@ -1,0 +1,84 @@
+{
+  "phase": "Phase-2.7D",
+  "generated_at": "2026-05-14T08:57:41.018385",
+  "overall_status": "CRITICAL",
+  "paper_only_lock": true,
+  "source_trace_required": true,
+  "baseline_frozen": true,
+  "robot_6_10_status": "RESERVED_ONLY",
+  "governance_bypass_detected": false,
+  "checks": {
+    "governance_guard": {
+      "phase": "Phase-2.7D",
+      "generated_at": "2026-05-14T08:57:41.018047",
+      "status": "PASS",
+      "checks": {
+        "soul_mode": {
+          "expected": "OBSERVE_ONLY",
+          "actual": "OBSERVE_ONLY",
+          "passed": true
+        },
+        "account_mode": {
+          "expected": "PAPER_ONLY",
+          "actual": "PAPER_ONLY",
+          "passed": true
+        },
+        "baseline_frozen": {
+          "expected": true,
+          "actual": true,
+          "passed": true
+        },
+        "robot_6_10_status": {
+          "expected": "RESERVED_ONLY",
+          "actual": "RESERVED_ONLY",
+          "passed": true
+        }
+      },
+      "violations": [],
+      "governance_bypass_detected": false
+    },
+    "governance_scalability": {
+      "phase": "Phase-2.7D",
+      "overall": "SUCCESS",
+      "checks": {
+        "version_registry_health": {
+          "status": "SUCCESS"
+        },
+        "strategy_registry_health": {
+          "status": "SUCCESS"
+        },
+        "agent_arbitration_health": {
+          "status": "SUCCESS"
+        },
+        "execution_reconciliation_health": {
+          "status": "SUCCESS"
+        },
+        "baseline_drift_health": {
+          "status": "SUCCESS"
+        }
+      }
+    },
+    "source_trace": {
+      "status": "CRITICAL",
+      "checked_decisions": 4,
+      "missing_fields": 20,
+      "critical_missing": 4,
+      "phase": "Phase-2.7D",
+      "source_trace_required": true
+    },
+    "baseline_drift": {
+      "baseline_drift_detected": false,
+      "status": "PASS",
+      "findings": [],
+      "baseline_mutation_allowed": false,
+      "monitor": "baseline_drift_monitor",
+      "version": "phase_2_7d"
+    },
+    "execution_reconciliation": {
+      "status": "PASS",
+      "execution_mismatch": 0,
+      "details": [],
+      "execution_records": 1
+    }
+  }
+}

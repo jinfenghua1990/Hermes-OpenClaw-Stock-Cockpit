@@ -1,0 +1,41 @@
+{
+  "phase": "Phase-2.8C",
+  "generated_at": "2026-05-14T16:44:50.424031",
+  "runtime_type": "intraday_market_data_runtime",
+  "quotes": [
+    {
+      "symbol": "301282",
+      "name": "金禄电子",
+      "current_price": 30.75,
+      "data_source": "runtime_cache",
+      "data_as_of": "2026-05-14T16:44:50.424025",
+      "freshness": "FRESH"
+    },
+    {
+      "symbol": "002130",
+      "name": "沃尔核材",
+      "current_price": 23.5,
+      "data_source": "runtime_cache",
+      "data_as_of": "2026-05-14T16:44:50.424028",
+      "freshness": "FRESH"
+    },
+    {
+      "symbol": "002463",
+      "name": "沪电股份",
+      "current_price": 108.68,
+      "data_source": "runtime_cache",
+      "data_as_of": "2026-05-14T16:44:50.424029",
+      "freshness": "FRESH"
+    },
+    {
+      "symbol": "603629",
+      "name": "利通电子",
+      "current_price": 162.82,
+      "data_source": "runtime_cache",
+      "data_as_of": "2026-05-14T16:44:50.424030",
+      "freshness": "FRESH"
+    }
+  ],
+  "quote_count": 4,
+  "status": "PASS"
+}

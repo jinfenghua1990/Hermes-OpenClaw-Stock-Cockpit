@@ -1,0 +1,48 @@
+{
+  "phase": "Phase-2.8C",
+  "runtime_type": "sector_runtime_engine",
+  "system_mode": "PAPER_ONLY_OBSERVE_ONLY",
+  "generated_at": "2026-05-14T16:44:50.424522",
+  "updated_at": "2026-05-14T16:44:50.424522",
+  "source": "candidate_rankings_or_top_picks",
+  "sector_count": 1,
+  "status": "PASS",
+  "reason": "sector_runtime_generated",
+  "sectors": [
+    {
+      "sector_name": "UNKNOWN",
+      "strength_score": 42.49,
+      "momentum": "NEUTRAL",
+      "volume_status": "EXPANDING",
+      "leaders": [
+        {
+          "symbol": "002463",
+          "name": "沪电股份",
+          "change_pct": -0.79,
+          "runtime_candidate_score": 0
+        },
+        {
+          "symbol": "002130",
+          "name": "沃尔核材",
+          "change_pct": -1.18,
+          "runtime_candidate_score": 0
+        },
+        {
+          "symbol": "301282",
+          "name": "金禄电子",
+          "change_pct": -1.98,
+          "runtime_candidate_score": 0
+        },
+        {
+          "symbol": "603629",
+          "name": "利通电子",
+          "change_pct": -2.85,
+          "runtime_candidate_score": 0
+        }
+      ],
+      "risk_flag": false,
+      "member_count": 4,
+      "updated_at": "2026-05-14T16:44:50.424522"
+    }
+  ]
+}
